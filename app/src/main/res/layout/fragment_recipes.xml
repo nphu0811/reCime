@@ -1,1 +1,81 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" android:padding="20dp" android:layout_width="match_parent" android:layout_height="match_parent"><TextView android:id="@+id/eyebrow" android:text="MY RECIPE LAB · BẾP CỦA BẠN" android:textColor="#B65C39" android:textStyle="bold" android:textSize="12sp" android:layout_width="match_parent" android:layout_height="wrap_content"/><TextView android:id="@+id/heading" android:text="Hôm nay nấu gì?" android:textSize="30sp" android:fontFamily="serif" android:textColor="#173F33" android:layout_marginTop="12dp" android:layout_width="match_parent" android:layout_height="wrap_content"/><TextView android:text="Gom món ngon, dành thời gian cho bữa cơm." android:layout_marginVertical="8dp" android:layout_width="match_parent" android:layout_height="wrap_content"/><EditText android:id="@+id/search" android:hint="Tìm món, tag hoặc nguyên liệu" android:inputType="text" android:singleLine="true" android:layout_width="match_parent" android:layout_height="56dp"/><Spinner android:id="@+id/books" android:contentDescription="Bộ sưu tập" android:layout_width="match_parent" android:layout_height="48dp"/><LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"><CheckBox android:id="@+id/favorites" android:text="Yêu thích" android:layout_width="0dp" android:layout_weight="1" android:layout_height="48dp"/><Button android:id="@+id/add" android:text="+ Công thức" android:layout_width="wrap_content" android:layout_height="wrap_content"/></LinearLayout><TextView android:id="@+id/empty" android:text="Đang tải…" android:layout_width="match_parent" android:layout_height="wrap_content"/><androidx.recyclerview.widget.RecyclerView android:id="@+id/list" android:clipToPadding="false" android:paddingBottom="12dp" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1"/></LinearLayout>
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <TextView
+        android:id="@+id/eyebrow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="MY RECIPE LAB · BẾP CỦA BẠN"
+        android:textColor="#B65C39"
+        android:textStyle="bold"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/heading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Hôm nay nấu gì?"
+        android:textSize="30sp"
+        android:fontFamily="serif"
+        android:textColor="#173F33"
+        android:layout_marginTop="12dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Gom món ngon, dành thời gian cho bữa cơm."
+        android:layout_marginVertical="8dp" />
+
+    <EditText
+        android:id="@+id/search"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:hint="Tìm món, tag hoặc nguyên liệu"
+        android:inputType="text"
+        android:singleLine="true" />
+
+    <Spinner
+        android:id="@+id/books"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:contentDescription="Bộ sưu tập" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <CheckBox
+            android:id="@+id/favorites"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:text="Yêu thích"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+ Công thức" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/empty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Đang tải…" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:paddingBottom="12dp"
+        android:layout_weight="1" />
+
+</LinearLayout>

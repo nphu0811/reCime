@@ -1,1 +1,45 @@
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_margin="5dp" app:cardCornerRadius="18dp" app:strokeWidth="0dp" app:cardBackgroundColor="#FFFFFF"><LinearLayout android:orientation="vertical" android:layout_width="match_parent" android:layout_height="wrap_content"><ImageView android:id="@+id/photo" android:src="@drawable/food_art" android:contentDescription="Ảnh minh họa công thức" android:scaleType="centerCrop" android:layout_width="match_parent" android:layout_height="116dp"/><TextView android:id="@+id/title" android:textSize="17sp" android:textStyle="bold" android:textColor="#173F33" android:padding="12dp" android:minLines="2" android:layout_width="match_parent" android:layout_height="wrap_content"/><TextView android:id="@+id/meta" android:textSize="12sp" android:paddingHorizontal="12dp" android:paddingBottom="14dp" android:layout_width="match_parent" android:layout_height="wrap_content"/></LinearLayout></com.google.android.material.card.MaterialCardView>
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    app:cardCornerRadius="18dp"
+    app:strokeWidth="0dp"
+    app:cardBackgroundColor="#FFFFFF">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/photo"
+            android:layout_width="match_parent"
+            android:layout_height="116dp"
+            android:src="@drawable/food_art"
+            android:contentDescription="Ảnh minh họa công thức"
+            android:scaleType="centerCrop" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:textColor="#173F33"
+            android:padding="12dp"
+            android:minLines="2" />
+
+        <TextView
+            android:id="@+id/meta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:paddingHorizontal="12dp"
+            android:paddingBottom="14dp" />
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

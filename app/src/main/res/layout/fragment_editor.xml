@@ -1,1 +1,140 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent"><LinearLayout android:orientation="vertical" android:padding="24dp" android:layout_width="match_parent" android:layout_height="wrap_content"><Button android:id="@+id/back" android:text="‹ Quay lại" android:layout_width="wrap_content" android:layout_height="wrap_content"/><TextView android:text="Công thức của bạn" android:fontFamily="serif" android:textSize="28sp" android:textColor="#173F33" android:layout_width="match_parent" android:layout_height="wrap_content"/><TextView android:text="Kiểm tra tên, lượng và các bước trước khi lưu. Mỗi nguyên liệu/bước trên một dòng." android:layout_width="match_parent" android:layout_height="wrap_content"/><EditText android:id="@+id/edit_title" android:hint="Tên món *" android:inputType="textCapSentences" android:layout_width="match_parent" android:layout_height="wrap_content"/><EditText android:id="@+id/edit_book" android:hint="Bộ sưu tập" android:inputType="textCapSentences" android:layout_width="match_parent" android:layout_height="wrap_content"/><EditText android:id="@+id/edit_tags" android:hint="Tags, cách nhau bởi dấu phẩy" android:inputType="text" android:layout_width="match_parent" android:layout_height="wrap_content"/><EditText android:id="@+id/edit_servings" android:hint="Khẩu phần gốc *" android:inputType="numberDecimal" android:layout_width="match_parent" android:layout_height="wrap_content"/><EditText android:id="@+id/edit_ingredients" android:hint="Nguyên liệu *" android:gravity="top" android:inputType="textMultiLine" android:minLines="5" android:layout_width="match_parent" android:layout_height="wrap_content"/><EditText android:id="@+id/edit_steps" android:hint="Các bước *" android:gravity="top" android:inputType="textMultiLine" android:minLines="4" android:layout_width="match_parent" android:layout_height="wrap_content"/><EditText android:id="@+id/edit_source" android:hint="Nguồn / URL" android:inputType="text" android:layout_width="match_parent" android:layout_height="wrap_content"/><TextView android:text="Dinh dưỡng tùy chọn — mỗi khẩu phần gốc, tự nhập. Cần ghi nguồn; để trống nếu chưa đủ dữ liệu." android:layout_marginTop="16dp" android:layout_width="match_parent" android:layout_height="wrap_content"/><EditText android:id="@+id/edit_kcal" android:hint="Calories (kcal)" android:inputType="numberDecimal" android:layout_width="match_parent" android:layout_height="wrap_content"/><EditText android:id="@+id/edit_protein" android:hint="Protein (g)" android:inputType="numberDecimal" android:layout_width="match_parent" android:layout_height="wrap_content"/><EditText android:id="@+id/edit_carbs" android:hint="Carb (g)" android:inputType="numberDecimal" android:layout_width="match_parent" android:layout_height="wrap_content"/><EditText android:id="@+id/edit_fat" android:hint="Fat (g)" android:inputType="numberDecimal" android:layout_width="match_parent" android:layout_height="wrap_content"/><EditText android:id="@+id/edit_nutrition_source" android:hint="Nguồn dinh dưỡng / nhãn sản phẩm" android:inputType="text" android:layout_width="match_parent" android:layout_height="wrap_content"/><TextView android:id="@+id/edit_error" android:textColor="#A72F22" android:layout_width="match_parent" android:layout_height="wrap_content"/><Button android:id="@+id/save" android:text="Lưu công thức" android:layout_width="match_parent" android:layout_height="wrap_content"/></LinearLayout></ScrollView>
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <Button
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="‹ Quay lại" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Công thức của bạn"
+            android:fontFamily="serif"
+            android:textSize="28sp"
+            android:textColor="#173F33" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Kiểm tra tên, lượng và các bước trước khi lưu. Mỗi nguyên liệu/bước trên một dòng." />
+
+        <EditText
+            android:id="@+id/edit_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Tên món *"
+            android:inputType="textCapSentences" />
+
+        <EditText
+            android:id="@+id/edit_book"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Bộ sưu tập"
+            android:inputType="textCapSentences" />
+
+        <EditText
+            android:id="@+id/edit_tags"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Tags, cách nhau bởi dấu phẩy"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/edit_servings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Khẩu phần gốc *"
+            android:inputType="numberDecimal" />
+
+        <EditText
+            android:id="@+id/edit_ingredients"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nguyên liệu *"
+            android:gravity="top"
+            android:inputType="textMultiLine"
+            android:minLines="5" />
+
+        <EditText
+            android:id="@+id/edit_steps"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Các bước *"
+            android:gravity="top"
+            android:inputType="textMultiLine"
+            android:minLines="4" />
+
+        <EditText
+            android:id="@+id/edit_source"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nguồn / URL"
+            android:inputType="text" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Dinh dưỡng tùy chọn — mỗi khẩu phần gốc, tự nhập. Cần ghi nguồn; để trống nếu chưa đủ dữ liệu."
+            android:layout_marginTop="16dp" />
+
+        <EditText
+            android:id="@+id/edit_kcal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Calories (kcal)"
+            android:inputType="numberDecimal" />
+
+        <EditText
+            android:id="@+id/edit_protein"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Protein (g)"
+            android:inputType="numberDecimal" />
+
+        <EditText
+            android:id="@+id/edit_carbs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Carb (g)"
+            android:inputType="numberDecimal" />
+
+        <EditText
+            android:id="@+id/edit_fat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Fat (g)"
+            android:inputType="numberDecimal" />
+
+        <EditText
+            android:id="@+id/edit_nutrition_source"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nguồn dinh dưỡng / nhãn sản phẩm"
+            android:inputType="text" />
+
+        <TextView
+            android:id="@+id/edit_error"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#A72F22" />
+
+        <Button
+            android:id="@+id/save"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Lưu công thức" />
+
+    </LinearLayout>
+
+</ScrollView>
