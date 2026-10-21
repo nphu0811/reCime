@@ -1,0 +1,57 @@
+package com.example.recime;
+
+import static androidx.test.espresso.Espresso.*;
+import static androidx.test.espresso.action.ViewActions.*;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.*;
+import static org.hamcrest.Matchers.*;
+
+import androidx.test.core.app.*;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import com.example.recime.data.*;
+import java.util.concurrent.TimeUnit;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+@RunWith(AndroidJUnit4.class)
+public class PlannerUiTest {
+  @Test
+  public void selectMealRecreateAndBuildChecklist() throws Exception {
+    RecipeRepository repo = RecipeRepository.get(ApplicationProvider.getApplicationContext());
+    repo.io.submit(() -> {}).get(20, TimeUnit.SECONDS);
+    try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+      onView(withId(R.id.nav_plan)).perform(click());
+      onView(withId(R.id.board_list))
+          .perform(
+              new androidx.test.espresso.ViewAction() {
+                public org.hamcrest.Matcher<android.view.View> getConstraints() {
+                  return isAssignableFrom(androidx.recyclerview.widget.RecyclerView.class);
+                }
+
+                public String getDescription() {
+                  return "Chọn ô sáng đầu tuần";
+                }
+
+                public void perform(
+                    androidx.test.espresso.UiController controller, android.view.View view) {
+                  ((androidx.recyclerview.widget.RecyclerView) view)
+                      .findViewHolderForAdapterPosition(0)
+                      .itemView
+                      .performClick();
+                  controller.loopMainThreadUntilIdle();
+                }
+              });
+      onView(withText("Trứng cà chua")).perform(click());
+      repo.io.submit(() -> {}).get(20, TimeUnit.SECONDS);
+      onIdle();
+      scenario.recreate();
+      onView(withText("Trứng cà chua")).check(matches(isDisplayed()));
+      onView(withId(R.id.board_action)).perform(click());
+      onView(withText("Thêm")).perform(click());
+      repo.io.submit(() -> {}).get(20, TimeUnit.SECONDS);
+      onIdle();
+      onView(withId(R.id.nav_grocery)).perform(click());
+      onView(withId(R.id.board_empty)).check(matches(withSubstring("nguyên liệu")));
+    }
+  }
+}

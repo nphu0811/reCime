@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.recime.RecipeDomainTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-21T17:32:40.244Z" hostname="CHIPIU" time="0.076">
+  <properties/>
+  <testcase name="portionsAlwaysScaleOriginalAndDoNotMutate" classname="com.example.recime.RecipeDomainTest" time="0.006"/>
+  <testcase name="vietnameseAndEnglishUnitsAndFractions" classname="com.example.recime.RecipeDomainTest" time="0.042"/>
+  <testcase name="searchNormalizesVietnameseAccents" classname="com.example.recime.RecipeDomainTest" time="0.001"/>
+  <testcase name="groceryAggregationNormalizesCompatibleDimensionsOnly" classname="com.example.recime.RecipeDomainTest" time="0.004"/>
+  <testcase name="metricAndConfiguredVolumeConversions" classname="com.example.recime.RecipeDomainTest" time="0.001"/>
+  <testcase name="refusesDifferentCountUnits" classname="com.example.recime.RecipeDomainTest" time="0.002"/>
+  <testcase name="refusesInvalidPortions" classname="com.example.recime.RecipeDomainTest" time="0.001"/>
+  <testcase name="refusesMassVolumeWithoutDensity" classname="com.example.recime.RecipeDomainTest" time="0.001"/>
+  <testcase name="parserPreservesUnknownQuantitiesAndSeparatesSteps" classname="com.example.recime.RecipeDomainTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

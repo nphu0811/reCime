@@ -1,0 +1,223 @@
+Calculating task graph as no cached configuration is available for tasks: assembleDebug testDebugUnitTest
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:generateDebugGlobalSynthetics UP-TO-DATE
+> Task :app:mergeDebugAssets UP-TO-DATE
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:desugarDebugFileDependencies UP-TO-DATE
+> Task :app:checkDebugDuplicateClasses UP-TO-DATE
+> Task :app:compressDebugAssets UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:mergeDebugJniLibFolders UP-TO-DATE
+> Task :app:validateSigningDebug UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths
+> Task :app:mergeLibDexDebug UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:writeDebugAppMetadata UP-TO-DATE
+> Task :app:generateDebugResources
+> Task :app:writeDebugSigningConfigVersions UP-TO-DATE
+> Task :app:processDebugNavigationResources
+> Task :app:javaPreCompileDebugUnitTest
+> Task :app:compileDebugNavigationResources UP-TO-DATE
+> Task :app:mergeDebugNativeLibs UP-TO-DATE
+> Task :app:mergeExtDexDebug UP-TO-DATE
+> Task :app:stripDebugDebugSymbols UP-TO-DATE
+> Task :app:packageDebugResources
+> Task :app:parseDebugLocalResources
+> Task :app:generateDebugRFile
+> Task :app:compileDebugKotlin NO-SOURCE
+> Task :app:processDebugMainManifest
+> Task :app:processDebugManifest
+> Task :app:processDebugManifestForPackage
+> Task :app:mergeDebugResources
+
+C:\Users\admin\AndroidStudioProjects\reCIme\app\src\main\java\com\example\recime\ui\ImportFragment.java:21: error: reference to R is ambiguous
+    public ImportFragment(){super(R.layout.fragment_import);}
+                                  ^
+> Task :app:compileDebugJavaWithJavac
+  both class com.example.recime.R in com.example.recime and class com.google.mlkit.vision.text.R in com.google.mlkit.vision.text match
+C:\Users\admin\AndroidStudioProjects\reCIme\app\src\main\java\com\example\recime\ui\ImportFragment.java:24: error: reference to R is ambiguous
+        v.findViewById(R.id.manual).setOnClickListener(x->open(null));
+                       ^
+  both class com.example.recime.R in com.example.recime and class com.google.mlkit.vision.text.R in com.google.mlkit.vision.text match
+C:\Users\admin\AndroidStudioProjects\reCIme\app\src\main\java\com\example\recime\ui\ImportFragment.java:25: error: reference to R is ambiguous
+        v.findViewById(R.id.pick).setOnClickListener(x->{try{picker.launch(new androidx.activity.result.PickVisualMediaRequest.Builder().setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE).build());}catch(Exception e){status("Không mở được thư viện: "+e.getMessage());}});
+                       ^
+  both class com.example.recime.R in com.example.recime and class com.google.mlkit.vision.text.R in com.google.mlkit.vision.text match
+C:\Users\admin\AndroidStudioProjects\reCIme\app\src\main\java\com\example\recime\ui\ImportFragment.java:26: error: reference to R is ambiguous
+        v.findViewById(R.id.camera).setOnClickListener(x->{try{File dir=new File(requireContext().getCacheDir(),"camera");dir.mkdirs();File f=File.createTempFile("capture",".jpg",dir);cameraUri=FileProvider.getUriForFile(requireContext(),requireContext().getPackageName()+".files",f);camera.launch(cameraUri);}catch(Exception e){status("Camera không khả dụng; hãy chọn ảnh. "+e.getMessage());}});
+                       ^
+  both class com.example.recime.R in com.example.recime and class com.google.mlkit.vision.text.R in com.google.mlkit.vision.text match
+C:\Users\admin\AndroidStudioProjects\reCIme\app\src\main\java\com\example\recime\ui\ImportFragment.java:27: error: reference to R is ambiguous
+        v.findViewById(R.id.fetch).setOnClickListener(x->fetch());
+                       ^
+  both class com.example.recime.R in com.example.recime and class com.google.mlkit.vision.text.R in com.google.mlkit.vision.text match
+C:\Users\admin\AndroidStudioProjects\reCIme\app\src\main\java\com\example\recime\ui\ImportFragment.java:28: error: reference to R is ambiguous
+        v.findViewById(R.id.review).setOnClickListener(x->{String text=Ui.text(v,R.id.raw);if(text.isEmpty())status("Hãy nhập văn bản hoặc chọn ảnh trước.");else open(text);});
+                       ^
+  both class com.example.recime.R in com.example.recime and class com.google.mlkit.vision.text.R in com.google.mlkit.vision.text match
+C:\Users\admin\AndroidStudioProjects\reCIme\app\src\main\java\com\example\recime\ui\ImportFragment.java:28: error: reference to R is ambiguous
+        v.findViewById(R.id.review).setOnClickListener(x->{String text=Ui.text(v,R.id.raw);if(text.isEmpty())status("Hãy nhập văn bản hoặc chọn ảnh trước.");else open(text);});
+                                                                                 ^
+  both class com.example.recime.R in com.example.recime and class com.google.mlkit.vision.text.R in com.google.mlkit.vision.text match
+C:\Users\admin\AndroidStudioProjects\reCIme\app\src\main\java\com\example\recime\ui\ImportFragment.java:29: error: reference to R is ambiguous
+        if(state==null&&getArguments()!=null){String text=getArguments().getString("text","");if(text!=null){if(text.trim().startsWith("https://")&&!text.trim().contains("\n"))Ui.set(v,R.id.url,text);else Ui.set(v,R.id.raw,text);}String uri=getArguments().getString("uri");if(uri!=null)ocr(Uri.parse(uri));}
+                                                                                                                                                                                         ^
+  both class com.example.recime.R in com.example.recime and class com.google.mlkit.vision.text.R in com.google.mlkit.vision.text match
+C:\Users\admin\AndroidStudioProjects\reCIme\app\src\main\java\com\example\recime\ui\ImportFragment.java:29: error: reference to R is ambiguous
+        if(state==null&&getArguments()!=null){String text=getArguments().getString("text","");if(text!=null){if(text.trim().startsWith("https://")&&!text.trim().contains("\n"))Ui.set(v,R.id.url,text);else Ui.set(v,R.id.raw,text);}String uri=getArguments().getString("uri");if(uri!=null)ocr(Uri.parse(uri));}
+                                                                                                                                                                                                                      ^
+  both class com.example.recime.R in com.example.recime and class com.google.mlkit.vision.text.R in com.google.mlkit.vision.text match
+C:\Users\admin\AndroidStudioProjects\reCIme\app\src\main\java\com\example\recime\ui\ImportFragment.java:31: error: reference to R is ambiguous
+    private void open(String raw){((MainActivity)requireActivity()).open(EditorFragment.create(0,raw,Ui.text(root,R.id.url),image));}
+                                                                                                                  ^
+  both class com.example.recime.R in com.example.recime and class com.google.mlkit.vision.text.R in com.google.mlkit.vision.text match
+C:\Users\admin\AndroidStudioProjects\reCIme\app\src\main\java\com\example\recime\ui\ImportFragment.java:32: error: reference to R is ambiguous
+    private void status(String s){if(root!=null)Ui.set(root,R.id.status,s);}
+                                                            ^
+  both class com.example.recime.R in com.example.recime and class com.google.mlkit.vision.text.R in com.google.mlkit.vision.text match
+C:\Users\admin\AndroidStudioProjects\reCIme\app\src\main\java\com\example\recime\ui\ImportFragment.java:33: error: reference to R is ambiguous
+    private void loading(boolean on){busy=on;if(root==null)return;root.findViewById(R.id.progress).setVisibility(on?View.VISIBLE:View.GONE);for(int id:new int[]{R.id.fetch,R.id.pick,R.id.camera,R.id.review,R.id.manual})root.findViewById(id).setEnabled(!on);}
+                                                                                    ^
+  both class com.example.recime.R in com.example.recime and class com.google.mlkit.vision.text.R in com.google.mlkit.vision.text match
+C:\Users\admin\AndroidStudioProjects\reCIme\app\src\main\java\com\example\recime\ui\ImportFragment.java:33: error: reference to R is ambiguous
+    private void loading(boolean on){busy=on;if(root==null)return;root.findViewById(R.id.progress).setVisibility(on?View.VISIBLE:View.GONE);for(int id:new int[]{R.id.fetch,R.id.pick,R.id.camera,R.id.review,R.id.manual})root.findViewById(id).setEnabled(!on);}
+                                                                                                                                                                 ^
+  both class com.example.recime.R in com.example.recime and class com.google.mlkit.vision.text.R in com.google.mlkit.vision.text match
+C:\Users\admin\AndroidStudioProjects\reCIme\app\src\main\java\com\example\recime\ui\ImportFragment.java:33: error: reference to R is ambiguous
+    private void loading(boolean on){busy=on;if(root==null)return;root.findViewById(R.id.progress).setVisibility(on?View.VISIBLE:View.GONE);for(int id:new int[]{R.id.fetch,R.id.pick,R.id.camera,R.id.review,R.id.manual})root.findViewById(id).setEnabled(!on);}
+                                                                                                                                                                            ^
+  both class com.example.recime.R in com.example.recime and class com.google.mlkit.vision.text.R in com.google.mlkit.vision.text match
+C:\Users\admin\AndroidStudioProjects\reCIme\app\src\main\java\com\example\recime\ui\ImportFragment.java:33: error: reference to R is ambiguous
+    private void loading(boolean on){busy=on;if(root==null)return;root.findViewById(R.id.progress).setVisibility(on?View.VISIBLE:View.GONE);for(int id:new int[]{R.id.fetch,R.id.pick,R.id.camera,R.id.review,R.id.manual})root.findViewById(id).setEnabled(!on);}
+                                                                                                                                                                                      ^
+  both class com.example.recime.R in com.example.recime and class com.google.mlkit.vision.text.R in com.google.mlkit.vision.text match
+C:\Users\admin\AndroidStudioProjects\reCIme\app\src\main\java\com\example\recime\ui\ImportFragment.java:33: error: reference to R is ambiguous
+    private void loading(boolean on){busy=on;if(root==null)return;root.findViewById(R.id.progress).setVisibility(on?View.VISIBLE:View.GONE);for(int id:new int[]{R.id.fetch,R.id.pick,R.id.camera,R.id.review,R.id.manual})root.findViewById(id).setEnabled(!on);}
+                                                                                                                                                                                                  ^
+  both class com.example.recime.R in com.example.recime and class com.google.mlkit.vision.text.R in com.google.mlkit.vision.text match
+C:\Users\admin\AndroidStudioProjects\reCIme\app\src\main\java\com\example\recime\ui\ImportFragment.java:33: error: reference to R is ambiguous
+    private void loading(boolean on){busy=on;if(root==null)return;root.findViewById(R.id.progress).setVisibility(on?View.VISIBLE:View.GONE);for(int id:new int[]{R.id.fetch,R.id.pick,R.id.camera,R.id.review,R.id.manual})root.findViewById(id).setEnabled(!on);}
+                                                                                                                                                                                                              ^
+  both class com.example.recime.R in com.example.recime and class com.google.mlkit.vision.text.R in com.google.mlkit.vision.text match
+C:\Users\admin\AndroidStudioProjects\reCIme\app\src\main\java\com\example\recime\ui\ImportFragment.java:34: error: reference to R is ambiguous
+    private void fetch(){if(busy)return;String url=Ui.text(root,R.id.url);loading(true);status("Đang đọc trang công khai…");final View target=root;
+                                                                ^
+  both class com.example.recime.R in com.example.recime and class com.google.mlkit.vision.text.R in com.google.mlkit.vision.text match
+C:\Users\admin\AndroidStudioProjects\reCIme\app\src\main\java\com\example\recime\ui\ImportFragment.java:35: error: reference to R is ambiguous
+        new ViewModelProvider(requireActivity()).get(LabViewModel.class).repository.io.execute(()->{try{String text=new PublicWebExtractor().extract(url);target.post(()->{if(root!=target)return;image="";Ui.set(root,R.id.raw,text);loading(false);status("Đã đọc Recipe JSON-LD. Kiểm tra văn bản rồi chọn Phân tích.");});}catch(Exception e){target.post(()->{if(root!=target)return;loading(false);status("Không nhập được: "+e.getMessage()+" Có thể sửa URL và thử lại.");});}});
+                                                                                                                                                                                                                       ^
+  both class com.example.recime.R in com.example.recime and class com.google.mlkit.vision.text.R in com.google.mlkit.vision.text match
+C:\Users\admin\AndroidStudioProjects\reCIme\app\src\main\java\com\example\recime\ui\ImportFragment.java:48: error: reference to R is ambiguous
+                recognizer.process(input).addOnSuccessListener(result->{if(root==target){image=file.getAbsolutePath();Ui.set(root,R.id.raw,result.getText());loading(false);status(result.getText().trim().isEmpty()?"Không tìm thấy chữ. Thử ảnh rõ hơn hoặc nhập thủ công.":"OCR hoàn tất. Hãy sửa dấu tiếng Việt, số lượng và phần thiếu trước khi phân tích.");}})
+                                                                                                                                  ^
+  both class com.example.recime.R in com.example.recime and class com.google.mlkit.vision.text.R in com.google.mlkit.vision.text match
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+20 errors
+
+> Task :app:compileDebugJavaWithJavac FAILED
+> Task :app:processDebugResources
+
+[Incubating] Problems report is available at: file:///C:/Users/admin/AndroidStudioProjects/reCIme/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:compileDebugJavaWithJavac' (registered by plugin 'com.android.internal.application').
+> Compilation failed; see the compiler output below.
+  C:\Users\admin\AndroidStudioProjects\reCIme\app\src\main\java\com\example\recime\ui\ImportFragment.java:21: error: reference to R is ambiguous
+      public ImportFragment(){super(R.layout.fragment_import);}
+                                    ^
+    both class com.example.recime.R in com.example.recime and class com.google.mlkit.vision.text.R in com.google.mlkit.vision.text match
+  C:\Users\admin\AndroidStudioProjects\reCIme\app\src\main\java\com\example\recime\ui\ImportFragment.java:24: error: reference to R is ambiguous
+          v.findViewById(R.id.manual).setOnClickListener(x->open(null));
+                         ^
+    both class com.example.recime.R in com.example.recime and class com.google.mlkit.vision.text.R in com.google.mlkit.vision.text match
+  C:\Users\admin\AndroidStudioProjects\reCIme\app\src\main\java\com\example\recime\ui\ImportFragment.java:25: error: reference to R is ambiguous
+          v.findViewById(R.id.pick).setOnClickListener(x->{try{picker.launch(new androidx.activity.result.PickVisualMediaRequest.Builder().setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE).build());}catch(Exception e){status("Không mở được thư viện: "+e.getMessage());}});
+                         ^
+    both class com.example.recime.R in com.example.recime and class com.google.mlkit.vision.text.R in com.google.mlkit.vision.text match
+  C:\Users\admin\AndroidStudioProjects\reCIme\app\src\main\java\com\example\recime\ui\ImportFragment.java:26: error: reference to R is ambiguous
+          v.findViewById(R.id.camera).setOnClickListener(x->{try{File dir=new File(requireContext().getCacheDir(),"camera");dir.mkdirs();File f=File.createTempFile("capture",".jpg",dir);cameraUri=FileProvider.getUriForFile(requireContext(),requireContext().getPackageName()+".files",f);camera.launch(cameraUri);}catch(Exception e){status("Camera không khả dụng; hãy chọn ảnh. "+e.getMessage());}});
+                         ^
+    both class com.example.recime.R in com.example.recime and class com.google.mlkit.vision.text.R in com.google.mlkit.vision.text match
+  C:\Users\admin\AndroidStudioProjects\reCIme\app\src\main\java\com\example\recime\ui\ImportFragment.java:27: error: reference to R is ambiguous
+          v.findViewById(R.id.fetch).setOnClickListener(x->fetch());
+                         ^
+    both class com.example.recime.R in com.example.recime and class com.google.mlkit.vision.text.R in com.google.mlkit.vision.text match
+  C:\Users\admin\AndroidStudioProjects\reCIme\app\src\main\java\com\example\recime\ui\ImportFragment.java:28: error: reference to R is ambiguous
+          v.findViewById(R.id.review).setOnClickListener(x->{String text=Ui.text(v,R.id.raw);if(text.isEmpty())status("Hãy nhập văn bản hoặc chọn ảnh trước.");else open(text);});
+                         ^
+    both class com.example.recime.R in com.example.recime and class com.google.mlkit.vision.text.R in com.google.mlkit.vision.text match
+  C:\Users\admin\AndroidStudioProjects\reCIme\app\src\main\java\com\example\recime\ui\ImportFragment.java:28: error: reference to R is ambiguous
+          v.findViewById(R.id.review).setOnClickListener(x->{String text=Ui.text(v,R.id.raw);if(text.isEmpty())status("Hãy nhập văn bản hoặc chọn ảnh trước.");else open(text);});
+                                                                                   ^
+    both class com.example.recime.R in com.example.recime and class com.google.mlkit.vision.text.R in com.google.mlkit.vision.text match
+  C:\Users\admin\AndroidStudioProjects\reCIme\app\src\main\java\com\example\recime\ui\ImportFragment.java:29: error: reference to R is ambiguous
+          if(state==null&&getArguments()!=null){String text=getArguments().getString("text","");if(text!=null){if(text.trim().startsWith("https://")&&!text.trim().contains("\n"))Ui.set(v,R.id.url,text);else Ui.set(v,R.id.raw,text);}String uri=getArguments().getString("uri");if(uri!=null)ocr(Uri.parse(uri));}
+                                                                                                                                                                                           ^
+    both class com.example.recime.R in com.example.recime and class com.google.mlkit.vision.text.R in com.google.mlkit.vision.text match
+  C:\Users\admin\AndroidStudioProjects\reCIme\app\src\main\java\com\example\recime\ui\ImportFragment.java:29: error: reference to R is ambiguous
+          if(state==null&&getArguments()!=null){String text=getArguments().getString("text","");if(text!=null){if(text.trim().startsWith("https://")&&!text.trim().contains("\n"))Ui.set(v,R.id.url,text);else Ui.set(v,R.id.raw,text);}String uri=getArguments().getString("uri");if(uri!=null)ocr(Uri.parse(uri));}
+                                                                                                                                                                                                                        ^
+    both class com.example.recime.R in com.example.recime and class com.google.mlkit.vision.text.R in com.google.mlkit.vision.text match
+  C:\Users\admin\AndroidStudioProjects\reCIme\app\src\main\java\com\example\recime\ui\ImportFragment.java:31: error: reference to R is ambiguous
+      private void open(String raw){((MainActivity)requireActivity()).open(EditorFragment.create(0,raw,Ui.text(root,R.id.url),image));}
+                                                                                                                    ^
+    both class com.example.recime.R in com.example.recime and class com.google.mlkit.vision.text.R in com.google.mlkit.vision.text match
+  C:\Users\admin\AndroidStudioProjects\reCIme\app\src\main\java\com\example\recime\ui\ImportFragment.java:32: error: reference to R is ambiguous
+      private void status(String s){if(root!=null)Ui.set(root,R.id.status,s);}
+                                                              ^
+    both class com.example.recime.R in com.example.recime and class com.google.mlkit.vision.text.R in com.google.mlkit.vision.text match
+  C:\Users\admin\AndroidStudioProjects\reCIme\app\src\main\java\com\example\recime\ui\ImportFragment.java:33: error: reference to R is ambiguous
+      private void loading(boolean on){busy=on;if(root==null)return;root.findViewById(R.id.progress).setVisibility(on?View.VISIBLE:View.GONE);for(int id:new int[]{R.id.fetch,R.id.pick,R.id.camera,R.id.review,R.id.manual})root.findViewById(id).setEnabled(!on);}
+                                                                                      ^
+    both class com.example.recime.R in com.example.recime and class com.google.mlkit.vision.text.R in com.google.mlkit.vision.text match
+  C:\Users\admin\AndroidStudioProjects\reCIme\app\src\main\java\com\example\recime\ui\ImportFragment.java:33: error: reference to R is ambiguous
+      private void loading(boolean on){busy=on;if(root==null)return;root.findViewById(R.id.progress).setVisibility(on?View.VISIBLE:View.GONE);for(int id:new int[]{R.id.fetch,R.id.pick,R.id.camera,R.id.review,R.id.manual})root.findViewById(id).setEnabled(!on);}
+                                                                                                                                                                   ^
+    both class com.example.recime.R in com.example.recime and class com.google.mlkit.vision.text.R in com.google.mlkit.vision.text match
+  C:\Users\admin\AndroidStudioProjects\reCIme\app\src\main\java\com\example\recime\ui\ImportFragment.java:33: error: reference to R is ambiguous
+      private void loading(boolean on){busy=on;if(root==null)return;root.findViewById(R.id.progress).setVisibility(on?View.VISIBLE:View.GONE);for(int id:new int[]{R.id.fetch,R.id.pick,R.id.camera,R.id.review,R.id.manual})root.findViewById(id).setEnabled(!on);}
+                                                                                                                                                                              ^
+    both class com.example.recime.R in com.example.recime and class com.google.mlkit.vision.text.R in com.google.mlkit.vision.text match
+  C:\Users\admin\AndroidStudioProjects\reCIme\app\src\main\java\com\example\recime\ui\ImportFragment.java:33: error: reference to R is ambiguous
+      private void loading(boolean on){busy=on;if(root==null)return;root.findViewById(R.id.progress).setVisibility(on?View.VISIBLE:View.GONE);for(int id:new int[]{R.id.fetch,R.id.pick,R.id.camera,R.id.review,R.id.manual})root.findViewById(id).setEnabled(!on);}
+                                                                                                                                                                                        ^
+    both class com.example.recime.R in com.example.recime and class com.google.mlkit.vision.text.R in com.google.mlkit.vision.text match
+  C:\Users\admin\AndroidStudioProjects\reCIme\app\src\main\java\com\example\recime\ui\ImportFragment.java:33: error: reference to R is ambiguous
+      private void loading(boolean on){busy=on;if(root==null)return;root.findViewById(R.id.progress).setVisibility(on?View.VISIBLE:View.GONE);for(int id:new int[]{R.id.fetch,R.id.pick,R.id.camera,R.id.review,R.id.manual})root.findViewById(id).setEnabled(!on);}
+                                                                                                                                                                                                    ^
+    both class com.example.recime.R in com.example.recime and class com.google.mlkit.vision.text.R in com.google.mlkit.vision.text match
+  C:\Users\admin\AndroidStudioProjects\reCIme\app\src\main\java\com\example\recime\ui\ImportFragment.java:33: error: reference to R is ambiguous
+      private void loading(boolean on){busy=on;if(root==null)return;root.findViewById(R.id.progress).setVisibility(on?View.VISIBLE:View.GONE);for(int id:new int[]{R.id.fetch,R.id.pick,R.id.camera,R.id.review,R.id.manual})root.findViewById(id).setEnabled(!on);}
+                                                                                                                                                                                                                ^
+    both class com.example.recime.R in com.example.recime and class com.google.mlkit.vision.text.R in com.google.mlkit.vision.text match
+  C:\Users\admin\AndroidStudioProjects\reCIme\app\src\main\java\com\example\recime\ui\ImportFragment.java:34: error: reference to R is ambiguous
+      private void fetch(){if(busy)return;String url=Ui.text(root,R.id.url);loading(true);status("Đang đọc trang công khai…");final View target=root;
+                                                                  ^
+    both class com.example.recime.R in com.example.recime and class com.google.mlkit.vision.text.R in com.google.mlkit.vision.text match
+  C:\Users\admin\AndroidStudioProjects\reCIme\app\src\main\java\com\example\recime\ui\ImportFragment.java:35: error: reference to R is ambiguous
+          new ViewModelProvider(requireActivity()).get(LabViewModel.class).repository.io.execute(()->{try{String text=new PublicWebExtractor().extract(url);target.post(()->{if(root!=target)return;image="";Ui.set(root,R.id.raw,text);loading(false);status("Đã đọc Recipe JSON-LD. Kiểm tra văn bản rồi chọn Phân tích.");});}catch(Exception e){target.post(()->{if(root!=target)return;loading(false);status("Không nhập được: "+e.getMessage()+" Có thể sửa URL và thử lại.");});}});
+                                                                                                                                                                                                                         ^
+    both class com.example.recime.R in com.example.recime and class com.google.mlkit.vision.text.R in com.google.mlkit.vision.text match
+  C:\Users\admin\AndroidStudioProjects\reCIme\app\src\main\java\com\example\recime\ui\ImportFragment.java:48: error: reference to R is ambiguous
+                  recognizer.process(input).addOnSuccessListener(result->{if(root==target){image=file.getAbsolutePath();Ui.set(root,R.id.raw,result.getText());loading(false);status(result.getText().trim().isEmpty()?"Không tìm thấy chữ. Thử ảnh rõ hơn hoặc nhập thủ công.":"OCR hoàn tất. Hãy sửa dấu tiếng Việt, số lượng và phần thiếu trước khi phân tích.");}})
+                                                                                                                                    ^
+    both class com.example.recime.R in com.example.recime and class com.google.mlkit.vision.text.R in com.google.mlkit.vision.text match
+  Note: Recompile with -Xlint:deprecation for details.
+  Note: Some input files use or override a deprecated API.
+  20 errors
+
+* Try:
+> Check your code and dependencies to fix the compilation error(s)
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+
+BUILD FAILED in 11s
+31 actionable tasks: 13 executed, 18 up-to-date
+Configuration cache entry stored.

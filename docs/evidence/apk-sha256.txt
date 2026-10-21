@@ -1,0 +1,5 @@
+
+Algorithm : SHA256
+Hash      : 2278DE57FB033191CDBC8B52312BB15EE07C24A2D4B8425811AD87034E31C204
+Path      : C:\Users\admin\AndroidStudioProjects\reCIme\app\build\outputs\apk\debug\app-debug.apk
+

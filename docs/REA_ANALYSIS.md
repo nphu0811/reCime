@@ -7,7 +7,7 @@ Tài liệu này được tạo **trước phần triển khai chính**. Workspa
 | Công cụ | Phiên bản | Trạng thái / thiếu gì |
 |---|---|---|
 | Node | 24.14.0 | Phù hợp REA: Node 24 >=24.11 |
-| npm / REA | rea-agents 6.7.0 | Đã chạy npx, setup Codex, doctor và ADB commands |
+| npm / REA | npm11.12.0 / rea-agents6.7.0 | Đã chạy npx, setup Codex, doctor và ADB commands |
 | Codex MCP | REA registration 6.7.0 | Setup trả `ready`; phiên hiện tại chưa nạp tool mới, dùng CLI cùng workflow |
 | JDK | Oracle 21.0.10 | java chạy được; Gradle ban đầu yêu cầu daemon JDK25 chưa có cache |
 | Gradle / AGP | 9.5.0 / 9.3.3 | Wrapper sẵn có, đã chạy --version; cần build để xác minh |
@@ -63,3 +63,7 @@ Luồng: manual/share/image/public HTTPS URL → adapter extraction hoặc ML Ki
 
 ## Rủi ro và giới hạn
 OCR tiếng Việt và chữ viết tay có thể sai: luôn review, không tự lưu. Parser heuristics không suy ra phần bị thiếu. Nguồn web có bản quyền: người dùng chỉ nhập nội dung có quyền sử dụng, app không phân phối lại corpus. URL importer chặn địa chỉ nội bộ, chỉ HTTPS; không vượt đăng nhập. App offline không có đồng bộ, social video, dịch vụ đặt hàng hoặc tính dinh dưỡng AI. Không có kết luận về công nghệ nội bộ ReciMe.
+
+## Phụ lục sau triển khai (không phải bằng chứng về ReciMe)
+
+Đã cài/chạy app độc lập `com.example.recime`, gọi REA `inspect-adb-package emulator-5554 com.example.recime` và `capture-adb-screen` cho5 màn hình. Kết quả ở `evidence/rea-myrecipelab-package.json`, `evidence/screenshot-*.json` và `evidence/screenshots/`. Dữ liệu này chỉ thuộc MyRecipeLab tự xây; tuyệt đối không dùng để kết luận về manifest/code của ReciMe. Build/unit/instrumentation/lint và các giới hạn test cuối ở IMPLEMENTATION_STATUS.md. Việc cài lại sau connected tests là cần thiết vì runner đã gỡ app test-target sau lượt chạy; đã chạy adb install và launcher thành công.

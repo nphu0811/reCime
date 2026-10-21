@@ -1,0 +1,62 @@
+Starting a Gradle Daemon, 1 incompatible and 2 stopped Daemons could not be reused, use --status for details
+Calculating task graph as no cached configuration is available for tasks: assembleDebug
+> Task :app:preBuild UP-TO-DATE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :app:desugarDebugFileDependencies
+> Task :app:generateDebugResources
+> Task :app:mapDebugSourceSetPaths
+> Task :app:packageDebugResources
+> Task :app:createDebugCompatibleScreenManifests
+> Task :app:extractDeepLinksDebug
+> Task :app:javaPreCompileDebug
+> Task :app:checkDebugDuplicateClasses
+> Task :app:mergeDebugJniLibFolders
+> Task :app:generateDebugGlobalSynthetics
+> Task :app:processDebugNavigationResources
+> Task :app:mergeLibDexDebug
+> Task :app:parseDebugLocalResources
+> Task :app:checkDebugAarMetadata
+> Task :app:compileDebugNavigationResources
+> Task :app:validateSigningDebug
+> Task :app:writeDebugSigningConfigVersions
+> Task :app:writeDebugAppMetadata
+> Task :app:generateDebugRFile
+> Task :app:compileDebugKotlin NO-SOURCE
+> Task :app:mergeDebugNativeLibs
+> Task :app:processDebugMainManifest
+> Task :app:processDebugManifest
+> Task :app:processDebugManifestForPackage
+
+> Task :app:compileDebugJavaWithJavac
+C:\Users\admin\AndroidStudioProjects\reCIme\app\src\main\java\com\example\recime\data\LabDatabase.java:4: warning: Schema export directory was not provided to the annotation processor so Room cannot export the schema. You can either provide `room.schemaLocation` annotation processor argument by applying the Room Gradle plugin (id 'androidx.room') OR set exportSchema to false.
+public abstract class LabDatabase extends RoomDatabase { public abstract LabDao dao(); }
+                ^
+
+> Task :app:mergeDebugAssets
+
+> Task :app:compileDebugJavaWithJavac
+1 warning
+
+> Task :app:compressDebugAssets
+
+> Task :app:stripDebugDebugSymbols
+Unable to strip the following libraries, packaging them as they are: libmlkit_google_ocr_pipeline.so. Run with --info option to learn more.
+
+> Task :app:processDebugJavaRes
+> Task :app:mergeDebugResources
+> Task :app:mergeDebugJavaResource
+> Task :app:mergeExtDexDebug
+> Task :app:processDebugResources
+> Task :app:dexBuilderDebug
+> Task :app:mergeProjectDexDebug
+> Task :app:packageDebug
+> Task :app:assembleDebug
+> Task :app:createDebugApkListingFileRedirect
+
+[Incubating] Problems report is available at: file:///C:/Users/admin/AndroidStudioProjects/reCIme/build/reports/problems/problems-report.html
+
+BUILD SUCCESSFUL in 1m 26s
+36 actionable tasks: 36 executed
+Configuration cache entry stored.
