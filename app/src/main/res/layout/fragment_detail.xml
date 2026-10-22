@@ -157,6 +157,11 @@
             android:text="▶ BẮT ĐẦU NẤU · TỪNG BƯỚC"
             android:textColor="@color/night_ink"
             app:backgroundTint="@color/electric_coral" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/ask_recipe_ai"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="✦ Hỏi AI về cách nấu (cần API key)" />
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content">
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/export_pdf" android:layout_width="0dp"
