@@ -65,6 +65,13 @@ public final class LocalAiClient {
             MediaType.get("application/json; charset=utf-8")));
   }
 
+  public JSONObject estimateNutrition(String ingredients,double servings) throws Exception {
+    JSONObject json=new JSONObject();
+    json.put("ingredients",ingredients);json.put("servings",servings);
+    return request("/nutrition/estimate",
+      RequestBody.create(json.toString(),MediaType.get("application/json; charset=utf-8")));
+  }
+
   public JSONObject ask(com.example.recime.model.Recipe recipe,String question) throws Exception {
     JSONObject json=new JSONObject();
     json.put("title",recipe.title);
