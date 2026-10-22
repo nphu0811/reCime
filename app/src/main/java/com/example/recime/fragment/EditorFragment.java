@@ -1,5 +1,7 @@
 package com.example.recime.fragment;
 
+import com.example.recime.helper.Motion;
+
 import android.os.Bundle;
 import android.view.*;
 import android.widget.*;
@@ -34,6 +36,7 @@ public class EditorFragment extends Fragment {
 
   @Override
   public void onViewCreated(View v, Bundle state) {
+    Motion.enter(v);
     LabViewModel vm = new ViewModelProvider(requireActivity()).get(LabViewModel.class);
     v.findViewById(R.id.back).setOnClickListener(x -> getParentFragmentManager().popBackStack());
     Bundle args = requireArguments();
