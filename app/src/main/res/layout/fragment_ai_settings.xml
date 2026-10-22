@@ -5,28 +5,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bg_screen_glow"
     tools:context=".fragment.AiSettingsFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="24dp">
+        android:padding="20dp">
 
         <Button
             android:id="@+id/back"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
-            android:text="‹ Quay lại"
+            android:text="← BACK TO AI LAB"
             style="@style/Widget.Material3.Button.TextButton" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Căn bếp có AI"
-            android:fontFamily="serif"
-            android:textSize="32sp"
-            android:textColor="#123B2D" />
+            android:text="Your AI sous-chef. ✦"
+            android:fontFamily="sans-serif-black"
+            android:textSize="34sp"
+            android:textColor="@color/soft_white" />
 
         <TextView
             android:layout_width="match_parent"
@@ -45,9 +46,11 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/ai_check"
+            android:textColor="@color/night_ink"
+            app:backgroundTint="@color/acid_lime"
             android:layout_width="match_parent"
             android:layout_height="52dp"
-            android:text="Lưu &amp; kiểm tra kết nối"
+            android:text="✦ CONNECT TO MY AI"
             app:cornerRadius="14dp" />
 
         <TextView
