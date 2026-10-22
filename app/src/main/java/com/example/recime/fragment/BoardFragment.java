@@ -34,6 +34,7 @@ public class BoardFragment extends Fragment {
   private List<Grocery> groceries = new ArrayList<>();
   private final List<BoardRow> rows = new ArrayList<>();
   private BoardAdapter adapter;
+  private int groceryOrder = 0;
 
   public BoardFragment() {
     super(R.layout.fragment_board);
@@ -71,7 +72,21 @@ public class BoardFragment extends Fragment {
             : "Nguyên liệu theo lịch ăn tự cập nhật; món thêm tay giữ riêng.");
     v.findViewById(R.id.week_controls).setVisibility(planner ? View.VISIBLE : View.GONE);
     Ui.set(v, R.id.board_action, planner ? "Xem giỏ đồng bộ tự động ↗" : "+ Thêm nguyên liệu");
-    Ui.set(v, R.id.board_secondary, planner ? "Hôm nay / tuần hiện tại" : "Chia sẻ checklist");
+    Ui.set(v, R.id.board_secondary, planner ? "Hôm nay (giữ để xóa tuần)" : "Chia sẻ checklist");
+    Spinner sort=v.findViewById(R.id.grocery_sort);
+    sort.setVisibility(planner?View.GONE:View.VISIBLE);
+    if(!planner){
+      ArrayAdapter<String> sorting=new ArrayAdapter<>(requireContext(),
+          android.R.layout.simple_spinner_dropdown_item,
+          new String[]{"Theo nhóm","A → Z","Theo nguồn","Chưa mua trước"});
+      sort.setAdapter(sorting);
+      sort.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+        public void onNothingSelected(AdapterView<?> parent){}
+        public void onItemSelected(AdapterView<?> parent,View item,int pos,long id){
+          groceryOrder=pos;render();
+        }
+      });
+    }
     v.findViewById(R.id.prev_week)
         .setOnClickListener(
             x -> {
@@ -99,6 +114,17 @@ public class BoardFragment extends Fragment {
                 render();
               } else share();
             });
+    v.findViewById(R.id.board_secondary).setOnLongClickListener(x->{
+      if(!planner)return false;
+      Calendar end=(Calendar)week.clone();end.add(Calendar.DAY_OF_MONTH,6);
+      String start=day(week),finish=day(end);
+      new MaterialAlertDialogBuilder(requireContext()).setTitle("Xóa lịch ăn tuần này?")
+        .setMessage("Giỏ tự đồng bộ lại, nguyên liệu nhập thủ công vẫn giữ.")
+        .setNegativeButton("Hủy",null)
+        .setPositiveButton("Xóa tuần",(d,w)->vm.repository.run(
+            ()->vm.repository.dao.clearMealWeek(start,finish))).show();
+      return true;
+    });
     ListView list = v.findViewById(R.id.board_list);
     adapter =
         new BoardAdapter(
@@ -194,7 +220,17 @@ public class BoardFragment extends Fragment {
       }
       Ui.set(root, R.id.board_empty, "4 bữa/ngày · nhiều món/bữa · giỏ tự đồng bộ");
     } else {
-      for (Grocery g : groceries) {
+      List<Grocery> sorted=new ArrayList<>(groceries);
+      if(groceryOrder==1) sorted.sort((a,b)->a.name.compareToIgnoreCase(b.name));
+      else if(groceryOrder==2) sorted.sort((a,b)->{
+        if(a.planned!=b.planned)return a.planned?-1:1;
+        return a.category.compareToIgnoreCase(b.category);
+      });
+      else if(groceryOrder==3) sorted.sort((a,b)->{
+        if(a.checked!=b.checked)return a.checked?1:-1;
+        return a.name.compareToIgnoreCase(b.name);
+      });
+      for (Grocery g : sorted) {
         BoardRow row = new BoardRow();
         row.grocery = g;
         row.title = g.name;
