@@ -97,6 +97,12 @@ public class RecipesFragment extends Fragment {
 
               public void afterTextChanged(Editable e) {}
             });
+    ((EditText) v.findViewById(R.id.ingredient_filter)).addTextChangedListener(
+      new TextWatcher(){
+        public void beforeTextChanged(CharSequence t,int a,int c,int d){}
+        public void onTextChanged(CharSequence t,int a,int b,int c){filter();}
+        public void afterTextChanged(Editable e){}
+      });
     ((CheckBox) v.findViewById(R.id.favorites)).setOnCheckedChangeListener((b, c) -> filter());
     ((Spinner) v.findViewById(R.id.books))
         .setOnItemSelectedListener(
@@ -215,6 +221,7 @@ public class RecipesFragment extends Fragment {
     if (root == null || adapter == null) return;
     String q = Units.key(Ui.text(root, R.id.search));
     boolean favorite = ((CheckBox) root.findViewById(R.id.favorites)).isChecked();
+    String ingredientQuery=Ui.text(root,R.id.ingredient_filter);
     shown.clear();
     for (Recipe r : all) {
       String hay = Units.key(r.title + " " + r.tags + " " + r.ingredients);
@@ -227,6 +234,21 @@ public class RecipesFragment extends Fragment {
               || category.equals("sweet") && type.matches(".*(banh|che |xoi|kem).*")
               || category.equals("main") && !type.matches(".*(banh|che |kem|canh|bun|pho).*");
       for (String token : q.split("[,\\s]+")) if (!hay.contains(token)) ok = false;
+      if (ok && !ingredientQuery.isEmpty()) {
+        for(String ingredient:ingredientQuery.split(",")) {
+          String key=Units.key(ingredient.trim());
+          if(key.isEmpty())continue;
+          boolean matched=false;
+          for(com.example.recime.model.Ingredient i:
+              com.example.recime.helper.RecipeParser.ingredients(r.ingredients)){
+            String ingredientName=Units.key(i.name);
+            if(ingredientName.matches(".*(^|\\\\s)"+java.util.regex.Pattern.quote(key)+"(\\\\s|$).*")){
+              matched=true;break;
+            }
+          }
+          if(!matched) {ok=false;break;}
+        }
+      }
       if (ok
           && categoryOk
           && (!favorite || r.favorite)
