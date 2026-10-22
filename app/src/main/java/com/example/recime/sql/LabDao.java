@@ -303,6 +303,8 @@ public class LabDao {
     } finally {db.endTransaction();}
   }
 
+  public List<Grocery> plannedGrocerySnapshot(){return plannedGroceries();}
+
   private List<Grocery> plannedGroceries(){
     List<Grocery> list=new ArrayList<>();
     try(Cursor c=helper.getReadableDatabase().rawQuery("SELECT * FROM plan_groceries ORDER BY category,name",null)){
