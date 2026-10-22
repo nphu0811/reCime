@@ -6,7 +6,6 @@ import android.view.*;
 import android.widget.*;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.*;
 import com.example.recime.*;
 import com.example.recime.activity.MainActivity;
 import com.example.recime.adapter.RecipeAdapter;
@@ -67,13 +66,17 @@ public class RecipesFragment extends Fragment {
                               : selected == R.id.chip_sweet ? "sweet" : "all";
               filter();
             });
-    RecyclerView list = v.findViewById(R.id.list);
-    list.setLayoutManager(new GridLayoutManager(requireContext(), 2));
-    adapter =
-        new RecipeAdapter(
-            shown,
-            recipe -> ((MainActivity) requireActivity()).open(DetailFragment.create(recipe.id)));
+    GridView list = v.findViewById(R.id.list);
+    adapter = new RecipeAdapter(requireContext(), R.layout.item_recipe, shown);
     list.setAdapter(adapter);
+    list.setOnItemClickListener(
+        new AdapterView.OnItemClickListener() {
+          @Override
+          public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Recipe recipe = adapter.getItem(position);
+            ((MainActivity) requireActivity()).open(DetailFragment.create(recipe.id));
+          }
+        });
     v.findViewById(R.id.add)
         .setOnClickListener(
             x -> ((MainActivity) requireActivity()).open(EditorFragment.create(0, null, "", "")));

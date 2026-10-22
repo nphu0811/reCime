@@ -52,7 +52,7 @@ write('layout/fragment_recipes.xml','''<LinearLayout xmlns:android="http://schem
 <com.google.android.material.button.MaterialButton android:id="@+id/add" android:layout_width="wrap_content" android:layout_height="44dp" android:text="+ Món của tôi" style="@style/Widget.Material3.Button.TextButton" android:textSize="12sp"/>
 </LinearLayout>
 <TextView android:id="@+id/empty" android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingBottom="4dp" android:text="Đang mở thư viện…" android:textSize="11sp" android:textColor="#617067"/>
-<androidx.recyclerview.widget.RecyclerView android:id="@+id/list" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:clipToPadding="false" android:paddingBottom="12dp" tools:listitem="@layout/item_recipe"/>
+<GridView android:numColumns="2" android:horizontalSpacing="10dp" android:verticalSpacing="10dp" android:stretchMode="columnWidth" android:id="@+id/list" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:clipToPadding="false" android:paddingBottom="12dp" tools:listitem="@layout/item_recipe"/>
 </LinearLayout>''')
 
 write('layout/item_recipe.xml','''<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_margin="5dp" android:clickable="true" android:focusable="true" app:cardCornerRadius="16dp" app:cardElevation="2dp" app:strokeColor="#E7E4D9" app:strokeWidth="1dp" app:cardBackgroundColor="#FFFFFF">

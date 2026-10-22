@@ -6,7 +6,6 @@ import android.view.*;
 import android.widget.*;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.*;
 import com.example.recime.*;
 import com.example.recime.adapter.BoardAdapter;
 import com.example.recime.helper.GroceryAggregator;
@@ -97,33 +96,41 @@ public class BoardFragment extends Fragment {
                 render();
               } else share();
             });
-    RecyclerView list = v.findViewById(R.id.board_list);
-    list.setLayoutManager(new LinearLayoutManager(requireContext()));
+    ListView list = v.findViewById(R.id.board_list);
     adapter =
         new BoardAdapter(
+            requireContext(),
+            R.layout.item_board,
             rows,
             planner,
-            new BoardAdapter.Listener() {
+            new CompoundButton.OnCheckedChangeListener() {
               @Override
-              public void onClick(BoardRow row) {
-                if (planner) selectMeal(row);
-                else groceryEditor(row.grocery);
-              }
-
-              @Override
-              public void onLongClick(BoardRow row) {
-                onRowLongClick(row);
-              }
-
-              @Override
-              public void onChecked(BoardRow row, boolean checked) {
-                if (row.grocery != null) {
-                  row.grocery.checked = checked;
-                  vm.repository.run(() -> vm.repository.dao.updateGrocery(row.grocery));
+              public void onCheckedChanged(CompoundButton button, boolean checked) {
+                Grocery grocery = (Grocery) button.getTag();
+                if (grocery != null) {
+                  grocery.checked = checked;
+                  vm.repository.run(() -> vm.repository.dao.updateGrocery(grocery));
                 }
               }
             });
     list.setAdapter(adapter);
+    list.setOnItemClickListener(
+        new AdapterView.OnItemClickListener() {
+          @Override
+          public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            BoardRow row = adapter.getItem(position);
+            if (planner) selectMeal(row);
+            else groceryEditor(row.grocery);
+          }
+        });
+    list.setOnItemLongClickListener(
+        new AdapterView.OnItemLongClickListener() {
+          @Override
+          public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            onRowLongClick(adapter.getItem(position));
+            return true;
+          }
+        });
     vm.recipes.observe(
         getViewLifecycleOwner(),
         r -> {

@@ -1,49 +1,60 @@
 package com.example.recime.adapter;
 
-import android.view.*;
-import androidx.recyclerview.widget.RecyclerView;
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
 import com.example.recime.R;
-import com.example.recime.helper.Motion;
 import com.example.recime.helper.Ui;
 import com.example.recime.helper.Units;
 import com.example.recime.model.Recipe;
+import java.util.List;
 
-public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeHolder> {
-  private final java.util.List<Recipe> recipes;
-  private final java.util.function.Consumer<Recipe> onClick;
+/** GridView adapter, cùng cách viết với project GridViewAdvanced. */
+public class RecipeAdapter extends BaseAdapter {
+  private final Context context;
+  private final int layout;
+  private final List<Recipe> recipeList;
 
-  public RecipeAdapter(
-      java.util.List<Recipe> recipes, java.util.function.Consumer<Recipe> onClick) {
-    this.recipes = recipes;
-    this.onClick = onClick;
+  public RecipeAdapter(Context context, int layout, List<Recipe> recipeList) {
+    this.context = context;
+    this.layout = layout;
+    this.recipeList = recipeList;
   }
 
-  public RecipeHolder onCreateViewHolder(ViewGroup p, int t) {
-    return new RecipeHolder(
-        LayoutInflater.from(p.getContext()).inflate(R.layout.item_recipe, p, false));
+  @Override
+  public int getCount() {
+    return recipeList.size();
   }
 
-  public int getItemCount() {
-    return recipes.size();
+  @Override
+  public Recipe getItem(int position) {
+    return recipeList.get(position);
   }
 
-  public void onBindViewHolder(RecipeHolder h, int pos) {
-    Recipe r = recipes.get(pos);
-    Ui.set(h.itemView, R.id.title, r.title);
-    Ui.set(
-        h.itemView,
-        R.id.meta,
-        (r.favorite ? "♥ · " : "")
-            + (r.catalogKey == null ? r.cookbook : "Wikibooks · CC BY-SA 4.0")
-            + (r.servingsKnown ? " · " + Units.format(r.servings) + " phần" : ""));
-    Ui.image(h.itemView.findViewById(R.id.photo), r.image);
-    Motion.card(h.itemView);
-    h.itemView.setOnClickListener(v -> onClick.accept(r));
+  @Override
+  public long getItemId(int position) {
+    return getItem(position).id;
   }
 
-  static class RecipeHolder extends RecyclerView.ViewHolder {
-    RecipeHolder(View v) {
-      super(v);
+  @Override
+  public View getView(int position, View convertView, ViewGroup parent) {
+    if (convertView == null) {
+      convertView = LayoutInflater.from(context).inflate(layout, parent, false);
     }
+    ImageView image = convertView.findViewById(R.id.photo);
+    TextView title = convertView.findViewById(R.id.title);
+    TextView meta = convertView.findViewById(R.id.meta);
+    Recipe recipe = getItem(position);
+    title.setText(recipe.title);
+    meta.setText(
+        (recipe.favorite ? "♥ · " : "")
+            + (recipe.catalogKey == null ? recipe.cookbook : "Wikibooks · CC BY-SA 4.0")
+            + (recipe.servingsKnown ? " · " + Units.format(recipe.servings) + " phần" : ""));
+    Ui.image(image, recipe.image);
+    return convertView;
   }
 }

@@ -10,7 +10,7 @@
         <item name="colorSurfaceContainer">#F2F0E7</item>
         <item name="colorOutline">#D7DCCF</item>
         <item name="android:colorBackground">#F8F5EC</item>
-        <item name="android:fontFamily">sans</item>
+        <item name="android:fontFamily">sans-serif</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:navigationBarColor">#F8F5EC</item>
         <item name="android:colorAccent">#123B2D</item>

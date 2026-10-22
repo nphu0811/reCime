@@ -70,11 +70,13 @@
         android:layout_height="wrap_content"
         tools:text="Danh sách trống" />
 
-    <androidx.recyclerview.widget.RecyclerView
+    <ListView
         android:id="@+id/board_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="10dp"
         tools:listitem="@layout/item_board"
         tools:itemCount="4" />
 

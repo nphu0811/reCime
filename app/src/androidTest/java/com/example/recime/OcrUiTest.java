@@ -26,7 +26,7 @@ import org.junit.runner.RunWith;
 @RunWith(AndroidJUnit4.class)
 public class OcrUiTest {
   @Test
-  public void sharedSelfCreatedImageGoesThroughOcrReviewAndRoom() throws Exception {
+  public void sharedSelfCreatedImageGoesThroughOcrReviewAndSqlite() throws Exception {
     Context c = ApplicationProvider.getApplicationContext();
     RecipeRepository repo = RecipeRepository.get(c);
     File dir = new File(c.getCacheDir(), "camera");

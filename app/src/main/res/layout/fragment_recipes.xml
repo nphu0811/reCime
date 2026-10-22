@@ -237,11 +237,15 @@
         android:textSize="11sp"
         android:textColor="#617067" />
 
-    <androidx.recyclerview.widget.RecyclerView
+    <GridView
         android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:numColumns="2"
+        android:horizontalSpacing="10dp"
+        android:verticalSpacing="10dp"
+        android:stretchMode="columnWidth"
         android:clipToPadding="false"
         android:paddingBottom="12dp"
         tools:listitem="@layout/item_recipe"

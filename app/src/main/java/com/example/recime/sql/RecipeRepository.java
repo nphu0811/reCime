@@ -2,7 +2,6 @@ package com.example.recime.sql;
 
 import android.content.Context;
 import androidx.lifecycle.*;
-import androidx.room.Room;
 import com.example.recime.helper.CatalogImporter;
 import com.example.recime.helper.GroceryAggregator;
 import com.example.recime.helper.Units;
@@ -30,10 +29,7 @@ public class RecipeRepository {
   }
 
   private RecipeRepository(Context c) {
-    db =
-        Room.databaseBuilder(c, LabDatabase.class, "myrecipelab.db")
-            .addMigrations(LabDatabase.MIGRATION_1_2, LabDatabase.MIGRATION_2_3)
-            .build();
+    db = new LabDatabase(c);
     dao = db.dao();
     run(
         () -> {
@@ -86,6 +82,7 @@ public class RecipeRepository {
                 .apply();
             message.postValue("Đã cập nhật thư viện offline · " + count + " công thức mới.");
           }
+          dao.refresh();
           ready.postValue(true);
         });
   }

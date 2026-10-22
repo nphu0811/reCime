@@ -3,7 +3,6 @@ package com.example.recime;
 import static org.junit.Assert.*;
 
 import android.content.Context;
-import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import com.example.recime.helper.CatalogImporter;
@@ -17,7 +16,7 @@ public class CatalogDatabaseTest {
   @Test
   public void offlineCatalogInstallsIdempotentlyAndPreservesUserEdits() throws Exception {
     Context context = ApplicationProvider.getApplicationContext();
-    LabDatabase database = Room.inMemoryDatabaseBuilder(context, LabDatabase.class).build();
+    LabDatabase database = new LabDatabase(context, null);
     try {
       int inserted = CatalogImporter.install(context, database);
       assertEquals(547, inserted);
@@ -73,10 +72,7 @@ public class CatalogDatabaseTest {
     } finally {
       old.close();
     }
-    LabDatabase upgraded =
-        Room.databaseBuilder(context, LabDatabase.class, name)
-            .addMigrations(LabDatabase.MIGRATION_1_2, LabDatabase.MIGRATION_2_3)
-            .build();
+    LabDatabase upgraded = new LabDatabase(context, name);
     try {
       Recipe r = upgraded.dao().find(1);
       assertEquals("Món riêng", r.title);

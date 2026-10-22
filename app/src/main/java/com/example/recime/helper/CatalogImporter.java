@@ -7,7 +7,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import org.json.*;
 
-/** Bundled, versioned open recipes: real Room rows, no network required at launch. */
+/** Bundled, versioned open recipes: real SQLite rows, no network required at launch. */
 public final class CatalogImporter {
   public static int install(Context context, LabDatabase database) throws Exception {
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();

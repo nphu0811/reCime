@@ -22,26 +22,7 @@ public class PlannerUiTest {
     repo.io.submit(() -> {}).get(20, TimeUnit.SECONDS);
     try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
       onView(withId(R.id.nav_plan)).perform(click());
-      onView(withId(R.id.board_list))
-          .perform(
-              new androidx.test.espresso.ViewAction() {
-                public org.hamcrest.Matcher<android.view.View> getConstraints() {
-                  return isAssignableFrom(androidx.recyclerview.widget.RecyclerView.class);
-                }
-
-                public String getDescription() {
-                  return "Chọn ô sáng đầu tuần";
-                }
-
-                public void perform(
-                    androidx.test.espresso.UiController controller, android.view.View view) {
-                  ((androidx.recyclerview.widget.RecyclerView) view)
-                      .findViewHolderForAdapterPosition(0)
-                      .itemView
-                      .performClick();
-                  controller.loopMainThreadUntilIdle();
-                }
-              });
+      onData(anything()).inAdapterView(withId(R.id.board_list)).atPosition(0).perform(click());
       onView(withId(R.id.meal_search))
           .inRoot(androidx.test.espresso.matcher.RootMatchers.isDialog())
           .perform(

@@ -3,7 +3,6 @@ package com.example.recime.helper;
 import android.content.*;
 import android.view.*;
 import android.widget.*;
-import com.example.recime.R;
 
 public final class Ui {
   public static String text(View v, int id) {
@@ -31,16 +30,7 @@ public final class Ui {
   }
 
   public static void image(ImageView view, String path) {
-    Object model =
-        path == null || path.isEmpty()
-            ? null
-            : path.startsWith("file://") ? path : new java.io.File(path);
-    com.bumptech.glide.Glide.with(view)
-        .load(model)
-        .placeholder(R.drawable.food_art)
-        .error(R.drawable.food_art)
-        .centerCrop()
-        .into(view);
+    ImageHelper.load(view, path);
   }
 
   public static EditText field(Context c, LinearLayout parent, String hint, String text) {
