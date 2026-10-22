@@ -1,5 +1,7 @@
 package com.example.recime.fragment;
 
+import com.example.recime.helper.Motion;
+
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -16,6 +18,7 @@ public final class AiSettingsFragment extends Fragment {
 
   @Override
   public void onViewCreated(View view, Bundle state) {
+    Motion.enter(view);
     EditText endpoint = view.findViewById(R.id.ai_endpoint);
     endpoint.setText(
         requireContext()
