@@ -13,6 +13,7 @@ public class LabViewModel extends AndroidViewModel {
   public final LiveData<List<Recipe>> recipes;
   public final LiveData<List<Meal>> meals;
   public final LiveData<List<Grocery>> groceries;
+  public final LiveData<List<String>> cookbooks;
 
   public LabViewModel(Application app) {
     super(app);
@@ -20,5 +21,6 @@ public class LabViewModel extends AndroidViewModel {
     recipes = repository.dao.recipes();
     meals = repository.dao.meals();
     groceries = repository.dao.groceries();
+    cookbooks = repository.dao.cookbooks();
   }
 }
