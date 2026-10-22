@@ -25,7 +25,7 @@ samples={
  'fragment_editor.xml':{'edit_title':'Gỏi cuốn tôm thịt','edit_book':'Món nhà','edit_tags':'gỏi, cuốn, món Việt','edit_servings':'4','edit_ingredients':'4 cái bánh tráng\n50 g bún đã nấu chín\nTôm và thịt đã chín theo nguồn','edit_steps':'Chuẩn bị nguyên liệu.\nCuốn bánh tráng và dùng cùng nước chấm.','edit_source':'Wikibooks / công thức gia đình'},
  'item_recipe.xml':{'title':'Bún bò Huế','meta':'Wikibooks · CC BY-SA 4.0'},
 }
-contexts={'fragment_board.xml':'.ui.BoardFragment','fragment_detail.xml':'.ui.DetailFragment','fragment_editor.xml':'.ui.EditorFragment','fragment_import.xml':'.ui.ImportFragment','fragment_recipes.xml':'.ui.RecipesFragment','fragment_ai_settings.xml':'.ui.AiSettingsFragment','activity_main.xml':'.MainActivity'}
+contexts={'fragment_board.xml':'.fragment.BoardFragment','fragment_detail.xml':'.fragment.DetailFragment','fragment_editor.xml':'.fragment.EditorFragment','fragment_import.xml':'.fragment.ImportFragment','fragment_recipes.xml':'.fragment.RecipesFragment','fragment_ai_settings.xml':'.fragment.AiSettingsFragment','activity_main.xml':'.activity.MainActivity'}
 
 def main():
     for path in LAYOUT.glob('*.xml'):

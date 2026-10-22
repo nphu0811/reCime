@@ -51,3 +51,8 @@ V1 docs được lưu tại archive/. Nghiên cứu REA cũ là bằng chứng l
 ## Ảnh chụp runtime cuối
 
 Đã cài lại APK sau test, mở và chụp thật bằng ADB; đã xem trực tiếp ảnh home/import/AI settings. File tại evidence/screenshots-v2/: home.png, import.png, ai-settings.png, planner.png, detail.png. Đây không phải ảnh Android Studio Preview.
+
+
+## Chia package Java theo yêu cầu
+
+Đã tách activity/fragment/sql/model/adapter/helper/AIservice/viewmodel, adapter UI thành class riêng, dữ liệu parser/board vào model. Chi tiết tại JAVA_STRUCTURE.md. Manifest/Preview/tests cập nhật; Room schema3 và identity hash giữ nguyên. Build +10unit +12Android tests PASS, lint0errors: evidence/package-refactor-final.log và package-refactor-tests/.

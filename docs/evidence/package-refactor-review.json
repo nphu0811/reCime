@@ -1,0 +1,51 @@
+{
+  "packages": {
+    "activity": [
+      "MainActivity.java"
+    ],
+    "adapter": [
+      "BoardAdapter.java",
+      "RecipeAdapter.java"
+    ],
+    "AIservice": [
+      "LocalAiClient.java"
+    ],
+    "fragment": [
+      "AiSettingsFragment.java",
+      "BoardFragment.java",
+      "DetailFragment.java",
+      "EditorFragment.java",
+      "ImportFragment.java",
+      "RecipesFragment.java"
+    ],
+    "helper": [
+      "CatalogImporter.java",
+      "ExtractionAdapter.java",
+      "GroceryAggregator.java",
+      "Motion.java",
+      "PublicWebExtractor.java",
+      "RecipeParser.java",
+      "Ui.java",
+      "Units.java"
+    ],
+    "model": [
+      "BoardRow.java",
+      "CatalogTombstone.java",
+      "Grocery.java",
+      "Ingredient.java",
+      "Meal.java",
+      "ParsedRecipe.java",
+      "Recipe.java"
+    ],
+    "sql": [
+      "LabDao.java",
+      "LabDatabase.java",
+      "RecipeRepository.java"
+    ],
+    "viewmodel": [
+      "LabViewModel.java"
+    ]
+  },
+  "customAdaptersHaveNoDatabaseOrNavigation": true,
+  "allMainPackagesMatchFolders": true
+}

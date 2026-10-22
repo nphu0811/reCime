@@ -58,8 +58,13 @@ Native Material Components, ripple/elevation, chuyển màn hình fade và chuy�
 .\backend\.venv\Scripts\python.exe -m unittest backend.test_backend -v
 ```
 
-- `app/src/main/java/.../data`: Room, migration, repository/catalog importer.
-- `domain`: parser, scaling, conversion, aggregation; `ui`: Java Fragment; `res/layout`: XML.
+- `app/src/main/java/com/example/recime/activity`: Activity; `fragment`: các màn hình Fragment.
+- `sql`: Room database, DAO và repository CRUD; `model`: đối tượng dữ liệu/Room entity.
+- `adapter`: RecipeAdapter (lưới món), BoardAdapter (lịch/giỏ); nhận callback, không tự gọi database hoặc điều hướng.
+- `helper`: parser, quy đổi đơn vị, gom nguyên liệu, import catalog/web, UI/motion helpers.
+- `AIservice`: client gọi AI laptop; model/inference Python vẫn ở `backend/`.
+- `viewmodel`: LabViewModel cung cấp LiveData cho màn hình qua vòng đời; không phải entity/DAO. [Giải thích cấu trúc](docs/JAVA_STRUCTURE.md).
+- `res/layout`: XML của các màn hình.
 - `app/src/main/assets/catalog`: dataset, ảnh, credits; `datasets/recipe_catalog.sqlite3`: SQLite độc lập để kiểm tra/học.
 - `backend`: FastAPI/ONNX/retrieval/scripts train; `tools`: thu thập và chuẩn bị dữ liệu có nguồn.
 - [Trạng thái và bằng chứng](docs/IMPLEMENTATION_STATUS.md), [dataset và AI](docs/DATASET_AND_AI.md), [nghiên cứu REA](docs/REA_ANALYSIS.md), [đối chiếu10 ảnh](docs/FEATURE_MATRIX.md), [review](docs/REVIEW_V2.md).

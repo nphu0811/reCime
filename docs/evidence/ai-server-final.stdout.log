@@ -6,3 +6,9 @@ INFO:     127.0.0.1:60541 - "GET /health HTTP/1.1" 200 OK
 INFO:     127.0.0.1:60541 - "POST /analyze/text HTTP/1.1" 200 OK
 INFO:     127.0.0.1:60548 - "POST /analyze/image HTTP/1.1" 200 OK
 INFO:     127.0.0.1:60555 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64155 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64155 - "POST /analyze/text HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64224 - "POST /analyze/image HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64375 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64375 - "POST /analyze/text HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64378 - "POST /analyze/image HTTP/1.1" 200 OK

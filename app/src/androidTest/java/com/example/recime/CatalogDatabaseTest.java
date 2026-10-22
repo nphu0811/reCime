@@ -6,7 +6,9 @@ import android.content.Context;
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import com.example.recime.data.*;
+import com.example.recime.helper.CatalogImporter;
+import com.example.recime.model.Recipe;
+import com.example.recime.sql.LabDatabase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 

@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<testsuites tests="12" failures="0" errors="0" skipped="0" time="47.377" timestamp="2026-10-22T13:52:05" hostname="localhost">
+  <testsuite name="com.example.recime.AiLaptopIntegrationTest" tests="2" failures="0" errors="0" skipped="0" time="7.026" timestamp="2026-10-22T13:52:05" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="androidCanCallRealRecipeModelOnLaptop" classname="com.example.recime.AiLaptopIntegrationTest" time="0.359" />
+    <testcase name="sharedFoodPhotoUsesRealVisionServerThenOpensSourcedRecipe" classname="com.example.recime.AiLaptopIntegrationTest" time="6.667" />
+  </testsuite>
+  <testsuite name="com.example.recime.CatalogDatabaseTest" tests="2" failures="0" errors="0" skipped="0" time="4.56" timestamp="2026-10-22T13:52:05" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="offlineCatalogInstallsIdempotentlyAndPreservesUserEdits" classname="com.example.recime.CatalogDatabaseTest" time="4.426" />
+    <testcase name="migrationOneToThreeKeepsRecipesAndMealForeignKeys" classname="com.example.recime.CatalogDatabaseTest" time="0.134" />
+  </testsuite>
+  <testsuite name="com.example.recime.ImportIntegrationTest" tests="2" failures="0" errors="0" skipped="0" time="0.448" timestamp="2026-10-22T13:52:05" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="webAdapterRefusesPrivateAndSocialInputs" classname="com.example.recime.ImportIntegrationTest" time="0.01" />
+    <testcase name="bundledOcrReadsSelfCreatedRecipeImageThenParserReviews" classname="com.example.recime.ImportIntegrationTest" time="0.438" />
+  </testsuite>
+  <testsuite name="com.example.recime.LabDatabaseTest" tests="1" failures="0" errors="0" skipped="0" time="0.076" timestamp="2026-10-22T13:52:05" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="persistsRecipeMealAndChecklistAndCascadesDelete" classname="com.example.recime.LabDatabaseTest" time="0.076" />
+  </testsuite>
+  <testsuite name="com.example.recime.LabUiTest" tests="2" failures="0" errors="0" skipped="0" time="19.696" timestamp="2026-10-22T13:52:05" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="tabsHaveRealContentAndInvalidUrlHasRecoverableError" classname="com.example.recime.LabUiTest" time="7.033" />
+    <testcase name="manualImportSaveSearchDetailScaleAndGroceryPersist" classname="com.example.recime.LabUiTest" time="12.663" />
+  </testsuite>
+  <testsuite name="com.example.recime.OcrUiTest" tests="1" failures="0" errors="0" skipped="0" time="8.136" timestamp="2026-10-22T13:52:05" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="sharedSelfCreatedImageGoesThroughOcrReviewAndRoom" classname="com.example.recime.OcrUiTest" time="8.136" />
+  </testsuite>
+  <testsuite name="com.example.recime.PlannerUiTest" tests="1" failures="0" errors="0" skipped="0" time="5.634" timestamp="2026-10-22T13:52:05" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="selectMealRecreateAndBuildChecklist" classname="com.example.recime.PlannerUiTest" time="5.634" />
+  </testsuite>
+  <testsuite name="com.example.recime.helper.WebRecipeTest" tests="1" failures="0" errors="0" skipped="0" time="0.35" timestamp="2026-10-22T13:52:05" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="selfCreatedJsonLdGraphAndHowToSectionsParseToReview" classname="com.example.recime.helper.WebRecipeTest" time="0.35" />
+  </testsuite>
+</testsuites>

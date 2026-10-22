@@ -18,7 +18,7 @@ def write(name,source):
     # Values resources contain text nodes and should retain their hand-written formatting.
     path.write_text('<?xml version="1.0" encoding="utf-8"?>\n'+'\n'.join(render(doc.documentElement))+'\n',encoding='utf-8')
 
-write('layout/fragment_recipes.xml','''<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:paddingHorizontal="20dp" android:paddingTop="16dp" tools:context=".ui.RecipesFragment">
+write('layout/fragment_recipes.xml','''<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:paddingHorizontal="20dp" android:paddingTop="16dp" tools:context=".fragment.RecipesFragment">
 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical">
 <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
 <TextView android:id="@+id/eyebrow" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="MY RECIPE LAB • ẨM THỰC MỞ" android:textSize="10sp" android:letterSpacing="0.12" android:textColor="#A35431" android:textStyle="bold"/>
@@ -64,7 +64,7 @@ write('layout/item_recipe.xml','''<com.google.android.material.card.MaterialCard
 
 write('drawable/hero_scrim.xml','''<shape xmlns:android="http://schemas.android.com/apk/res/android"><gradient android:angle="90" android:startColor="#E8123B2D" android:endColor="#00123B2D"/></shape>''')
 
-write('layout/fragment_import.xml','''<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true" tools:context=".ui.ImportFragment">
+write('layout/fragment_import.xml','''<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true" tools:context=".fragment.ImportFragment">
 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="24dp">
 <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="TỪ CẢM HỨNG ĐẾN CĂN BẾP" android:textSize="10sp" android:letterSpacing="0.12" android:textStyle="bold" android:textColor="#A35431"/>
 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical">
@@ -93,7 +93,7 @@ write('layout/fragment_import.xml','''<ScrollView xmlns:android="http://schemas.
 <com.google.android.material.button.MaterialButton android:id="@+id/manual" android:layout_width="match_parent" android:layout_height="48dp" android:text="Hoặc viết công thức của bạn" style="@style/Widget.Material3.Button.TextButton"/>
 </LinearLayout></ScrollView>''')
 
-write('layout/fragment_ai_settings.xml','''<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent" tools:context=".ui.AiSettingsFragment">
+write('layout/fragment_ai_settings.xml','''<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent" tools:context=".fragment.AiSettingsFragment">
 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="24dp">
 <Button android:id="@+id/back" android:layout_width="wrap_content" android:layout_height="48dp" android:text="‹ Quay lại" style="@style/Widget.Material3.Button.TextButton"/>
 <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Căn bếp có AI" android:fontFamily="serif" android:textSize="32sp" android:textColor="#123B2D"/>

@@ -4,8 +4,9 @@ import static org.junit.Assert.*;
 
 import android.graphics.*;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import com.example.recime.domain.RecipeParser;
-import com.example.recime.importing.PublicWebExtractor;
+import com.example.recime.helper.PublicWebExtractor;
+import com.example.recime.helper.RecipeParser;
+import com.example.recime.model.ParsedRecipe;
 import com.google.android.gms.tasks.Tasks;
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.text.*;
@@ -38,7 +39,7 @@ public class ImportIntegrationTest {
       Text result =
           Tasks.await(reader.process(InputImage.fromBitmap(bitmap, 0)), 45, TimeUnit.SECONDS);
       assertTrue(result.getText(), result.getText().contains("tofu"));
-      RecipeParser.Parsed parsed = RecipeParser.parse(result.getText());
+      ParsedRecipe parsed = RecipeParser.parse(result.getText());
       assertTrue(parsed.ingredients, parsed.ingredients.contains("200"));
       assertFalse(parsed.steps.isEmpty());
     } finally {

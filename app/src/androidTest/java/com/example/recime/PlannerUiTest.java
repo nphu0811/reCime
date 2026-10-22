@@ -8,7 +8,8 @@ import static org.hamcrest.Matchers.*;
 
 import androidx.test.core.app.*;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import com.example.recime.data.*;
+import com.example.recime.activity.MainActivity;
+import com.example.recime.sql.RecipeRepository;
 import java.util.concurrent.TimeUnit;
 import org.junit.Test;
 import org.junit.runner.RunWith;

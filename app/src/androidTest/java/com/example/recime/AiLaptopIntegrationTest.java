@@ -13,7 +13,8 @@ import android.widget.TextView;
 import androidx.core.content.FileProvider;
 import androidx.test.core.app.*;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import com.example.recime.importing.LocalAiClient;
+import com.example.recime.AIservice.LocalAiClient;
+import com.example.recime.activity.MainActivity;
 import java.io.*;
 import java.util.concurrent.atomic.AtomicReference;
 import org.json.*;
@@ -83,7 +84,7 @@ public class AiLaptopIntegrationTest {
       assertTrue(status.get(), status.get().contains("Ảnh không thể xác minh"));
       onView(withText("Món nào giống ảnh/caption của bạn?")).check(matches(isDisplayed()));
       onView(withText("Bún bò Huế")).perform(click());
-      com.example.recime.data.RecipeRepository.get(context)
+      com.example.recime.sql.RecipeRepository.get(context)
           .io
           .submit(() -> {})
           .get(20, java.util.concurrent.TimeUnit.SECONDS);

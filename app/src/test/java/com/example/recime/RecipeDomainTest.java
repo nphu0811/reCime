@@ -2,7 +2,11 @@ package com.example.recime;
 
 import static org.junit.Assert.*;
 
-import com.example.recime.domain.*;
+import com.example.recime.helper.GroceryAggregator;
+import com.example.recime.helper.RecipeParser;
+import com.example.recime.helper.Units;
+import com.example.recime.model.Ingredient;
+import com.example.recime.model.ParsedRecipe;
 import java.util.*;
 import org.junit.Test;
 
@@ -79,7 +83,7 @@ public class RecipeDomainTest {
 
   @Test
   public void parserPreservesUnknownQuantitiesAndSeparatesSteps() {
-    RecipeParser.Parsed p =
+    ParsedRecipe p =
         RecipeParser.parse(
             "Đậu sốt\n"
                 + "Nguyên liệu:\n"
@@ -94,7 +98,7 @@ public class RecipeDomainTest {
     assertEquals("Cắt đậu.\nNấu chín.", p.steps);
     assertNull(RecipeParser.ingredient("muối vừa đủ").amount);
     assertNull(RecipeParser.ingredient("1/0 g lỗi").amount);
-    RecipeParser.Parsed english =
+    ParsedRecipe english =
         RecipeParser.parse("Bread\nIngredients\n1 cup flour\nDirections\nMix.\nBake.");
     assertEquals("Mix.\nBake.", english.steps);
   }
