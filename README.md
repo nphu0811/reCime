@@ -1,12 +1,12 @@
 # MyRecipeLab — Java/XML, dữ liệu thật và AI local
 
-Ứng dụng Android độc lập, lưu offline bằng **Room trên SQLite**, không cần trả tiền database hoặc API. Dataset đi kèm có **547 công thức** (cộng4 món mẫu tự soạn khi cài mới), **211 công thức có ảnh thật (178 ảnh riêng biệt)** cùng nguồn, lịch sử tác giả và giấy phép. Phần lớn là công thức tiếng Việt từ Wikibooks, có cả món quốc tế; đây **không phải toàn bộ món Việt Nam**. 336 công thức còn thiếu ảnh thật. Không sử dụng mã nguồn/nhận diện/API riêng của ReciMe.
+Ứng dụng Android độc lập, lưu offline bằng **SQLiteOpenHelper (SQLite)**, không cần trả tiền database hoặc API. Dataset đi kèm có **547 công thức** (cộng4 món mẫu tự soạn khi cài mới), **211 công thức có ảnh thật (178 ảnh riêng biệt)** cùng nguồn, lịch sử tác giả và giấy phép. Phần lớn là công thức tiếng Việt từ Wikibooks, có cả món quốc tế; đây **không phải toàn bộ món Việt Nam**. 336 công thức còn thiếu ảnh thật. Không sử dụng mã nguồn/nhận diện/API riêng của ReciMe.
 
 ## Chạy Android Studio
 
 1. Open thư mục `reCIme`, chọn Gradle JDK **21**, SDK **37**, Sync. Wrapper Gradle9.5.0 và AGP9.3.3 đã cấu hình; minSDK24.
 2. Mở emulator hoặc kết nối điện thoại USB debugging → Run module `app`.
-3. Lần mở đầu nạp dataset vào Room. Công thức, sửa đổi, yêu thích, lịch tuần và checklist còn sau khi khởi động lại. Database version3 có migration giữ dữ liệu; công thức catalog đã xóa được lưu tombstone để cập nhật catalog không phục hồi chúng.
+3. Lần mở đầu nạp dataset vào SQLite. Công thức, sửa đổi, yêu thích, lịch tuần và checklist còn sau khi khởi động lại. Database version 3 có migration giữ dữ liệu; công thức catalog đã xóa được lưu tombstone để cập nhật catalog không phục hồi chúng.
 4. Thư viện, CRUD, OCR và planner không cần AI server. Lần Sync đầu cần Internet tải dependencies. APK: `app/build/outputs/apk/debug/app-debug.apk`.
 
 ```powershell
@@ -38,7 +38,7 @@ Trong **Nhập → Cài đặt AI**, endpoint `http://127.0.0.1:8765`, Kiểm tr
 3. **OCR:** chọn ảnh/chụp chữ, chỉnh kết quả trước khi phân tích và lưu; nhận ảnh/text qua Sharesheet.
 4. **Ảnh món:** chọn ảnh món hoặc chế độ camera ảnh món → laptop AI → xác nhận ứng viên.
 5. **URL/caption:** đọc Recipe JSON-LD công khai hoặc tìm từ caption; TikTok hiện giới hạn như trên.
-6. **Lịch tuần:** chọn ô sáng/trưa/tối, tìm món trong hộp chọn, đổi/bỏ món, chuyển tuần; lưu Room.
+6. **Lịch tuần:** chọn ô sáng/trưa/tối, tìm món trong hộp chọn, đổi/bỏ món, chuyển tuần; lưu SQLite.
 7. **Đi chợ:** thêm từ món/lịch; gom nguyên liệu cùng đơn vị tương thích, thêm/sửa/xóa/checkbox/chia sẻ. Mỗi lần thêm là cộng, không tự đồng bộ hoặc đặt hàng online.
 8. **Khẩu phần:** tính từ lượng gốc; chưa biết số phần thì hiện mẻ công thức, khoảng định lượng giữ nguyên để review.
 9. **Đơn vị:** g/kg/lạng(100g),ml/l; tsp/tbsp/cup cấu hình mặc định5/15/240ml. Không đổi g↔ml thiếu mật độ.
@@ -59,7 +59,7 @@ Native Material Components, ripple/elevation, chuyển màn hình fade và chuy�
 ```
 
 - `app/src/main/java/com/example/recime/activity`: Activity; `fragment`: các màn hình Fragment.
-- `sql`: Room database, DAO và repository CRUD; `model`: đối tượng dữ liệu/Room entity.
+- `sql`: SQLiteOpenHelper, DAO và repository CRUD; `model`: đối tượng dữ liệu Java (không phụ thuộc Room).
 - `adapter`: RecipeAdapter (lưới món), BoardAdapter (lịch/giỏ); nhận callback, không tự gọi database hoặc điều hướng.
 - `helper`: parser, quy đổi đơn vị, gom nguyên liệu, import catalog/web, UI/motion helpers.
 - `AIservice`: client gọi AI laptop; model/inference Python vẫn ở `backend/`.
