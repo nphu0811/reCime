@@ -184,3 +184,7 @@ Tên file bên dưới tương đối với thư mục evidence nêu đầu báo
 | `onboard-init.json` | `com.recime.screens.onboarding.RMOnboardingViewModel.initialize` | `ev_80142e670df6e288759bb9d7ee1d1d39463312801e6b27e5d0c15b55ed39698c` |
 | `agent-source-drag-refs.json` | `com.recime.screens.meal_plan.RMMealPlanViewModel.startDrag` | `ev_531324986dabc7b0bcfe4c3b7bbf0fb501f7f42a59e24dec4fa7a0914b2c2b27` |
 | `agent-source-drag-handler.json` | `defpackage.n0.invoke` | `ev_177b27c7f8e77a5e24dd1a411a13b6ed64d56d5a26fda41ae3ede5f4e2effeaa` |
+
+## Runtime bổ sung sau PR #5
+
+Xem [UI map](REAL_RECIME_UI_UX_MAP.md): reuse screenshots/XML đã thu thập cho Home, cookbook create/empty/menu, Editor form, Meal Plan empty, Grocery empty và Discover. Lần tiếp tục23/10/2026 xác nhận official đang ở error Something went wrong/Try again/Cancel (`editor-current.png/xml`). Không có evidence mới về server hoặc save/detail success; không chạy lại APK inventory. Source/test nhóm Editor độc lập ghi tại [test results](TEST_RESULTS.md).

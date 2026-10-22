@@ -14,10 +14,10 @@ import com.example.recime.helper.Units;
 import com.example.recime.model.ParsedRecipe;
 import com.example.recime.model.Recipe;
 import com.example.recime.viewmodel.LabViewModel;
+import com.example.recime.viewmodel.EditorSaveState;
 
 public class EditorFragment extends Fragment {
   private Recipe recipe = new Recipe();
-  private boolean saving;
 
   public EditorFragment() {
     super(R.layout.fragment_editor);
@@ -38,6 +38,8 @@ public class EditorFragment extends Fragment {
   public void onViewCreated(View v, Bundle state) {
     Motion.enter(v);
     LabViewModel vm = new ViewModelProvider(requireActivity()).get(LabViewModel.class);
+    EditorSaveState saveState = new ViewModelProvider(this).get(EditorSaveState.class);
+    boolean[] loaded = {false};
     v.findViewById(R.id.back).setOnClickListener(x -> getParentFragmentManager().popBackStack());
     Bundle args = requireArguments();
     long id = args.getLong("id");
@@ -45,13 +47,15 @@ public class EditorFragment extends Fragment {
       vm.recipes.observe(
           getViewLifecycleOwner(),
           list -> {
-            if (!saving)
+            if (!loaded[0])
               for (Recipe r : list)
                 if (r.id == id) {
-                  recipe = r;
+                  recipe = new Recipe(r);
+                  loaded[0] = true;
                   if (state == null) fill(v);
                   break;
                 }
+            v.findViewById(R.id.save).setEnabled(!saveState.saving && loaded[0]);
           });
     else {
       recipe.image = args.getString("image", "");
@@ -65,6 +69,17 @@ public class EditorFragment extends Fragment {
       }
       if (state == null) fill(v);
     }
+    v.findViewById(R.id.save).setEnabled(!saveState.saving && (id == 0 || loaded[0]));
+    saveState.outcome.observe(getViewLifecycleOwner(), error -> {
+      if (error == null) return;
+      saveState.saving = false;
+      v.findViewById(R.id.save).setEnabled(true);
+      saveState.outcome.setValue(null);
+      if (error.isEmpty()) {
+        vm.repository.message.setValue("Đã lưu công thức");
+        getParentFragmentManager().popBackStack();
+      } else Ui.set(v, R.id.edit_error, "Không lưu được: " + error);
+    });
     v.findViewById(R.id.estimate_nutrition).setOnClickListener(x->{
       try{
         String ingredients=Ui.text(v,R.id.edit_ingredients);
@@ -132,8 +147,9 @@ public class EditorFragment extends Fragment {
     v.findViewById(R.id.save)
         .setOnClickListener(
             x -> {
-              if (saving) return;
+              if (saveState.saving || (id > 0 && !loaded[0])) return;
               try {
+                Recipe candidate = new Recipe(recipe);
                 String title = Ui.text(v, R.id.edit_title),
                     ing = Ui.text(v, R.id.edit_ingredients),
                     steps = Ui.text(v, R.id.edit_steps);
@@ -143,47 +159,37 @@ public class EditorFragment extends Fragment {
                     Double.parseDouble(Ui.text(v, R.id.edit_servings).replace(',', '.'));
                 if (!Double.isFinite(servings) || servings <= 0 || servings > 10000)
                   throw new IllegalArgumentException("Khẩu phần phải từ lớn hơn 0 đến 10000.");
-                recipe.title = title;
-                recipe.ingredients = ing;
-                recipe.steps = steps;
-                recipe.servings = servings;
-                recipe.cookbook = Ui.text(v, R.id.edit_book);
-                if (recipe.id == 0 && recipe.cookbook.isEmpty()) recipe.cookbook = "Món nhà";
-                recipe.tags = Ui.text(v, R.id.edit_tags);
-                recipe.source = Ui.text(v, R.id.edit_source);
-                recipe.calories = optional(v, R.id.edit_kcal);
-                recipe.protein = optional(v, R.id.edit_protein);
-                recipe.carbs = optional(v, R.id.edit_carbs);
-                recipe.fat = optional(v, R.id.edit_fat);
-                recipe.nutritionSource = Ui.text(v, R.id.edit_nutrition_source);
-                if ((recipe.calories != null
-                        || recipe.protein != null
-                        || recipe.carbs != null
-                        || recipe.fat != null)
-                    && recipe.nutritionSource.isEmpty())
+                candidate.title = title;
+                candidate.ingredients = ing;
+                candidate.steps = steps;
+                candidate.servings = servings;
+                candidate.cookbook = Ui.text(v, R.id.edit_book);
+                if (candidate.id == 0 && candidate.cookbook.isEmpty()) candidate.cookbook = "Món nhà";
+                candidate.tags = Ui.text(v, R.id.edit_tags);
+                candidate.source = Ui.text(v, R.id.edit_source);
+                candidate.calories = optional(v, R.id.edit_kcal);
+                candidate.protein = optional(v, R.id.edit_protein);
+                candidate.carbs = optional(v, R.id.edit_carbs);
+                candidate.fat = optional(v, R.id.edit_fat);
+                candidate.nutritionSource = Ui.text(v, R.id.edit_nutrition_source);
+                if ((candidate.calories != null
+                        || candidate.protein != null
+                        || candidate.carbs != null
+                        || candidate.fat != null)
+                    && candidate.nutritionSource.isEmpty())
                   throw new IllegalArgumentException(
                       "Hãy ghi nguồn dinh dưỡng hoặc để trống các giá trị.");
-                saving = true;
+                saveState.saving = true;
                 v.findViewById(R.id.save).setEnabled(false);
                 vm.repository.io.execute(
                     () -> {
                       try {
-                        if (recipe.id == 0) recipe.id = vm.repository.dao.insert(recipe);
-                        else vm.repository.dao.update(recipe);
-                        v.post(
-                            () -> {
-                              if (isAdded()) {
-                                vm.repository.message.setValue("Đã lưu công thức");
-                                getParentFragmentManager().popBackStack();
-                              }
-                            });
+                        if (candidate.id == 0) candidate.id = vm.repository.dao.insert(candidate);
+                        else vm.repository.dao.update(candidate);
+                        saveState.outcome.postValue("");
                       } catch (Exception e) {
-                        v.post(
-                            () -> {
-                              saving = false;
-                              v.findViewById(R.id.save).setEnabled(true);
-                              Ui.set(v, R.id.edit_error, "Không lưu được: " + e.getMessage());
-                            });
+                        saveState.outcome.postValue(e.getMessage() == null
+                            ? e.getClass().getSimpleName() : e.getMessage());
                       }
                     });
               } catch (Exception e) {

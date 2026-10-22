@@ -223,6 +223,9 @@ public class RecipesFragment extends Fragment {
     String q = Units.key(Ui.text(root, R.id.search));
     boolean favorite = ((CheckBox) root.findViewById(R.id.favorites)).isChecked();
     String ingredientQuery=Ui.text(root,R.id.ingredient_filter);
+    // Keep search results readable: the promotional hero otherwise clips the recipe cards.
+    root.findViewById(R.id.hero_card).setVisibility(
+        q.isEmpty() && ingredientQuery.trim().isEmpty() ? View.VISIBLE : View.GONE);
     shown.clear();
     java.util.Set<Long> members=book.equals("Tất cả")?java.util.Collections.emptySet()
         :vm.repository.dao.recipeIdsForCookbook(book);

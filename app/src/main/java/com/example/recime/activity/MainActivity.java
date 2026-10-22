@@ -23,7 +23,8 @@ public class MainActivity extends AppCompatActivity {
         (v, insets) -> {
           androidx.core.graphics.Insets b = insets.getInsets(WindowInsetsCompat.Type.systemBars());
           v.setPadding(b.left, b.top, b.right, b.bottom);
-          return insets;
+          // Root already applies the system bars; do not add them again inside the dock.
+          return WindowInsetsCompat.CONSUMED;
         });
     BottomNavigationView bottom = findViewById(R.id.bottom);
     bottom.setOnItemSelectedListener(

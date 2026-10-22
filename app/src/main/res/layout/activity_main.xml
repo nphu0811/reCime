@@ -13,12 +13,13 @@
         android:id="@+id/host"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="86dp" />
+        android:layout_marginBottom="102dp" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom"
         android:layout_width="match_parent"
-        android:layout_height="68dp"
+        android:layout_height="wrap_content"
+        android:minHeight="68dp"
         android:layout_gravity="bottom"
         android:layout_marginHorizontal="12dp"
         android:layout_marginBottom="10dp"
