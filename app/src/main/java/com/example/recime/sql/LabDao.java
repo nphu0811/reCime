@@ -232,7 +232,7 @@ public class LabDao {
     ContentValues values=new ContentValues();
     values.put("day",meal.day); values.put("type",meal.type);
     values.put("recipeId",meal.recipeId);
-    values.put("servings",meal.servings > 0 ? meal.servings : 1.0);
+    values.put("servings",meal.servings > 0 ? meal.servings : 0.0);
     long id=helper.getWritableDatabase().insertOrThrow("meal_extras",null,values);
     syncPlanGroceries();
     refresh();
