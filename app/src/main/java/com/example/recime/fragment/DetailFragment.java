@@ -1,5 +1,7 @@
 package com.example.recime.fragment;
 
+import com.example.recime.helper.Motion;
+
 import android.os.Bundle;
 import android.view.*;
 import android.widget.*;
@@ -35,6 +37,7 @@ public class DetailFragment extends Fragment {
 
   @Override
   public void onViewCreated(View v, Bundle state) {
+    Motion.enter(v);
     root = v;
     LabViewModel vm = new ViewModelProvider(requireActivity()).get(LabViewModel.class);
     if (state != null) portions = state.getDouble("portions", -1);
