@@ -26,7 +26,10 @@ public class LabV4FeaturesTest {
       r.id=db.dao().insert(r);
       db.dao().createCookbook("Thứ bảy");
       assertTrue(db.dao().bookNamesSnapshot().contains("Thứ bảy"));
+      db.dao().addRecipeToCookbook(r.id,"Thứ bảy");
+      assertTrue(db.dao().recipeIdsForCookbook("Thứ bảy").contains(r.id));
       db.dao().renameCookbook("Thứ bảy","Ăn cuối tuần");
+      assertTrue(db.dao().recipeIdsForCookbook("Ăn cuối tuần").contains(r.id));
       assertTrue(db.dao().bookNamesSnapshot().contains("Ăn cuối tuần"));
       db.dao().deleteCookbook("Ăn cuối tuần");
       assertNotNull(db.dao().find(r.id));
