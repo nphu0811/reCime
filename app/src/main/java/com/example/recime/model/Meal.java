@@ -4,4 +4,6 @@ public class Meal {
   public String slot = "";
   public String day = "", type = "";
   public long recipeId;
+  public long extraId;
+  public double servings = 1;
 }
