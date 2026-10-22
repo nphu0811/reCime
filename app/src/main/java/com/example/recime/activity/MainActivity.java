@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.*;
 import androidx.fragment.app.Fragment;
 import com.example.recime.R;
+import com.example.recime.helper.Motion;
 import com.example.recime.fragment.BoardFragment;
 import com.example.recime.fragment.ImportFragment;
 import com.example.recime.fragment.RecipesFragment;
@@ -35,7 +36,12 @@ public class MainActivity extends AppCompatActivity {
           else if (item.getItemId() == R.id.nav_plan) f = BoardFragment.create(true);
           else if (item.getItemId() == R.id.nav_grocery) f = BoardFragment.create(false);
           else f = RecipesFragment.create(item.getItemId() == R.id.nav_discover);
-          getSupportFragmentManager().beginTransaction().replace(R.id.host, f).commit();
+          getSupportFragmentManager()
+              .beginTransaction()
+              .setCustomAnimations(R.anim.recime_slide_down, R.anim.recime_fade_out)
+              .replace(R.id.host, f)
+              .commit();
+          if (Motion.enabled(bottom)) Motion.pop(bottom);
           return true;
         });
     if (state == null) {
@@ -85,10 +91,10 @@ public class MainActivity extends AppCompatActivity {
     getSupportFragmentManager()
         .beginTransaction()
         .setCustomAnimations(
-            android.R.anim.fade_in,
-            android.R.anim.fade_out,
-            android.R.anim.fade_in,
-            android.R.anim.fade_out)
+            R.anim.recime_slide_up,
+            R.anim.recime_fade_out,
+            R.anim.recime_slide_down,
+            R.anim.recime_fade_out)
         .replace(R.id.host, f)
         .addToBackStack(null)
         .commit();
