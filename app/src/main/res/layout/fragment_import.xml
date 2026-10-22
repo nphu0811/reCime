@@ -12,16 +12,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="24dp">
+        android:padding="20dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TỪ CẢM HỨNG ĐẾN CĂN BẾP"
+            android:text="reCime / THE AI KITCHEN ✦"
             android:textSize="10sp"
             android:letterSpacing="0.12"
             android:textStyle="bold"
-            android:textColor="#A35431" />
+            android:textColor="@color/acid_lime" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -32,16 +32,16 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Mang món ngon về"
-                android:fontFamily="serif"
-                android:textSize="30sp"
-                android:textColor="#123B2D" />
+                android:text="See it.\nCook it."
+                android:fontFamily="sans-serif-black"
+                android:textSize="36sp"
+                android:textColor="@color/night_ink" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/ai_settings"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
-                android:text="Kết nối AI"
+                android:text="⚙ AI SETUP"
                 android:textSize="11sp"
                 style="@style/Widget.Material3.Button.TextButton" />
 
@@ -50,9 +50,9 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:cardCornerRadius="20dp"
-            app:cardBackgroundColor="#E8EEE5"
+            android:layout_marginTop="20dp"
+            app:cardCornerRadius="28dp"
+            app:cardBackgroundColor="@color/acid_lime"
             app:strokeWidth="0dp">
 
             <LinearLayout
@@ -64,25 +64,27 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="✦ Nhìn món ăn, tìm công thức"
+                    android:text="✦ SNAP. MATCH. COOK."
                     android:textSize="20sp"
-                    android:fontFamily="serif"
-                    android:textColor="#123B2D" />
+                    android:fontFamily="sans-serif-black"
+                    android:textColor="@color/night_ink" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
-                    android:text="AI trên laptop gợi ý món tương tự. Bạn chọn món rồi xem công thức có nguồn trong thư viện."
+                    android:text="Biến ảnh món ăn thành cảm hứng nấu nướng. AI gợi ý, bạn chọn công thức phù hợp."
                     android:textSize="13sp"
-                    android:textColor="#526455" />
+                    android:textColor="@color/night_ink" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/ai_pick"
+                    android:textColor="@color/soft_white"
+                    app:backgroundTint="@color/night_ink"
                     android:layout_width="match_parent"
                     android:layout_height="52dp"
                     android:layout_marginTop="10dp"
-                    android:text="Chọn ảnh món ăn"
+                    android:text="✦ SCAN MÓN ĂN"
                     app:cornerRadius="14dp" />
 
             </LinearLayout>
@@ -99,7 +101,7 @@
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_weight="1"
-                android:text="Ảnh công thức"
+                android:text="📷 SCAN CHỮ"
                 android:textSize="12sp"
                 style="@style/Widget.Material3.Button.OutlinedButton"
                 app:cornerRadius="14dp" />
@@ -110,7 +112,7 @@
                 android:layout_height="48dp"
                 android:layout_weight="1"
                 android:layout_marginStart="8dp"
-                android:text="Chụp ảnh"
+                android:text="✦ CAMERA"
                 android:textSize="12sp"
                 style="@style/Widget.Material3.Button.OutlinedButton"
                 app:cornerRadius="14dp" />
@@ -121,7 +123,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            app:boxStrokeColor="@color/acid_lime"
+            app:boxBackgroundColor="@color/card_ink">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/url"
@@ -138,7 +142,7 @@
             android:id="@+id/fetch"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:text="Lấy nội dung từ link"
+            android:text="PASTE & IMPORT ↗"
             app:cornerRadius="14dp" />
 
         <ProgressBar
@@ -155,7 +159,7 @@
             android:layout_marginVertical="12dp"
             android:text="Ảnh có chữ dùng OCR trên điện thoại. TikTok đọc caption công khai khi nền tảng cho phép. Luôn kiểm tra kết quả trước khi lưu."
             android:textSize="12sp"
-            android:textColor="#647265" />
+            android:textColor="@color/muted_ink" />
 
         <EditText
             android:id="@+id/raw"
@@ -171,22 +175,24 @@
             android:id="@+id/ai_text"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:text="✦ Tìm món từ caption / nguyên liệu"
+            android:text="✦ AI MATCH TỪ CAPTION"
             style="@style/Widget.Material3.Button.OutlinedButton"
             app:cornerRadius="14dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/review"
+            android:textColor="@color/night_ink"
+            app:backgroundTint="@color/electric_coral"
             android:layout_width="match_parent"
             android:layout_height="52dp"
-            android:text="Tách công thức → kiểm tra &amp; lưu"
+            android:text="LET’S COOK → Review &amp; save"
             app:cornerRadius="14dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/manual"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:text="Hoặc viết công thức của bạn"
+            android:text="+ TỰ VIẾT CÔNG THỨC"
             style="@style/Widget.Material3.Button.TextButton" />
 
     </LinearLayout>

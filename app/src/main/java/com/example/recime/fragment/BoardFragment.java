@@ -1,5 +1,7 @@
 package com.example.recime.fragment;
 
+import com.example.recime.helper.Motion;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.*;
@@ -51,6 +53,7 @@ public class BoardFragment extends Fragment {
 
   @Override
   public void onViewCreated(View v, Bundle state) {
+    Motion.enter(v);
     root = v;
     planner = requireArguments().getBoolean("planner");
     vm = new ViewModelProvider(requireActivity()).get(LabViewModel.class);

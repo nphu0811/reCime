@@ -41,10 +41,14 @@ public class RecipesFragment extends Fragment {
   public void onViewCreated(View v, Bundle state) {
     root = v;
     Motion.enter(v);
+    Motion.pop(v.findViewById(R.id.hero_card));
+    Motion.card(v.findViewById(R.id.hero_card));
+    Motion.card(v.findViewById(R.id.ai_camera));
+    Motion.card(v.findViewById(R.id.add));
     vm = new ViewModelProvider(requireActivity()).get(LabViewModel.class);
     if (getArguments() != null && getArguments().getBoolean("discover")) {
-      Ui.set(v, R.id.heading, "Khám phá từ căn bếp");
-      Ui.set(v, R.id.eyebrow, "Ý TƯỞNG OFFLINE · NGUYÊN LIỆU CÓ SẴN");
+      Ui.set(v, R.id.heading, "Fresh ideas.\nFresh bites.");
+      Ui.set(v, R.id.eyebrow, "reCime / EXPLORE SOMETHING NEW ✦");
     }
     v.findViewById(R.id.ai_camera)
         .setOnClickListener(

@@ -1,5 +1,7 @@
 package com.example.recime.fragment;
 
+import com.example.recime.helper.Motion;
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.*;
@@ -49,6 +51,7 @@ public class ImportFragment extends Fragment {
 
   @Override
   public void onViewCreated(View v, Bundle state) {
+    Motion.enter(v);
     root = v;
     busy = false;
     if (state != null) {

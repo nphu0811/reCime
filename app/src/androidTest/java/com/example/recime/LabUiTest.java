@@ -79,7 +79,7 @@ public class LabUiTest {
       onView(withId(R.id.next_week)).perform(click());
       onView(withId(R.id.prev_week)).perform(click());
       onView(withId(R.id.nav_discover)).perform(click());
-      onView(withId(R.id.heading)).check(matches(withText("Khám phá từ căn bếp")));
+      onView(withId(R.id.heading)).check(matches(withText("Fresh ideas.\nFresh bites.")));
       onView(withId(R.id.nav_import)).perform(click());
       onView(withId(R.id.url)).perform(scrollTo(), replaceText("invalid-url"), closeSoftKeyboard());
       onView(withId(R.id.fetch)).perform(scrollTo(), click());

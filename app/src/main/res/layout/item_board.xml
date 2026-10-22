@@ -6,16 +6,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginVertical="4dp"
-    app:cardCornerRadius="16dp"
-    app:cardBackgroundColor="#FFFFFF"
-    app:cardElevation="1dp"
-    app:strokeColor="#E0E6DA">
+    app:cardCornerRadius="22dp"
+    app:cardBackgroundColor="@color/card_ink"
+    app:cardElevation="4dp"
+    app:strokeColor="@color/outline_ink">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:padding="12dp">
+        android:padding="16dp">
 
         <CheckBox
             android:id="@+id/checked"
@@ -34,7 +34,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="17sp"
-                android:textColor="#123B2D"
+                android:textStyle="bold"
+                android:textColor="@color/soft_white"
                 tools:text="Bún bò Huế" />
 
             <TextView
@@ -42,6 +43,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="12sp"
+                android:textColor="@color/muted_ink"
                 tools:text="Thứ hai · Bữa trưa" />
 
         </LinearLayout>
@@ -51,7 +53,8 @@
             android:layout_width="24dp"
             android:layout_height="wrap_content"
             android:text="›"
-            android:textSize="24sp" />
+            android:textSize="24sp"
+            android:textColor="@color/acid_lime" />
 
     </LinearLayout>
 

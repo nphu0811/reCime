@@ -6,8 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingHorizontal="20dp"
-    android:paddingTop="16dp"
+    android:paddingHorizontal="18dp"
+    android:paddingTop="24dp"
     tools:context=".fragment.RecipesFragment">
 
     <LinearLayout
@@ -25,10 +25,10 @@
                 android:id="@+id/eyebrow"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="MY RECIPE LAB • ẨM THỰC MỞ"
+                android:text="reCime / YOUR FOOD ERA ✦"
                 android:textSize="10sp"
                 android:letterSpacing="0.12"
-                android:textColor="#A35431"
+                android:textColor="@color/acid_lime"
                 android:textStyle="bold" />
 
             <TextView
@@ -36,10 +36,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
-                android:text="Bếp Việt, mỗi ngày"
-                android:fontFamily="serif"
-                android:textSize="29sp"
-                android:textColor="#123B2D" />
+                android:text="Ăn ngon.\nSống chất."
+                android:fontFamily="sans-serif-black"
+                android:textSize="34sp"
+                android:textColor="@color/soft_white" />
 
         </LinearLayout>
 
@@ -47,8 +47,10 @@
             android:id="@+id/ai_camera"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
-            android:text="AI ✦"
-            android:textSize="13sp"
+            android:text="✦ AI SCAN"
+            android:textSize="12sp"
+            android:textColor="@color/night_ink"
+            app:backgroundTint="@color/acid_lime"
             android:contentDescription="Nhập ảnh món ăn bằng AI"
             app:cornerRadius="24dp" />
 
@@ -59,6 +61,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        app:boxBackgroundColor="@color/card_ink"
+        app:boxStrokeColor="@color/acid_lime"
         app:boxCornerRadiusTopStart="16dp"
         app:boxCornerRadiusTopEnd="16dp"
         app:boxCornerRadiusBottomStart="16dp"
@@ -69,7 +73,7 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:paddingVertical="8dp"
-            android:hint="Hôm nay bạn muốn nấu gì?"
+            android:hint="Search một món, cook một vibe ✦"
             android:inputType="text"
             android:singleLine="true"
             android:textSize="14sp" />
@@ -133,10 +137,10 @@
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/hero_card"
         android:layout_width="match_parent"
-        android:layout_height="138dp"
+        android:layout_height="182dp"
         android:layout_marginTop="8dp"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="4dp"
+        app:cardCornerRadius="28dp"
+        app:cardElevation="9dp"
         app:strokeWidth="0dp"
         android:clickable="true"
         android:focusable="true">
@@ -169,18 +173,18 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="TỪ KHO CÔNG THỨC MỞ"
+                    android:text="✦ TONIGHT’S PICK · OPEN RECIPE"
                     android:textSize="9sp"
                     android:textStyle="bold"
                     android:letterSpacing="0.12"
-                    android:textColor="#F4CA78" />
+                    android:textColor="@color/acid_lime" />
 
                 <TextView
                     android:id="@+id/hero_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Một món ngon, một câu chuyện"
-                    android:textSize="25sp"
+                    android:text="Ăn gì hôm nay?"
+                    android:textSize="29sp"
                     android:fontFamily="serif"
                     android:textColor="#FFFFFF" />
 
@@ -188,7 +192,7 @@
                     android:id="@+id/hero_meta"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Khám phá công thức có nguồn →"
+                    android:text="TAP TO GET COOKING →"
                     android:textSize="11sp"
                     android:textColor="#F8F5EC" />
 
@@ -215,14 +219,14 @@
             android:id="@+id/favorites"
             android:layout_width="wrap_content"
             android:layout_height="44dp"
-            android:text="♥"
+            android:text="♡ SAVED"
             android:contentDescription="Chỉ món yêu thích" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/add"
             android:layout_width="wrap_content"
             android:layout_height="44dp"
-            android:text="+ Món của tôi"
+            android:text="+ TẠO MÓN"
             style="@style/Widget.Material3.Button.TextButton"
             android:textSize="12sp" />
 
@@ -233,9 +237,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="4dp"
-        android:text="Đang mở thư viện…"
+        android:text="Đang nạp công thức ✦"
         android:textSize="11sp"
-        android:textColor="#617067" />
+        android:textColor="@color/muted_ink" />
 
     <GridView
         android:id="@+id/list"
@@ -243,8 +247,8 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:numColumns="2"
-        android:horizontalSpacing="10dp"
-        android:verticalSpacing="10dp"
+        android:horizontalSpacing="8dp"
+        android:verticalSpacing="12dp"
         android:stretchMode="columnWidth"
         android:clipToPadding="false"
         android:paddingBottom="12dp"

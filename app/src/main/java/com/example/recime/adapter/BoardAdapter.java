@@ -9,6 +9,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 import com.example.recime.R;
+import com.example.recime.helper.Motion;
 import com.example.recime.model.BoardRow;
 import java.util.List;
 
@@ -52,6 +53,8 @@ public class BoardAdapter extends BaseAdapter {
   public View getView(int position, View convertView, ViewGroup parent) {
     if (convertView == null) {
       convertView = LayoutInflater.from(context).inflate(layout, parent, false);
+      Motion.card(convertView);
+      Motion.stagger(convertView, position);
     }
     TextView title = convertView.findViewById(R.id.row_title);
     TextView meta = convertView.findViewById(R.id.row_meta);

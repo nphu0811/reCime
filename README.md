@@ -1,6 +1,6 @@
-# MyRecipeLab — Java/XML, dữ liệu thật và AI local
+# reCime — Kinetic Kitchen / Java + XML / AI local
 
-Ứng dụng Android độc lập, lưu offline bằng **SQLiteOpenHelper (SQLite)**, không cần trả tiền database hoặc API. Dataset đi kèm có **547 công thức** (cộng4 món mẫu tự soạn khi cài mới), **211 công thức có ảnh thật (178 ảnh riêng biệt)** cùng nguồn, lịch sử tác giả và giấy phép. Phần lớn là công thức tiếng Việt từ Wikibooks, có cả món quốc tế; đây **không phải toàn bộ món Việt Nam**. 336 công thức còn thiếu ảnh thật. Không sử dụng mã nguồn/nhận diện/API riêng của ReciMe.
+**reCime** là ứng dụng Android độc lập với visual style Kinetic Kitchen (midnight / neon lime / coral), motion thuần Android và dữ liệu offline bằng **SQLiteOpenHelper (SQLite)**, không cần trả tiền database hoặc API. Dataset đi kèm có **547 công thức** (cộng4 món mẫu tự soạn khi cài mới), **211 công thức có ảnh thật (178 ảnh riêng biệt)** cùng nguồn, lịch sử tác giả và giấy phép. Phần lớn là công thức tiếng Việt từ Wikibooks, có cả món quốc tế; đây **không phải toàn bộ món Việt Nam**. 336 công thức còn thiếu ảnh thật. Không sử dụng mã nguồn/nhận diện/API riêng của ReciMe.
 
 ## Chạy Android Studio
 
@@ -70,3 +70,24 @@ Native Material Components, ripple/elevation, chuyển màn hình fade và chuy�
 - [Trạng thái và bằng chứng](docs/IMPLEMENTATION_STATUS.md), [dataset và AI](docs/DATASET_AND_AI.md), [nghiên cứu REA](docs/REA_ANALYSIS.md), [đối chiếu10 ảnh](docs/FEATURE_MATRIX.md), [review](docs/REVIEW_V2.md).
 
 Không ghi secrets vào repo; artifacts model, venv và cache thô bị gitignore. Quyền dữ liệu/ảnh được ghi từng mục; ảnh dùng chung nhóm món chỉ là minh họa, không chứng minh đúng biến thể. Chưa đo độ chính xác ảnh ngoài gallery, chưa có dataset đầy đủ mọi món Việt, chưa có speech/video extraction hoặc LLM chuyên gia được kiểm định.
+
+
+## Kinetic Kitchen UI (redesign 2026)
+
+Thiết kế theo hướng editorial / Gen-Z: nền đậm, lime/coral highlight, typeface sans-serif-black, ảnh món lớn, dock nổi, transition fade-slide, item GridView/ListView stagger, pop-in hero và phản hồi nhấn. Tham khảo cảm hứng trải nghiệm từ Lollypop Designathon 2026; không sao chép hình ảnh hoặc assets của website.
+
+- App launcher: **reCime** (giữ nguyên package `com.example.recime` và tên database để nâng cấp không làm mất dữ liệu).
+- Layout: `res/layout/`; màu: `res/values/colors.xml`; nền: `res/drawable/bg_*.xml`.
+- Animation: `helper/Motion.java`, `res/anim/recime_*.xml`, `MainActivity.java`; chỉ native, không thêm thư viện UI animation.
+- Dùng `BaseAdapter`, `GridView`, `ListView` và `SQLiteOpenHelper` đúng kiểu Android Java cơ bản.
+- Khi tắt **Animator duration scale** trong Developer options, các micro-animation qua `Motion` sẽ bỏ qua (animation transaction phụ thuộc animator hệ thống).
+- Xem trước `preview_app_home.xml` trong Design/Split; giao diện hoạt động thật là `MainActivity` với Fragment.
+
+### Kiểm tra trên máy
+
+```powershell
+.\gradlew.bat assembleDebug testDebugUnitTest lintDebug
+.\gradlew.bat connectedDebugAndroidTest
+```
+
+GitHub Actions: `.github/workflows/android-ci.yml` build và lưu debug APK trong mục Actions → Artifacts. Bộ test Android instrumentation yêu cầu Emulator hoặc thiết bị, không được CI compile thay thế kiểm tra hiệu ứng trên máy thật. `docs/DESIGN_V3.md` ghi rõ khác biệt và checklist review.
