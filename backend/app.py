@@ -13,6 +13,10 @@ def engine():return RecipeEngine()
 
 class TextInput(BaseModel):text:str=Field(min_length=2,max_length=16000)
 class LinkInput(BaseModel):url:str=Field(min_length=8,max_length=2048)
+class NutritionInput(BaseModel):
+    ingredients:str=Field(min_length=2,max_length=12000)
+    servings:float=Field(gt=0,le=10000)
+
 class AskInput(BaseModel):
     question:str=Field(min_length=2,max_length=1500)
     title:str=Field(min_length=1,max_length=300)
@@ -95,3 +99,12 @@ def ask(body:AskInput):
               'warning':'Câu trả lời AI cần được kiểm tra, nhất là dị ứng và an toàn thực phẩm.'}
     except requests.RequestException:
       raise HTTPException(503,'Không kết nối được tới nhà cung cấp AI.')
+
+
+@app.post('/nutrition/estimate')
+def estimate_nutrition(body:NutritionInput):
+    from backend.nutrition import estimate
+    try:return estimate(body.ingredients,body.servings)
+    except ValueError as e:raise HTTPException(422,str(e))
+    except RuntimeError as e:raise HTTPException(503,str(e))
+    except requests.RequestException:raise HTTPException(503,'Không truy cập được USDA FoodData Central.')
