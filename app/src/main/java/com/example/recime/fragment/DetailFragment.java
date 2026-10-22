@@ -1,6 +1,8 @@
 package com.example.recime.fragment;
 
 import com.example.recime.helper.Motion;
+import com.example.recime.helper.RecipeExport;
+import com.example.recime.model.Meal;
 
 import android.os.Bundle;
 import android.view.*;
@@ -116,6 +118,51 @@ public class DetailFragment extends Fragment {
                     Ui.tbsp(requireContext()),
                     Ui.cup(requireContext()));
             });
+    v.findViewById(R.id.cooking_mode).setOnClickListener(x->{
+      if(recipe!=null)((MainActivity)requireActivity()).open(CookingFragment.create(recipe.id));
+    });
+    v.findViewById(R.id.to_plan).setOnClickListener(x->{
+      if(recipe!=null)pickPlanDate(vm);
+    });
+    v.findViewById(R.id.export_pdf).setOnClickListener(x->{
+      if(recipe==null)return;
+      try{RecipeExport.share(requireActivity(),recipe);}
+      catch(Exception error){Toast.makeText(requireContext(),"Lỗi xuất PDF: "+error.getMessage(),Toast.LENGTH_LONG).show();}
+    });
+    v.findViewById(R.id.print_recipe).setOnClickListener(x->{
+      if(recipe==null)return;
+      try{RecipeExport.print(requireActivity(),recipe);}
+      catch(Exception error){Toast.makeText(requireContext(),"Lỗi in: "+error.getMessage(),Toast.LENGTH_LONG).show();}
+    });
+  }
+
+  private void pickPlanDate(LabViewModel vm){
+    Calendar date=Calendar.getInstance();
+    new android.app.DatePickerDialog(requireContext(),(picker,year,month,day)->{
+      Calendar dayValue=Calendar.getInstance();
+      dayValue.set(year,month,day);
+      String formatted=new java.text.SimpleDateFormat("yyyy-MM-dd",Locale.ROOT)
+          .format(dayValue.getTime());
+      final String[] types={"Sáng","Trưa","Tối","Ăn nhẹ"};
+      new MaterialAlertDialogBuilder(requireContext())
+          .setTitle("Thêm "+recipe.title+" vào "+formatted)
+          .setItems(types,(dialog,which)->{
+            final long id=recipe.id;
+            final double servings=portions;
+            final String type=types[which];
+            vm.repository.run(()->{
+              Meal next=new Meal();
+              next.day=formatted;next.type=type;next.slot=formatted+"|"+type;
+              next.recipeId=id;next.servings=servings;
+              boolean exists=false;
+              for(Meal existing:vm.repository.dao.mealSnapshot(formatted,formatted))
+                if(existing.type.equals(type))exists=true;
+              if(exists)vm.repository.dao.addMeal(next);
+              else vm.repository.dao.putMeal(next);
+              vm.repository.message.postValue("Đã thêm vào lịch · nguyên liệu tự đồng bộ");
+            });
+          }).show();
+    },date.get(Calendar.YEAR),date.get(Calendar.MONTH),date.get(Calendar.DAY_OF_MONTH)).show();
   }
 
   private List<Ingredient> scaled() {
