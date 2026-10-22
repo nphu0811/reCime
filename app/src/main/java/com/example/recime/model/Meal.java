@@ -5,5 +5,5 @@ public class Meal {
   public String day = "", type = "";
   public long recipeId;
   public long extraId;
-  public double servings = 1;
+  public double servings = 0; // 0 = original recipe yield
 }
