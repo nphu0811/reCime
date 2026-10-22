@@ -25,3 +25,10 @@ local.properties
 
 /.understand-anything/tmp/
 /.understand-anything/intermediate/
+
+# Local service credentials -- NEVER commit secrets
+.env
+.env.*
+!*.env.example
+/backend/.env
+/backend/.env.local
