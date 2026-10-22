@@ -35,11 +35,9 @@ public class PlannerUiTest {
       onIdle();
       scenario.recreate();
       onView(withText("Trứng cà chua")).check(matches(isDisplayed()));
-      onView(withId(R.id.board_action)).perform(click());
-      onView(withText("Thêm")).perform(click());
+      // The cart is now derived automatically; no old additive confirm dialog.\n      onView(withId(R.id.board_action)).perform(click());
       repo.io.submit(() -> {}).get(20, TimeUnit.SECONDS);
       onIdle();
-      onView(withId(R.id.nav_grocery)).perform(click());
       onView(withId(R.id.board_empty)).check(matches(withSubstring("nguyên liệu")));
     }
   }
