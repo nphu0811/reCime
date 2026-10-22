@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingHorizontal="20dp">
+
+    <EditText
+        android:id="@+id/meal_search"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:hint="Tìm món cho bữa này"
+        android:inputType="text"
+        android:singleLine="true" />
+
+    <ListView
+        android:id="@+id/meal_recipe_list"
+        android:layout_width="match_parent"
+        android:layout_height="320dp"
+        android:contentDescription="Các công thức phù hợp" />
+
+</LinearLayout>

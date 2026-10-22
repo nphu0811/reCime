@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".ui.EditorFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,7 +24,7 @@
             android:text="Công thức của bạn"
             android:fontFamily="serif"
             android:textSize="28sp"
-            android:textColor="#173F33" />
+            android:textColor="#123B2D" />
 
         <TextView
             android:layout_width="match_parent"
@@ -34,28 +36,32 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Tên món *"
-            android:inputType="textCapSentences" />
+            android:inputType="textCapSentences"
+            tools:text="Gỏi cuốn tôm thịt" />
 
         <EditText
             android:id="@+id/edit_book"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Bộ sưu tập"
-            android:inputType="textCapSentences" />
+            android:inputType="textCapSentences"
+            tools:text="Món nhà" />
 
         <EditText
             android:id="@+id/edit_tags"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Tags, cách nhau bởi dấu phẩy"
-            android:inputType="text" />
+            android:inputType="text"
+            tools:text="gỏi, cuốn, món Việt" />
 
         <EditText
             android:id="@+id/edit_servings"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Khẩu phần gốc *"
-            android:inputType="numberDecimal" />
+            android:inputType="numberDecimal"
+            tools:text="4" />
 
         <EditText
             android:id="@+id/edit_ingredients"
@@ -64,7 +70,8 @@
             android:hint="Nguyên liệu *"
             android:gravity="top"
             android:inputType="textMultiLine"
-            android:minLines="5" />
+            android:minLines="5"
+            tools:text="4 cái bánh tráng&#10;50 g bún đã nấu chín&#10;Tôm và thịt đã chín theo nguồn" />
 
         <EditText
             android:id="@+id/edit_steps"
@@ -73,14 +80,16 @@
             android:hint="Các bước *"
             android:gravity="top"
             android:inputType="textMultiLine"
-            android:minLines="4" />
+            android:minLines="4"
+            tools:text="Chuẩn bị nguyên liệu.&#10;Cuốn bánh tráng và dùng cùng nước chấm." />
 
         <EditText
             android:id="@+id/edit_source"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Nguồn / URL"
-            android:inputType="text" />
+            android:inputType="text"
+            tools:text="Wikibooks / công thức gia đình" />
 
         <TextView
             android:layout_width="match_parent"

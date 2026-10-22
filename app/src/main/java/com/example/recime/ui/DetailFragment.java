@@ -123,7 +123,10 @@ public class DetailFragment extends Fragment {
     Ui.set(root, R.id.detail_meta, recipe.cookbook + " · " + recipe.tags);
     Ui.image(root.findViewById(R.id.photo), recipe.image);
     Ui.set(root, R.id.favorite, recipe.favorite ? "♥ Đã thích" : "♡ Thích");
-    Ui.set(root, R.id.portions, Units.format(portions) + " khẩu phần");
+    Ui.set(
+        root,
+        R.id.portions,
+        Units.format(portions) + (recipe.servingsKnown ? " khẩu phần" : " mẻ công thức"));
     StringBuilder ingredients = new StringBuilder();
     boolean metric = ((CheckBox) root.findViewById(R.id.metric)).isChecked();
     for (Ingredient i : scaled()) {
@@ -169,7 +172,18 @@ public class DetailFragment extends Fragment {
     Ui.set(
         root,
         R.id.source,
-        "Nguồn công thức: " + (recipe.source.isEmpty() ? "Tự nhập" : recipe.source));
+        "Nguồn công thức: "
+            + (recipe.source.isEmpty() ? "Tự nhập" : recipe.source)
+            + "\n\n"
+            + recipe.attribution
+            + (recipe.servingsKnown
+                ? ""
+                : "\n"
+                      + "Nguồn chưa ghi số người ăn. Định lượng phía trên là toàn bộ công thức,"
+                      + " tính theo mẻ.")
+            + (recipe.imageAttribution.isEmpty()
+                ? ""
+                : "\n\nẢnh và giấy phép:\n" + recipe.imageAttribution));
   }
 
   private String macro(Double d) {

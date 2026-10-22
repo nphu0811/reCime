@@ -1,0 +1,7 @@
+{
+  "endpoint": "https://www.tiktok.com/oembed",
+  "input": "https://www.tiktok.com/@scout2015/video/6718335390845095173",
+  "purpose": "Public example video URL from official TikTok embed documentation, no account or video download",
+  "outcome": "blocked or unavailable; no bypass attempted",
+  "error": "oEmbed không có caption; hãy dán văn bản hoặc dùng OCR."
+}

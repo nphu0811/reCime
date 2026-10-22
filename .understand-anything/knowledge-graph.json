@@ -1,0 +1,1401 @@
+{
+  "version": "1.0.0",
+  "project": {
+    "name": "MyRecipeLab",
+    "description": "Native Android Java/XML recipe library, Room offline persistence, local laptop AI integration and FastAPI recipe recognition backend. Snapshot during active implementation.",
+    "languages": [
+      "batch",
+      "jar",
+      "java",
+      "json",
+      "keep",
+      "kotlin",
+      "markdown",
+      "powershell",
+      "properties",
+      "python",
+      "toml",
+      "txt",
+      "unknown",
+      "webp",
+      "xml"
+    ],
+    "frameworks": [
+      "AndroidX",
+      "Material Components",
+      "Room",
+      "ML Kit",
+      "OkHttp",
+      "FastAPI",
+      "ONNX Runtime"
+    ],
+    "analyzedAt": "2026-10-22T13:24:24.092680+00:00",
+    "gitCommitHash": "a777eff98ea6d0d753751594121ce60c333fa419"
+  },
+  "nodes": [
+    {
+      "id": "file:app/src/main/java/com/example/recime/data/CatalogImporter.java",
+      "type": "file",
+      "name": "CatalogImporter.java",
+      "filePath": "app/src/main/java/com/example/recime/data/CatalogImporter.java",
+      "summary": "Loads bundled catalog JSON into Room in a transaction, preserves existing records and fills missing licensed photo metadata without replacing user edits.",
+      "tags": [
+        "review-snapshot",
+        "java",
+        "core"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:app/src/main/java/com/example/recime/data/CatalogImporter.java:install",
+      "type": "function",
+      "name": "install",
+      "filePath": "app/src/main/java/com/example/recime/data/CatalogImporter.java",
+      "lineRange": [
+        10,
+        41
+      ],
+      "summary": "Declared function install in CatalogImporter.java; structure extracted by bundled tree-sitter script. Fine-grained semantic review deferred.",
+      "tags": [
+        "structural-extraction",
+        "java",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:app/src/main/java/com/example/recime/data/CatalogImporter.java:CatalogImporter",
+      "type": "class",
+      "name": "CatalogImporter",
+      "filePath": "app/src/main/java/com/example/recime/data/CatalogImporter.java",
+      "lineRange": [
+        9,
+        42
+      ],
+      "summary": "Declared class CatalogImporter in CatalogImporter.java; structure extracted by bundled tree-sitter script. Fine-grained semantic review deferred.",
+      "tags": [
+        "structural-extraction",
+        "java",
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/src/main/java/com/example/recime/data/LabDatabase.java",
+      "type": "file",
+      "name": "LabDatabase.java",
+      "filePath": "app/src/main/java/com/example/recime/data/LabDatabase.java",
+      "summary": "Room version 2 database for Recipe, Meal and Grocery entities; migration adds catalog attribution and serving metadata plus a unique catalog key index.",
+      "tags": [
+        "review-snapshot",
+        "java",
+        "core"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:app/src/main/java/com/example/recime/data/LabDatabase.java:LabDatabase",
+      "type": "class",
+      "name": "LabDatabase",
+      "filePath": "app/src/main/java/com/example/recime/data/LabDatabase.java",
+      "lineRange": [
+        5,
+        21
+      ],
+      "summary": "Declared class LabDatabase in LabDatabase.java; structure extracted by bundled tree-sitter script. Fine-grained semantic review deferred.",
+      "tags": [
+        "structural-extraction",
+        "java",
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/src/main/java/com/example/recime/data/RecipeRepository.java",
+      "type": "file",
+      "name": "RecipeRepository.java",
+      "filePath": "app/src/main/java/com/example/recime/data/RecipeRepository.java",
+      "summary": "Owns singleton Room database and background executors, seeds initial recipes, installs the catalog, publishes readiness/messages and performs recipe CRUD and grocery merging.",
+      "tags": [
+        "review-snapshot",
+        "java",
+        "core"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:app/src/main/java/com/example/recime/data/RecipeRepository.java:RecipeRepository",
+      "type": "function",
+      "name": "RecipeRepository",
+      "filePath": "app/src/main/java/com/example/recime/data/RecipeRepository.java",
+      "lineRange": [
+        27,
+        78
+      ],
+      "summary": "Declared function RecipeRepository in RecipeRepository.java; structure extracted by bundled tree-sitter script. Fine-grained semantic review deferred.",
+      "tags": [
+        "structural-extraction",
+        "java",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:app/src/main/java/com/example/recime/data/RecipeRepository.java:seed",
+      "type": "function",
+      "name": "seed",
+      "filePath": "app/src/main/java/com/example/recime/data/RecipeRepository.java",
+      "lineRange": [
+        80,
+        89
+      ],
+      "summary": "Declared function seed in RecipeRepository.java; structure extracted by bundled tree-sitter script. Fine-grained semantic review deferred.",
+      "tags": [
+        "structural-extraction",
+        "java",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:app/src/main/java/com/example/recime/data/RecipeRepository.java:run",
+      "type": "function",
+      "name": "run",
+      "filePath": "app/src/main/java/com/example/recime/data/RecipeRepository.java",
+      "lineRange": [
+        91,
+        100
+      ],
+      "summary": "Declared function run in RecipeRepository.java; structure extracted by bundled tree-sitter script. Fine-grained semantic review deferred.",
+      "tags": [
+        "structural-extraction",
+        "java",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:app/src/main/java/com/example/recime/data/RecipeRepository.java:addIngredients",
+      "type": "function",
+      "name": "addIngredients",
+      "filePath": "app/src/main/java/com/example/recime/data/RecipeRepository.java",
+      "lineRange": [
+        115,
+        145
+      ],
+      "summary": "Declared function addIngredients in RecipeRepository.java; structure extracted by bundled tree-sitter script. Fine-grained semantic review deferred.",
+      "tags": [
+        "structural-extraction",
+        "java",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:app/src/main/java/com/example/recime/data/RecipeRepository.java:RecipeRepository",
+      "type": "class",
+      "name": "RecipeRepository",
+      "filePath": "app/src/main/java/com/example/recime/data/RecipeRepository.java",
+      "lineRange": [
+        10,
+        146
+      ],
+      "summary": "Declared class RecipeRepository in RecipeRepository.java; structure extracted by bundled tree-sitter script. Fine-grained semantic review deferred.",
+      "tags": [
+        "structural-extraction",
+        "java",
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/src/main/java/com/example/recime/domain/RecipeParser.java",
+      "type": "file",
+      "name": "RecipeParser.java",
+      "filePath": "app/src/main/java/com/example/recime/domain/RecipeParser.java",
+      "summary": "Parses bilingual ingredient quantities and units while preserving ambiguous ranges for review rather than inventing exact amounts.",
+      "tags": [
+        "review-snapshot",
+        "java",
+        "core"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:app/src/main/java/com/example/recime/domain/RecipeParser.java:ingredient",
+      "type": "function",
+      "name": "ingredient",
+      "filePath": "app/src/main/java/com/example/recime/domain/RecipeParser.java",
+      "lineRange": [
+        36,
+        65
+      ],
+      "summary": "Declared function ingredient in RecipeParser.java; structure extracted by bundled tree-sitter script. Fine-grained semantic review deferred.",
+      "tags": [
+        "structural-extraction",
+        "java",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:app/src/main/java/com/example/recime/domain/RecipeParser.java:quantity",
+      "type": "function",
+      "name": "quantity",
+      "filePath": "app/src/main/java/com/example/recime/domain/RecipeParser.java",
+      "lineRange": [
+        67,
+        79
+      ],
+      "summary": "Declared function quantity in RecipeParser.java; structure extracted by bundled tree-sitter script. Fine-grained semantic review deferred.",
+      "tags": [
+        "structural-extraction",
+        "java",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:app/src/main/java/com/example/recime/domain/RecipeParser.java:parse",
+      "type": "function",
+      "name": "parse",
+      "filePath": "app/src/main/java/com/example/recime/domain/RecipeParser.java",
+      "lineRange": [
+        88,
+        116
+      ],
+      "summary": "Declared function parse in RecipeParser.java; structure extracted by bundled tree-sitter script. Fine-grained semantic review deferred.",
+      "tags": [
+        "structural-extraction",
+        "java",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:app/src/main/java/com/example/recime/domain/RecipeParser.java:RecipeParser",
+      "type": "class",
+      "name": "RecipeParser",
+      "filePath": "app/src/main/java/com/example/recime/domain/RecipeParser.java",
+      "lineRange": [
+        6,
+        117
+      ],
+      "summary": "Declared class RecipeParser in RecipeParser.java; structure extracted by bundled tree-sitter script. Fine-grained semantic review deferred.",
+      "tags": [
+        "structural-extraction",
+        "java",
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/src/main/java/com/example/recime/importing/LocalAiClient.java",
+      "type": "file",
+      "name": "LocalAiClient.java",
+      "filePath": "app/src/main/java/com/example/recime/importing/LocalAiClient.java",
+      "summary": "OkHttp adapter for laptop health, text, TikTok and image endpoints; validates endpoint syntax, caps response bytes and compresses rotated dish photos before upload.",
+      "tags": [
+        "review-snapshot",
+        "java",
+        "core"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:app/src/main/java/com/example/recime/importing/LocalAiClient.java:request",
+      "type": "function",
+      "name": "request",
+      "filePath": "app/src/main/java/com/example/recime/importing/LocalAiClient.java",
+      "lineRange": [
+        21,
+        34
+      ],
+      "summary": "Declared function request in LocalAiClient.java; structure extracted by bundled tree-sitter script. Fine-grained semantic review deferred.",
+      "tags": [
+        "structural-extraction",
+        "java",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:app/src/main/java/com/example/recime/importing/LocalAiClient.java:image",
+      "type": "function",
+      "name": "image",
+      "filePath": "app/src/main/java/com/example/recime/importing/LocalAiClient.java",
+      "lineRange": [
+        42,
+        54
+      ],
+      "summary": "Declared function image in LocalAiClient.java; structure extracted by bundled tree-sitter script. Fine-grained semantic review deferred.",
+      "tags": [
+        "structural-extraction",
+        "java",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:app/src/main/java/com/example/recime/importing/LocalAiClient.java:LocalAiClient",
+      "type": "class",
+      "name": "LocalAiClient",
+      "filePath": "app/src/main/java/com/example/recime/importing/LocalAiClient.java",
+      "lineRange": [
+        11,
+        55
+      ],
+      "summary": "Declared class LocalAiClient in LocalAiClient.java; structure extracted by bundled tree-sitter script. Fine-grained semantic review deferred.",
+      "tags": [
+        "structural-extraction",
+        "java",
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/src/main/java/com/example/recime/MainActivity.java",
+      "type": "file",
+      "name": "MainActivity.java",
+      "filePath": "app/src/main/java/com/example/recime/MainActivity.java",
+      "summary": "Inflates activity_main, routes bottom navigation to fragments, dispatches ACTION_SEND text/image input and opens detail flows on the fragment back stack.",
+      "tags": [
+        "review-snapshot",
+        "java",
+        "core"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:app/src/main/java/com/example/recime/MainActivity.java:onCreate",
+      "type": "function",
+      "name": "onCreate",
+      "filePath": "app/src/main/java/com/example/recime/MainActivity.java",
+      "lineRange": [
+        12,
+        57
+      ],
+      "summary": "Declared function onCreate in MainActivity.java; structure extracted by bundled tree-sitter script. Fine-grained semantic review deferred.",
+      "tags": [
+        "structural-extraction",
+        "java",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:app/src/main/java/com/example/recime/MainActivity.java:handleShare",
+      "type": "function",
+      "name": "handleShare",
+      "filePath": "app/src/main/java/com/example/recime/MainActivity.java",
+      "lineRange": [
+        66,
+        77
+      ],
+      "summary": "Declared function handleShare in MainActivity.java; structure extracted by bundled tree-sitter script. Fine-grained semantic review deferred.",
+      "tags": [
+        "structural-extraction",
+        "java",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:app/src/main/java/com/example/recime/MainActivity.java:MainActivity",
+      "type": "class",
+      "name": "MainActivity",
+      "filePath": "app/src/main/java/com/example/recime/MainActivity.java",
+      "lineRange": [
+        11,
+        88
+      ],
+      "summary": "Declared class MainActivity in MainActivity.java; structure extracted by bundled tree-sitter script. Fine-grained semantic review deferred.",
+      "tags": [
+        "structural-extraction",
+        "java",
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/src/main/java/com/example/recime/ui/BoardFragment.java",
+      "type": "file",
+      "name": "BoardFragment.java",
+      "filePath": "app/src/main/java/com/example/recime/ui/BoardFragment.java",
+      "summary": "Shared planner/grocery fragment selects behavior from arguments, derives the current week, observes local state and binds action labels dynamically.",
+      "tags": [
+        "review-snapshot",
+        "java",
+        "core"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:app/src/main/java/com/example/recime/ui/BoardFragment.java:onViewCreated",
+      "type": "function",
+      "name": "onViewCreated",
+      "filePath": "app/src/main/java/com/example/recime/ui/BoardFragment.java",
+      "lineRange": [
+        44,
+        114
+      ],
+      "summary": "Declared function onViewCreated in BoardFragment.java; structure extracted by bundled tree-sitter script. Fine-grained semantic review deferred.",
+      "tags": [
+        "structural-extraction",
+        "java",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:app/src/main/java/com/example/recime/ui/BoardFragment.java:render",
+      "type": "function",
+      "name": "render",
+      "filePath": "app/src/main/java/com/example/recime/ui/BoardFragment.java",
+      "lineRange": [
+        121,
+        171
+      ],
+      "summary": "Declared function render in BoardFragment.java; structure extracted by bundled tree-sitter script. Fine-grained semantic review deferred.",
+      "tags": [
+        "structural-extraction",
+        "java",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:app/src/main/java/com/example/recime/ui/BoardFragment.java:selectMeal",
+      "type": "function",
+      "name": "selectMeal",
+      "filePath": "app/src/main/java/com/example/recime/ui/BoardFragment.java",
+      "lineRange": [
+        173,
+        195
+      ],
+      "summary": "Declared function selectMeal in BoardFragment.java; structure extracted by bundled tree-sitter script. Fine-grained semantic review deferred.",
+      "tags": [
+        "structural-extraction",
+        "java",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:app/src/main/java/com/example/recime/ui/BoardFragment.java:planGroceries",
+      "type": "function",
+      "name": "planGroceries",
+      "filePath": "app/src/main/java/com/example/recime/ui/BoardFragment.java",
+      "lineRange": [
+        197,
+        227
+      ],
+      "summary": "Declared function planGroceries in BoardFragment.java; structure extracted by bundled tree-sitter script. Fine-grained semantic review deferred.",
+      "tags": [
+        "structural-extraction",
+        "java",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:app/src/main/java/com/example/recime/ui/BoardFragment.java:groceryEditor",
+      "type": "function",
+      "name": "groceryEditor",
+      "filePath": "app/src/main/java/com/example/recime/ui/BoardFragment.java",
+      "lineRange": [
+        229,
+        290
+      ],
+      "summary": "Declared function groceryEditor in BoardFragment.java; structure extracted by bundled tree-sitter script. Fine-grained semantic review deferred.",
+      "tags": [
+        "structural-extraction",
+        "java",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:app/src/main/java/com/example/recime/ui/BoardFragment.java:share",
+      "type": "function",
+      "name": "share",
+      "filePath": "app/src/main/java/com/example/recime/ui/BoardFragment.java",
+      "lineRange": [
+        292,
+        303
+      ],
+      "summary": "Declared function share in BoardFragment.java; structure extracted by bundled tree-sitter script. Fine-grained semantic review deferred.",
+      "tags": [
+        "structural-extraction",
+        "java",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:app/src/main/java/com/example/recime/ui/BoardFragment.java:BoardFragment",
+      "type": "class",
+      "name": "BoardFragment",
+      "filePath": "app/src/main/java/com/example/recime/ui/BoardFragment.java",
+      "lineRange": [
+        17,
+        381
+      ],
+      "summary": "Declared class BoardFragment in BoardFragment.java; structure extracted by bundled tree-sitter script. Fine-grained semantic review deferred.",
+      "tags": [
+        "structural-extraction",
+        "java",
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/src/main/java/com/example/recime/ui/ImportFragment.java",
+      "type": "file",
+      "name": "ImportFragment.java",
+      "filePath": "app/src/main/java/com/example/recime/ui/ImportFragment.java",
+      "summary": "Receives Photo Picker/camera input, offers OCR and laptop AI import paths, keeps recoverable import state and opens editor review.",
+      "tags": [
+        "review-snapshot",
+        "java",
+        "core"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:app/src/main/java/com/example/recime/ui/ImportFragment.java:onViewCreated",
+      "type": "function",
+      "name": "onViewCreated",
+      "filePath": "app/src/main/java/com/example/recime/ui/ImportFragment.java",
+      "lineRange": [
+        47,
+        113
+      ],
+      "summary": "Declared function onViewCreated in ImportFragment.java; structure extracted by bundled tree-sitter script. Fine-grained semantic review deferred.",
+      "tags": [
+        "structural-extraction",
+        "java",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:app/src/main/java/com/example/recime/ui/ImportFragment.java:fetch",
+      "type": "function",
+      "name": "fetch",
+      "filePath": "app/src/main/java/com/example/recime/ui/ImportFragment.java",
+      "lineRange": [
+        132,
+        166
+      ],
+      "summary": "Declared function fetch in ImportFragment.java; structure extracted by bundled tree-sitter script. Fine-grained semantic review deferred.",
+      "tags": [
+        "structural-extraction",
+        "java",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:app/src/main/java/com/example/recime/ui/ImportFragment.java:ocr",
+      "type": "function",
+      "name": "ocr",
+      "filePath": "app/src/main/java/com/example/recime/ui/ImportFragment.java",
+      "lineRange": [
+        168,
+        265
+      ],
+      "summary": "Declared function ocr in ImportFragment.java; structure extracted by bundled tree-sitter script. Fine-grained semantic review deferred.",
+      "tags": [
+        "structural-extraction",
+        "java",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:app/src/main/java/com/example/recime/ui/ImportFragment.java:aiRequest",
+      "type": "function",
+      "name": "aiRequest",
+      "filePath": "app/src/main/java/com/example/recime/ui/ImportFragment.java",
+      "lineRange": [
+        267,
+        281
+      ],
+      "summary": "Declared function aiRequest in ImportFragment.java; structure extracted by bundled tree-sitter script. Fine-grained semantic review deferred.",
+      "tags": [
+        "structural-extraction",
+        "java",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:app/src/main/java/com/example/recime/ui/ImportFragment.java:showCandidates",
+      "type": "function",
+      "name": "showCandidates",
+      "filePath": "app/src/main/java/com/example/recime/ui/ImportFragment.java",
+      "lineRange": [
+        283,
+        298
+      ],
+      "summary": "Declared function showCandidates in ImportFragment.java; structure extracted by bundled tree-sitter script. Fine-grained semantic review deferred.",
+      "tags": [
+        "structural-extraction",
+        "java",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:app/src/main/java/com/example/recime/ui/ImportFragment.java:ImportFragment",
+      "type": "class",
+      "name": "ImportFragment",
+      "filePath": "app/src/main/java/com/example/recime/ui/ImportFragment.java",
+      "lineRange": [
+        23,
+        314
+      ],
+      "summary": "Declared class ImportFragment in ImportFragment.java; structure extracted by bundled tree-sitter script. Fine-grained semantic review deferred.",
+      "tags": [
+        "structural-extraction",
+        "java",
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/src/main/java/com/example/recime/ui/LabViewModel.java",
+      "type": "file",
+      "name": "LabViewModel.java",
+      "filePath": "app/src/main/java/com/example/recime/ui/LabViewModel.java",
+      "summary": "Activity-scoped AndroidViewModel exposes repository-backed LiveData for recipes, meals and groceries.",
+      "tags": [
+        "review-snapshot",
+        "java",
+        "core"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:app/src/main/java/com/example/recime/ui/LabViewModel.java:LabViewModel",
+      "type": "class",
+      "name": "LabViewModel",
+      "filePath": "app/src/main/java/com/example/recime/ui/LabViewModel.java",
+      "lineRange": [
+        8,
+        21
+      ],
+      "summary": "Declared class LabViewModel in LabViewModel.java; structure extracted by bundled tree-sitter script. Fine-grained semantic review deferred.",
+      "tags": [
+        "structural-extraction",
+        "java",
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/src/main/java/com/example/recime/ui/Motion.java",
+      "type": "file",
+      "name": "Motion.java",
+      "filePath": "app/src/main/java/com/example/recime/ui/Motion.java",
+      "summary": "Native Android entry fade/translation and touch-scale feedback honor the global animation scale setting.",
+      "tags": [
+        "review-snapshot",
+        "java",
+        "core"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:app/src/main/java/com/example/recime/ui/Motion.java:card",
+      "type": "function",
+      "name": "card",
+      "filePath": "app/src/main/java/com/example/recime/ui/Motion.java",
+      "lineRange": [
+        17,
+        26
+      ],
+      "summary": "Declared function card in Motion.java; structure extracted by bundled tree-sitter script. Fine-grained semantic review deferred.",
+      "tags": [
+        "structural-extraction",
+        "java",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:app/src/main/java/com/example/recime/ui/Motion.java:Motion",
+      "type": "class",
+      "name": "Motion",
+      "filePath": "app/src/main/java/com/example/recime/ui/Motion.java",
+      "lineRange": [
+        8,
+        27
+      ],
+      "summary": "Declared class Motion in Motion.java; structure extracted by bundled tree-sitter script. Fine-grained semantic review deferred.",
+      "tags": [
+        "structural-extraction",
+        "java",
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/src/main/java/com/example/recime/ui/RecipesFragment.java",
+      "type": "file",
+      "name": "RecipesFragment.java",
+      "filePath": "app/src/main/java/com/example/recime/ui/RecipesFragment.java",
+      "summary": "Displays a Room-backed recipe grid with cookbook/category/search filtering, discovery wording and native entry motion.",
+      "tags": [
+        "review-snapshot",
+        "java",
+        "core"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:app/src/main/java/com/example/recime/ui/RecipesFragment.java:onViewCreated",
+      "type": "function",
+      "name": "onViewCreated",
+      "filePath": "app/src/main/java/com/example/recime/ui/RecipesFragment.java",
+      "lineRange": [
+        35,
+        99
+      ],
+      "summary": "Declared function onViewCreated in RecipesFragment.java; structure extracted by bundled tree-sitter script. Fine-grained semantic review deferred.",
+      "tags": [
+        "structural-extraction",
+        "java",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:app/src/main/java/com/example/recime/ui/RecipesFragment.java:filter",
+      "type": "function",
+      "name": "filter",
+      "filePath": "app/src/main/java/com/example/recime/ui/RecipesFragment.java",
+      "lineRange": [
+        101,
+        124
+      ],
+      "summary": "Declared function filter in RecipesFragment.java; structure extracted by bundled tree-sitter script. Fine-grained semantic review deferred.",
+      "tags": [
+        "structural-extraction",
+        "java",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:app/src/main/java/com/example/recime/ui/RecipesFragment.java:RecipesFragment",
+      "type": "class",
+      "name": "RecipesFragment",
+      "filePath": "app/src/main/java/com/example/recime/ui/RecipesFragment.java",
+      "lineRange": [
+        15,
+        161
+      ],
+      "summary": "Declared class RecipesFragment in RecipesFragment.java; structure extracted by bundled tree-sitter script. Fine-grained semantic review deferred.",
+      "tags": [
+        "structural-extraction",
+        "java",
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:backend/app.py",
+      "type": "file",
+      "name": "app.py",
+      "filePath": "backend/app.py",
+      "summary": "FastAPI routes expose health, text matching, image matching and official TikTok oEmbed caption retrieval with bounded upload size and explicit errors.",
+      "tags": [
+        "review-snapshot",
+        "python",
+        "core"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:backend/app.py:tiktok_caption",
+      "type": "function",
+      "name": "tiktok_caption",
+      "filePath": "backend/app.py",
+      "lineRange": [
+        34,
+        52
+      ],
+      "summary": "Declared function tiktok_caption in app.py; structure extracted by bundled tree-sitter script. Fine-grained semantic review deferred.",
+      "tags": [
+        "structural-extraction",
+        "python",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:backend/engine.py",
+      "type": "file",
+      "name": "engine.py",
+      "filePath": "backend/engine.py",
+      "summary": "Fits or loads source-backed TF-IDF recipe retrieval, mirrors catalog into SQLite, and compares CLIP ONNX image embeddings against licensed catalog image references.",
+      "tags": [
+        "review-snapshot",
+        "python",
+        "core"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:backend/engine.py:RecipeEngine",
+      "type": "class",
+      "name": "RecipeEngine",
+      "filePath": "backend/engine.py",
+      "lineRange": [
+        16,
+        117
+      ],
+      "summary": "Declared class RecipeEngine in engine.py; structure extracted by bundled tree-sitter script. Fine-grained semantic review deferred.",
+      "tags": [
+        "structural-extraction",
+        "python",
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:backend/README.md",
+      "type": "document",
+      "name": "README.md",
+      "filePath": "backend/README.md",
+      "summary": "Vietnamese setup instructions, app workflow examples, limitations and development entry points. Read during this snapshot; root is updating documentation.",
+      "tags": [
+        "review-snapshot",
+        "markdown",
+        "core"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:backend/train_recipe_model.py",
+      "type": "file",
+      "name": "train_recipe_model.py",
+      "filePath": "backend/train_recipe_model.py",
+      "summary": "Exports a from-scratch TF-IDF recipe retrieval vocabulary and sparse weights; sanity queries are explicitly distinguished from held-out accuracy.",
+      "tags": [
+        "review-snapshot",
+        "python",
+        "core"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:backend/train_recipe_model.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "backend/train_recipe_model.py",
+      "lineRange": [
+        11,
+        27
+      ],
+      "summary": "Declared function main in train_recipe_model.py; structure extracted by bundled tree-sitter script. Fine-grained semantic review deferred.",
+      "tags": [
+        "structural-extraction",
+        "python",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:backend/train_vision_scratch.py",
+      "type": "file",
+      "name": "train_vision_scratch.py",
+      "filePath": "backend/train_vision_scratch.py",
+      "summary": "Trains a gradient/color linear classifier with deduplicated source-image split and records validation against a majority baseline; selection remains disabled pending evaluation.",
+      "tags": [
+        "review-snapshot",
+        "python",
+        "core"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:backend/train_vision_scratch.py:features",
+      "type": "function",
+      "name": "features",
+      "filePath": "backend/train_vision_scratch.py",
+      "lineRange": [
+        16,
+        28
+      ],
+      "summary": "Declared function features in train_vision_scratch.py; structure extracted by bundled tree-sitter script. Fine-grained semantic review deferred.",
+      "tags": [
+        "structural-extraction",
+        "python",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:backend/train_vision_scratch.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "backend/train_vision_scratch.py",
+      "lineRange": [
+        30,
+        59
+      ],
+      "summary": "Declared function main in train_vision_scratch.py; structure extracted by bundled tree-sitter script. Fine-grained semantic review deferred.",
+      "tags": [
+        "structural-extraction",
+        "python",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:README.md",
+      "type": "document",
+      "name": "README.md",
+      "filePath": "README.md",
+      "summary": "Vietnamese setup instructions, app workflow examples, limitations and development entry points. Read during this snapshot; root is updating documentation.",
+      "tags": [
+        "review-snapshot",
+        "markdown",
+        "core"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:app/src/main/java/com/example/recime/data/CatalogImporter.java",
+      "target": "function:app/src/main/java/com/example/recime/data/CatalogImporter.java:install",
+      "type": "contains",
+      "weight": 1.0,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/src/main/java/com/example/recime/data/CatalogImporter.java",
+      "target": "class:app/src/main/java/com/example/recime/data/CatalogImporter.java:CatalogImporter",
+      "type": "contains",
+      "weight": 1.0,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/src/main/java/com/example/recime/data/LabDatabase.java",
+      "target": "class:app/src/main/java/com/example/recime/data/LabDatabase.java:LabDatabase",
+      "type": "contains",
+      "weight": 1.0,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/src/main/java/com/example/recime/data/RecipeRepository.java",
+      "target": "function:app/src/main/java/com/example/recime/data/RecipeRepository.java:RecipeRepository",
+      "type": "contains",
+      "weight": 1.0,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/src/main/java/com/example/recime/data/RecipeRepository.java",
+      "target": "function:app/src/main/java/com/example/recime/data/RecipeRepository.java:seed",
+      "type": "contains",
+      "weight": 1.0,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/src/main/java/com/example/recime/data/RecipeRepository.java",
+      "target": "function:app/src/main/java/com/example/recime/data/RecipeRepository.java:run",
+      "type": "contains",
+      "weight": 1.0,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/src/main/java/com/example/recime/data/RecipeRepository.java",
+      "target": "function:app/src/main/java/com/example/recime/data/RecipeRepository.java:addIngredients",
+      "type": "contains",
+      "weight": 1.0,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/src/main/java/com/example/recime/data/RecipeRepository.java",
+      "target": "class:app/src/main/java/com/example/recime/data/RecipeRepository.java:RecipeRepository",
+      "type": "contains",
+      "weight": 1.0,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/src/main/java/com/example/recime/domain/RecipeParser.java",
+      "target": "function:app/src/main/java/com/example/recime/domain/RecipeParser.java:ingredient",
+      "type": "contains",
+      "weight": 1.0,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/src/main/java/com/example/recime/domain/RecipeParser.java",
+      "target": "function:app/src/main/java/com/example/recime/domain/RecipeParser.java:quantity",
+      "type": "contains",
+      "weight": 1.0,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/src/main/java/com/example/recime/domain/RecipeParser.java",
+      "target": "function:app/src/main/java/com/example/recime/domain/RecipeParser.java:parse",
+      "type": "contains",
+      "weight": 1.0,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/src/main/java/com/example/recime/domain/RecipeParser.java",
+      "target": "class:app/src/main/java/com/example/recime/domain/RecipeParser.java:RecipeParser",
+      "type": "contains",
+      "weight": 1.0,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/src/main/java/com/example/recime/importing/LocalAiClient.java",
+      "target": "function:app/src/main/java/com/example/recime/importing/LocalAiClient.java:request",
+      "type": "contains",
+      "weight": 1.0,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/src/main/java/com/example/recime/importing/LocalAiClient.java",
+      "target": "function:app/src/main/java/com/example/recime/importing/LocalAiClient.java:image",
+      "type": "contains",
+      "weight": 1.0,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/src/main/java/com/example/recime/importing/LocalAiClient.java",
+      "target": "class:app/src/main/java/com/example/recime/importing/LocalAiClient.java:LocalAiClient",
+      "type": "contains",
+      "weight": 1.0,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/src/main/java/com/example/recime/MainActivity.java",
+      "target": "function:app/src/main/java/com/example/recime/MainActivity.java:onCreate",
+      "type": "contains",
+      "weight": 1.0,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/src/main/java/com/example/recime/MainActivity.java",
+      "target": "function:app/src/main/java/com/example/recime/MainActivity.java:handleShare",
+      "type": "contains",
+      "weight": 1.0,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/src/main/java/com/example/recime/MainActivity.java",
+      "target": "class:app/src/main/java/com/example/recime/MainActivity.java:MainActivity",
+      "type": "contains",
+      "weight": 1.0,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/src/main/java/com/example/recime/ui/BoardFragment.java",
+      "target": "function:app/src/main/java/com/example/recime/ui/BoardFragment.java:onViewCreated",
+      "type": "contains",
+      "weight": 1.0,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/src/main/java/com/example/recime/ui/BoardFragment.java",
+      "target": "function:app/src/main/java/com/example/recime/ui/BoardFragment.java:render",
+      "type": "contains",
+      "weight": 1.0,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/src/main/java/com/example/recime/ui/BoardFragment.java",
+      "target": "function:app/src/main/java/com/example/recime/ui/BoardFragment.java:selectMeal",
+      "type": "contains",
+      "weight": 1.0,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/src/main/java/com/example/recime/ui/BoardFragment.java",
+      "target": "function:app/src/main/java/com/example/recime/ui/BoardFragment.java:planGroceries",
+      "type": "contains",
+      "weight": 1.0,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/src/main/java/com/example/recime/ui/BoardFragment.java",
+      "target": "function:app/src/main/java/com/example/recime/ui/BoardFragment.java:groceryEditor",
+      "type": "contains",
+      "weight": 1.0,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/src/main/java/com/example/recime/ui/BoardFragment.java",
+      "target": "function:app/src/main/java/com/example/recime/ui/BoardFragment.java:share",
+      "type": "contains",
+      "weight": 1.0,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/src/main/java/com/example/recime/ui/BoardFragment.java",
+      "target": "class:app/src/main/java/com/example/recime/ui/BoardFragment.java:BoardFragment",
+      "type": "contains",
+      "weight": 1.0,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/src/main/java/com/example/recime/ui/ImportFragment.java",
+      "target": "function:app/src/main/java/com/example/recime/ui/ImportFragment.java:onViewCreated",
+      "type": "contains",
+      "weight": 1.0,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/src/main/java/com/example/recime/ui/ImportFragment.java",
+      "target": "function:app/src/main/java/com/example/recime/ui/ImportFragment.java:fetch",
+      "type": "contains",
+      "weight": 1.0,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/src/main/java/com/example/recime/ui/ImportFragment.java",
+      "target": "function:app/src/main/java/com/example/recime/ui/ImportFragment.java:ocr",
+      "type": "contains",
+      "weight": 1.0,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/src/main/java/com/example/recime/ui/ImportFragment.java",
+      "target": "function:app/src/main/java/com/example/recime/ui/ImportFragment.java:aiRequest",
+      "type": "contains",
+      "weight": 1.0,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/src/main/java/com/example/recime/ui/ImportFragment.java",
+      "target": "function:app/src/main/java/com/example/recime/ui/ImportFragment.java:showCandidates",
+      "type": "contains",
+      "weight": 1.0,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/src/main/java/com/example/recime/ui/ImportFragment.java",
+      "target": "class:app/src/main/java/com/example/recime/ui/ImportFragment.java:ImportFragment",
+      "type": "contains",
+      "weight": 1.0,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/src/main/java/com/example/recime/ui/ImportFragment.java",
+      "target": "file:app/src/main/java/com/example/recime/importing/LocalAiClient.java",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/src/main/java/com/example/recime/ui/LabViewModel.java",
+      "target": "class:app/src/main/java/com/example/recime/ui/LabViewModel.java:LabViewModel",
+      "type": "contains",
+      "weight": 1.0,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/src/main/java/com/example/recime/ui/Motion.java",
+      "target": "function:app/src/main/java/com/example/recime/ui/Motion.java:card",
+      "type": "contains",
+      "weight": 1.0,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/src/main/java/com/example/recime/ui/Motion.java",
+      "target": "class:app/src/main/java/com/example/recime/ui/Motion.java:Motion",
+      "type": "contains",
+      "weight": 1.0,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/src/main/java/com/example/recime/ui/RecipesFragment.java",
+      "target": "function:app/src/main/java/com/example/recime/ui/RecipesFragment.java:onViewCreated",
+      "type": "contains",
+      "weight": 1.0,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/src/main/java/com/example/recime/ui/RecipesFragment.java",
+      "target": "function:app/src/main/java/com/example/recime/ui/RecipesFragment.java:filter",
+      "type": "contains",
+      "weight": 1.0,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/src/main/java/com/example/recime/ui/RecipesFragment.java",
+      "target": "class:app/src/main/java/com/example/recime/ui/RecipesFragment.java:RecipesFragment",
+      "type": "contains",
+      "weight": 1.0,
+      "direction": "forward"
+    },
+    {
+      "source": "file:backend/app.py",
+      "target": "function:backend/app.py:tiktok_caption",
+      "type": "contains",
+      "weight": 1.0,
+      "direction": "forward"
+    },
+    {
+      "source": "file:backend/app.py",
+      "target": "file:backend/engine.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:backend/engine.py",
+      "target": "class:backend/engine.py:RecipeEngine",
+      "type": "contains",
+      "weight": 1.0,
+      "direction": "forward"
+    },
+    {
+      "source": "file:backend/train_recipe_model.py",
+      "target": "function:backend/train_recipe_model.py:main",
+      "type": "contains",
+      "weight": 1.0,
+      "direction": "forward"
+    },
+    {
+      "source": "file:backend/train_recipe_model.py",
+      "target": "file:backend/engine.py",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:backend/train_vision_scratch.py",
+      "target": "function:backend/train_vision_scratch.py:features",
+      "type": "contains",
+      "weight": 1.0,
+      "direction": "forward"
+    },
+    {
+      "source": "file:backend/train_vision_scratch.py",
+      "target": "function:backend/train_vision_scratch.py:main",
+      "type": "contains",
+      "weight": 1.0,
+      "direction": "forward"
+    }
+  ],
+  "layers": [
+    {
+      "id": "layer:android-ui",
+      "name": "Android UI",
+      "description": "Activity, fragments, ViewModel and native motion.",
+      "nodeIds": [
+        "file:app/src/main/java/com/example/recime/MainActivity.java",
+        "file:app/src/main/java/com/example/recime/ui/BoardFragment.java",
+        "file:app/src/main/java/com/example/recime/ui/ImportFragment.java",
+        "file:app/src/main/java/com/example/recime/ui/LabViewModel.java",
+        "file:app/src/main/java/com/example/recime/ui/Motion.java",
+        "file:app/src/main/java/com/example/recime/ui/RecipesFragment.java"
+      ]
+    },
+    {
+      "id": "layer:android-data",
+      "name": "Android persistence",
+      "description": "Room persistence, catalog installation and repository.",
+      "nodeIds": [
+        "file:app/src/main/java/com/example/recime/data/CatalogImporter.java",
+        "file:app/src/main/java/com/example/recime/data/LabDatabase.java",
+        "file:app/src/main/java/com/example/recime/data/RecipeRepository.java"
+      ]
+    },
+    {
+      "id": "layer:import-domain",
+      "name": "Import and domain",
+      "description": "Recipe parsing and laptop request adapter.",
+      "nodeIds": [
+        "file:app/src/main/java/com/example/recime/domain/RecipeParser.java",
+        "file:app/src/main/java/com/example/recime/importing/LocalAiClient.java"
+      ]
+    },
+    {
+      "id": "layer:laptop-ai",
+      "name": "Laptop AI",
+      "description": "FastAPI service, retrieval and training utilities.",
+      "nodeIds": [
+        "file:backend/app.py",
+        "file:backend/engine.py",
+        "document:backend/README.md",
+        "file:backend/train_recipe_model.py",
+        "file:backend/train_vision_scratch.py"
+      ]
+    },
+    {
+      "id": "layer:documentation",
+      "name": "Documentation",
+      "description": "Development and user guidance.",
+      "nodeIds": [
+        "document:README.md"
+      ]
+    }
+  ],
+  "tour": [
+    {
+      "order": 1,
+      "title": "Start at the Android entry",
+      "description": "Follow bottom navigation and share intents from MainActivity.",
+      "nodeIds": [
+        "file:app/src/main/java/com/example/recime/MainActivity.java"
+      ]
+    },
+    {
+      "order": 2,
+      "title": "Observe persistent state",
+      "description": "ViewModel exposes Room-backed state and repository operations.",
+      "nodeIds": [
+        "file:app/src/main/java/com/example/recime/data/LabDatabase.java",
+        "file:app/src/main/java/com/example/recime/data/RecipeRepository.java",
+        "file:app/src/main/java/com/example/recime/ui/LabViewModel.java"
+      ]
+    },
+    {
+      "order": 3,
+      "title": "Install sourced catalog",
+      "description": "Inspect catalog loading and preservation of existing user data.",
+      "nodeIds": [
+        "file:app/src/main/java/com/example/recime/data/CatalogImporter.java"
+      ]
+    },
+    {
+      "order": 4,
+      "title": "Browse and plan",
+      "description": "Follow recipe grid filtering and shared planner/grocery presentation.",
+      "nodeIds": [
+        "file:app/src/main/java/com/example/recime/ui/BoardFragment.java",
+        "file:app/src/main/java/com/example/recime/ui/RecipesFragment.java"
+      ]
+    },
+    {
+      "order": 5,
+      "title": "Review imports",
+      "description": "Trace OCR/image choices through parser and laptop adapter before saving.",
+      "nodeIds": [
+        "file:app/src/main/java/com/example/recime/domain/RecipeParser.java",
+        "file:app/src/main/java/com/example/recime/importing/LocalAiClient.java",
+        "file:app/src/main/java/com/example/recime/ui/ImportFragment.java"
+      ]
+    },
+    {
+      "order": 6,
+      "title": "Inspect local AI honestly",
+      "description": "Read endpoint behavior and distinguish recipe retrieval, pretrained vision and experimental scratch training.",
+      "nodeIds": [
+        "file:backend/app.py",
+        "file:backend/engine.py",
+        "file:backend/train_recipe_model.py",
+        "file:backend/train_vision_scratch.py"
+      ]
+    }
+  ]
+}

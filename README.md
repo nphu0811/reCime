@@ -1,88 +1,67 @@
-# MyRecipeLab — sổ công thức offline (Java + XML)
+# MyRecipeLab — Java/XML, dữ liệu thật và AI local
 
-Ứng dụng Android độc lập để học và tiếp tục phát triển: lưu công thức, nhập văn bản/ảnh, lên lịch tuần và tạo danh sách đi chợ. Không sử dụng mã nguồn, logo, ảnh quảng cáo hay API riêng của ReciMe. Nghiên cứu có bằng chứng và giới hạn tại [docs/REA_ANALYSIS.md](docs/REA_ANALYSIS.md); đối chiếu đủ 10 ảnh tại [docs/FEATURE_MATRIX.md](docs/FEATURE_MATRIX.md).
+Ứng dụng Android độc lập, lưu offline bằng **Room trên SQLite**, không cần trả tiền database hoặc API. Dataset đi kèm có **547 công thức** (cộng4 món mẫu tự soạn khi cài mới), **211 công thức có ảnh thật (178 ảnh riêng biệt)** cùng nguồn, lịch sử tác giả và giấy phép. Phần lớn là công thức tiếng Việt từ Wikibooks, có cả món quốc tế; đây **không phải toàn bộ món Việt Nam**. 336 công thức còn thiếu ảnh thật. Không sử dụng mã nguồn/nhận diện/API riêng của ReciMe.
 
-## Mở và chạy trong Android Studio trên Windows
+## Chạy Android Studio
 
-1. Chọn **Open** thư mục project này (`C:\Users\admin\AndroidStudioProjects\reCIme`). Tên project/ứng dụng là **MyRecipeLab**. Namespace và application ID `com.example.recime` được giữ từ project ban đầu.
-2. Dùng **JDK 21**, Android SDK **37**, Gradle wrapper **9.5.0**, AGP **9.3.3** đang có trong project. Đã chỉnh Gradle daemon từ yêu cầu JDK25 sang JDK21 hiện hữu; không cài thêm JDK. Trong Settings → Build Tools → Gradle chọn JDK21. SDK location nằm trong `local.properties` của máy, không commit.
-3. Sync Gradle. Lần đầu cần Internet tải AndroidX, Room, Material, ML Kit OCR bundled, OkHttp, Jsoup. Không cần API key, tài khoản hay backend.
-4. Device Manager → mở AVD (đã thử `Medium_Phone`, API37/x86_64); hoặc kết nối điện thoại Android 7/API24 trở lên, bật USB debugging và xác nhận RSA trên điện thoại.
-5. Chọn module `app` → Run. Bốn công thức mẫu tự soạn được tạo một lần; xóa chúng không làm chúng xuất hiện lại khi mở app. Ảnh xanh là minh họa vector riêng, không phải ảnh món ăn thực tế.
-
-```powershell
-.\gradlew.bat assembleDebug
-.\gradlew.bat testDebugUnitTest
-# Cần emulator/thiết bị đã được ADB nhận:
-.\gradlew.bat connectedDebugAndroidTest
-.\gradlew.bat lintDebug
-```
-
-APK debug: `app\build\outputs\apk\debug\app-debug.apk`. Có thể cài bằng Run trong Android Studio hoặc:
+1. Open thư mục `reCIme`, chọn Gradle JDK **21**, SDK **37**, Sync. Wrapper Gradle9.5.0 và AGP9.3.3 đã cấu hình; minSDK24.
+2. Mở emulator hoặc kết nối điện thoại USB debugging → Run module `app`.
+3. Lần mở đầu nạp dataset vào Room. Công thức, sửa đổi, yêu thích, lịch tuần và checklist còn sau khi khởi động lại. Database version3 có migration giữ dữ liệu; công thức catalog đã xóa được lưu tombstone để cập nhật catalog không phục hồi chúng.
+4. Thư viện, CRUD, OCR và planner không cần AI server. Lần Sync đầu cần Internet tải dependencies. APK: `app/build/outputs/apk/debug/app-debug.apk`.
 
 ```powershell
-& "$env:LOCALAPPDATA\Android\Sdk\platform-tools\adb.exe" install -r .\app\build\outputs\apk\debug\app-debug.apk
-& "$env:LOCALAPPDATA\Android\Sdk\platform-tools\adb.exe" shell am start -n com.example.recime/.MainActivity
+.\gradlew.bat assembleDebug testDebugUnitTest lintDebug
 ```
 
-Nếu SDK khác máy này: cài platform37/build tools qua SDK Manager rồi Sync. Không hạ Gradle/AGP tùy tiện. Nếu JDK báo sai: kiểm tra `java -version`, Gradle JDK và `gradle/gradle-daemon-jvm.properties`. Không commit `local.properties`, signing keys hoặc secrets.
+## AI miễn phí trên laptop
+
+Xem hướng dẫn cài mới, tải model và Wi-Fi tại [backend/README.md](backend/README.md). Trên máy đã thiết lập:
+
+```powershell
+.\backend\run.ps1
+# Terminal khác, khi điện thoại/emulator kết nối USB:
+& "$env:LOCALAPPDATA\Android\Sdk\platform-tools\adb.exe" reverse tcp:8765 tcp:8765
+```
+
+Trong **Nhập → Cài đặt AI**, endpoint `http://127.0.0.1:8765`, Kiểm tra kết nối. Đây là debug build cho phép HTTP để thử local. Wi-Fi cần địa chỉ LAN laptop và bind server như backend README; không tự thay firewall. Release cần HTTPS phù hợp.
+
+- Ảnh chữ: ML Kit OCR trên điện thoại → sửa văn bản → parser → review → lưu.
+- Ảnh món: CLIP ONNX quantized khoảng89MB trên laptop → so với ảnh nguồn → chọn ứng viên/biến thể → công thức đã lưu có nguồn. Không suy ra được định lượng chuẩn của một món chỉ từ ảnh.
+- Caption: model truy hồi TF-IDF tự train từ547 công thức, khoảng0.8MB. Có kiểm tra ngoài miền; chưa tích hợp LLM sinh công thức.
+- TikTok: chỉ metadata/caption oEmbed chính thức khi truy cập được. Không tải video/audio hoặc vượt đăng nhập. Lượt thử live không nhận được caption; có fallback dán caption/OCR screenshot.
+- Đã train model phân3 nhóm ảnh từ đầu; kiểm định45 ảnh chỉ46.67% chính xác, thấp hơn baseline53.33%. **Không dùng model này để chọn công thức**. Script/model report được giao để tiếp tục học, không công bố model chuyên gia đã đạt chuẩn.
 
 ## Thử 10 nhóm chức năng
 
-1. **Recipes / CRUD:** mở món mẫu, chọn Sửa hoặc Nhập → Viết công thức mới. Điền tên, nguyên liệu, các bước, khẩu phần dương → Lưu. Xóa có xác nhận; các bữa dùng món bị xóa theo foreign key.
-2. **Cookbooks / favorites:** điền tên bộ sưu tập ở form; lọc bằng dropdown, đánh dấu ♥ ở chi tiết. Đây là nhãn bộ sưu tập cho từng món, chưa có cookbook trống hoặc nhiều cookbook cho cùng một món.
-3. **Tìm kiếm / Discover:** tìm `dau phu`, `trứng`, `chay`, hoặc các token nguyên liệu cách nhau bởi dấu phẩy/khoảng trắng. Lọc không phân biệt dấu/hoa thường. Discover tìm trong thư viện local, chưa có catalog Internet.
-4. **Import văn bản:** dán ví dụ bên dưới → Phân tích → kiểm tra/sửa từng trường → Lưu. Không tự suy diễn nguyên liệu hoặc bước bị thiếu.
-5. **Import ảnh/OCR:** chọn ảnh qua Android Photo Picker hoặc Chụp ảnh qua camera app. OCR ML Kit chạy trên thiết bị, không cần dịch vụ cloud. Sửa kết quả OCR trong ô văn bản, rồi Phân tích → kiểm tra form → Lưu. OCR chữ viết tay/tiếng Việt có thể sai. Nếu camera không có/ảnh lỗi, có thông báo và đường nhập thủ công.
-6. **Sharesheet / URL:** trong app khác chia sẻ text, ảnh hoặc URL vào MyRecipeLab. URL HTTPS cần chọn “Đọc Recipe JSON-LD”; chỉ lấy structured Recipe công khai, không chạy JavaScript hay đăng nhập. Nếu không có schema tương thích hoặc link social, dán caption/screenshot có quyền sử dụng. Sửa URL và bấm đọc để retry.
-7. **Meal planner:** chọn Lịch tuần, nhấn ô sáng/trưa/tối → chọn món. Chọn lại để thay món, mục Bỏ món để xóa; giữ ô cũng có thể bỏ món. Mũi tên chuyển tuần. Dữ liệu còn sau khi đóng/mở ứng dụng.
-8. **Groceries:** từ chi tiết chọn “Thêm nguyên liệu vào giỏ” với khẩu phần đang hiển thị, hoặc từ lịch chọn “Tạo giỏ từ tuần này” với khẩu phần gốc. Cùng tên chuẩn hóa và dimension tương thích sẽ cộng lại. Mỗi lần bấm là **cộng thêm**, không đồng bộ tự động với lịch. Nhập/sửa/xóa tay, checkbox và chia sẻ checklist đều hoạt động. Không có dịch vụ đặt hàng.
-9. **Portions / Units:** tăng/giảm khẩu phần trong chi tiết; lượng luôn tính từ baseline đã lưu, không nhân lũy tiến trên kết quả cũ. Chọn g/ml để chuyển mass/volume; cấu hình tsp/tbsp/cup trong “Chuẩn thìa & cup”, mặc định 5/15/240ml. `lạng=100g`; quả/củ giữ nguyên. Không đổi g↔ml vì thiếu mật độ.
-10. **Nutrition:** sửa món → tùy chọn nhập kcal/protein/carb/fat **mỗi khẩu phần gốc**, kèm nguồn như nhãn sản phẩm. Giá trị không có nguồn bị từ chối; thiếu trường thì hiển thị “chưa đủ dữ liệu”. Đây là dữ liệu tự nhập, chưa được xác minh; app chưa tự tính từ nguyên liệu. Đổi tổng số phần không làm thay đổi giá trị mỗi khẩu phần.
+1. **Thư viện:** ảnh thật, hero, grid, tìm không dấu, lọc cookbook và tag; dataset mở offline.
+2. **CRUD:** Nhập → Viết công thức; lưu, mở chi tiết, sửa, yêu thích, xóa có xác nhận.
+3. **OCR:** chọn ảnh/chụp chữ, chỉnh kết quả trước khi phân tích và lưu; nhận ảnh/text qua Sharesheet.
+4. **Ảnh món:** chọn ảnh món hoặc chế độ camera ảnh món → laptop AI → xác nhận ứng viên.
+5. **URL/caption:** đọc Recipe JSON-LD công khai hoặc tìm từ caption; TikTok hiện giới hạn như trên.
+6. **Lịch tuần:** chọn ô sáng/trưa/tối, tìm món trong hộp chọn, đổi/bỏ món, chuyển tuần; lưu Room.
+7. **Đi chợ:** thêm từ món/lịch; gom nguyên liệu cùng đơn vị tương thích, thêm/sửa/xóa/checkbox/chia sẻ. Mỗi lần thêm là cộng, không tự đồng bộ hoặc đặt hàng online.
+8. **Khẩu phần:** tính từ lượng gốc; chưa biết số phần thì hiện mẻ công thức, khoảng định lượng giữ nguyên để review.
+9. **Đơn vị:** g/kg/lạng(100g),ml/l; tsp/tbsp/cup cấu hình mặc định5/15/240ml. Không đổi g↔ml thiếu mật độ.
+10. **Dinh dưỡng:** nhập tay mỗi khẩu phần kèm nguồn; thiếu dữ liệu hiển thị rõ, chưa có cơ sở dữ liệu tự tính.
 
-Ví dụ parser Việt:
+## XML Preview và giao diện
 
-```text
-Đậu phụ sốt gừng
-Nguyên liệu
-2 lạng đậu phụ
-1 muỗng canh dầu ăn
-1 muỗng cà phê nước tương
-50 ml nước
-1 củ gừng
-Cách làm
-1. Cắt đậu và gừng.
-2. Áp chảo đậu, thêm nước tương và nước, nấu chín.
+Layout đã format nhiều dòng. Mở `fragment_board.xml`, `fragment_recipes.xml` hoặc `preview_app_home.xml` trong Design/Split, Build & Refresh. `tools:text`, `tools:src`, `tools:listitem` cung cấp dữ liệu thiết kế cho thành phần có text/ảnh gán động bằng Java; giữ nguyên giá trị người dùng đã thêm. `activity_main.xml` là host Fragment nên không tự hiện các màn hình động. File `preview_app_home.xml` chỉ phục vụ Preview.
+
+Native Material Components, ripple/elevation, chuyển màn hình fade và chuyển động card; tôn trọng thiết lập tắt animation hệ thống. Không dùng GSAP web trong Android native.
+
+## Kiểm thử và cấu trúc
+
+```powershell
+# AI server + adb reverse phải chạy cho bộ integration AI:
+.\gradlew.bat connectedDebugAndroidTest
+.\backend\.venv\Scripts\python.exe -m unittest backend.test_backend -v
 ```
 
-Hỗ trợ heading `Nguyên liệu / Ingredients` và `Cách làm / Instructions / Directions / Method / Steps`, số thập phân dấu phẩy/chấm, phân số `1/2`, `1 1/2`, `½`. Hãy kiểm tra kết quả với văn bản không có heading, nhiều công thức trong một ảnh hoặc đơn vị lạ. Đơn vị không biết được giữ nguyên; không tự gán density/nutrition.
+- `app/src/main/java/.../data`: Room, migration, repository/catalog importer.
+- `domain`: parser, scaling, conversion, aggregation; `ui`: Java Fragment; `res/layout`: XML.
+- `app/src/main/assets/catalog`: dataset, ảnh, credits; `datasets/recipe_catalog.sqlite3`: SQLite độc lập để kiểm tra/học.
+- `backend`: FastAPI/ONNX/retrieval/scripts train; `tools`: thu thập và chuẩn bị dữ liệu có nguồn.
+- [Trạng thái và bằng chứng](docs/IMPLEMENTATION_STATUS.md), [dataset và AI](docs/DATASET_AND_AI.md), [nghiên cứu REA](docs/REA_ANALYSIS.md), [đối chiếu10 ảnh](docs/FEATURE_MATRIX.md), [review](docs/REVIEW_V2.md).
 
-## Cấu trúc để học và mở rộng
-
-```text
-app/src/main/java/com/example/recime/
-  MainActivity.java                 BottomNavigationView, Sharesheet, fragment navigation
-  data/                            Room entities, DAO, database, repository + executor
-  domain/                          Ingredient, Units, RecipeParser, GroceryAggregator
-  importing/                       ExtractionAdapter, PublicWebExtractor
-  ui/                              ViewModel, Recipes/Import/Editor/Detail/Board fragments
-app/src/main/res/layout/            XML màn hình và RecyclerView items
-app/schemas/                       Room schema v1 (cần migration khi đổi DB)
-app/src/test/                      Unit tests nghiệp vụ
-app/src/androidTest/               Room, OCR, JSON-LD, Espresso integration tests
-docs/evidence/                     REA outputs, bản gốc, logs, screenshots
-```
-
-Luồng: Input → extraction/OCR → parser → normalize → validate → **review** → Room → LiveData → UI. Truy vấn/ghi DB, tải URL và chuẩn bị OCR chạy ngoài UI thread. Không dùng `allowMainThreadQueries` hay destructive migration. App không phụ thuộc backend khi khởi động.
-
-## Giới hạn và an toàn dữ liệu
-
-- ReciMe thật không có trên emulator lúc nghiên cứu. Chưa có APK hợp lệ, chưa decompile, chưa kiểm tra framework/network/backend; không giả định app Android dùng cấu trúc trong ảnh iOS.
-- REA CLI 6.7.0 đã chạy thật. Setup chỉ đăng ký Codex MCP, backup `C:\Users\admin\.codex\config.toml.rea.backup`, không cài skill/provider. Khởi động lại Codex khi thuận tiện để nạp MCP mới; CLI vẫn dùng được. JADX chưa cài vì không có APK mục tiêu.
-- OCR Latin bundled hoạt động offline, nhưng dấu Việt và chữ viết tay cần kiểm tra thủ công. Ảnh giới hạn 20MB, thu nhỏ trước OCR. Nếu xoay màn hình khi đang nhập URL/OCR, thử lại thao tác; nội dung đã có được Android khôi phục. Mã chưa xử lý tự động ảnh mirror EXIF.
-- URL importer chặn mạng nội bộ, userinfo và HTTP, kiểm tra lại redirect và DNS kết nối, giới hạn body2MB/timeout20s. Trang trả 401/403/paywall không được vượt qua. Không dùng API riêng ReciMe hoặc social; không tự lấy âm thanh video.
-- Speech/LLM/cloud sync/tài khoản/đặt hàng/dinh dưỡng tự động: **chưa hỗ trợ**. `ExtractionAdapter` là điểm mở rộng; chưa có nút giả hay yêu cầu secret.
-- Room và ảnh lưu private app storage; app hiện dùng cơ chế Android backup theo cấu hình project, chưa có mật khẩu/DB encryption. Gỡ app có thể mất dữ liệu local; chưa có xuất/nhập backup toàn bộ. File ảnh mồ côi sau hủy/xóa recipe chưa được dọn tự động.
-- Tests chỉ nên chạy trên emulator/dev build: tạo/xóa công thức test và có thể thêm meal/grocery demo. Không chạy test tự động trên bản có dữ liệu người dùng quan trọng.
-
-Trạng thái và bằng chứng kiểm thử cuối cùng: [docs/IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md).
+Không ghi secrets vào repo; artifacts model, venv và cache thô bị gitignore. Quyền dữ liệu/ảnh được ghi từng mục; ảnh dùng chung nhóm món chỉ là minh họa, không chứng minh đúng biến thể. Chưa đo độ chính xác ảnh ngoài gallery, chưa có dataset đầy đủ mọi món Việt, chưa có speech/video extraction hoặc LLM chuyên gia được kiểm định.

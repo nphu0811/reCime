@@ -1,0 +1,5120 @@
+{
+  "version": "1.0.0",
+  "gitCommitHash": "a777eff98ea6d0d753751594121ce60c333fa419",
+  "generatedAt": "2026-10-22T13:24:35.694Z",
+  "files": {
+    ".understand-anything/.understandignore": {
+      "filePath": ".understand-anything/.understandignore",
+      "contentHash": "7387ed16e1832763028f3937523279623a47d4ed4f354a8ece8b8477471b265b",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 11,
+      "hasStructuralAnalysis": false
+    },
+    "app/build.gradle.kts": {
+      "filePath": "app/build.gradle.kts",
+      "contentHash": "21e9929bc1a11f0a41a330d1d692bfc6422bc7efed1dcbb70020aee3477e8ba9",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 60,
+      "hasStructuralAnalysis": false
+    },
+    "app/schemas/com.example.recime.data.LabDatabase/1.json": {
+      "filePath": "app/schemas/com.example.recime.data.LabDatabase/1.json",
+      "contentHash": "22f4a3db019ac1087da2a33140711ae3f7879babce27824422af00ab07cbb66d",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 205,
+      "hasStructuralAnalysis": true
+    },
+    "app/schemas/com.example.recime.data.LabDatabase/2.json": {
+      "filePath": "app/schemas/com.example.recime.data.LabDatabase/2.json",
+      "contentHash": "f1abf1928480992952775ff77f83897a963ce409cf205715e1a583864cd478c3",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 240,
+      "hasStructuralAnalysis": true
+    },
+    "app/src/androidTest/java/com/example/recime/AiLaptopIntegrationTest.java": {
+      "filePath": "app/src/androidTest/java/com/example/recime/AiLaptopIntegrationTest.java",
+      "contentHash": "e13358f0b69f3da0e94642aeca6f6c04ed9048ec46fb8a37895c03ff8694c877",
+      "functions": [
+        {
+          "name": "androidCanCallRealRecipeModelOnLaptop",
+          "params": [],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 9
+        },
+        {
+          "name": "sharedFoodPhotoUsesRealVisionServerThenOpensSourcedRecipe",
+          "params": [],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 55
+        }
+      ],
+      "classes": [
+        {
+          "name": "AiLaptopIntegrationTest",
+          "methods": [
+            "androidCanCallRealRecipeModelOnLaptop",
+            "sharedFoodPhotoUsesRealVisionServerThenOpensSourcedRecipe"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 68
+        }
+      ],
+      "imports": [
+        {
+          "source": "androidx.test.espresso.Espresso.onView",
+          "specifiers": [
+            "onView"
+          ]
+        },
+        {
+          "source": "androidx.test.espresso.action.ViewActions.click",
+          "specifiers": [
+            "click"
+          ]
+        },
+        {
+          "source": "androidx.test.espresso.assertion.ViewAssertions.matches",
+          "specifiers": [
+            "matches"
+          ]
+        },
+        {
+          "source": "androidx.test.espresso.matcher.ViewMatchers",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "org.junit.Assert",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "android.content",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "android.net.Uri",
+          "specifiers": [
+            "Uri"
+          ]
+        },
+        {
+          "source": "android.os.SystemClock",
+          "specifiers": [
+            "SystemClock"
+          ]
+        },
+        {
+          "source": "android.widget.TextView",
+          "specifiers": [
+            "TextView"
+          ]
+        },
+        {
+          "source": "androidx.core.content.FileProvider",
+          "specifiers": [
+            "FileProvider"
+          ]
+        },
+        {
+          "source": "androidx.test.core.app",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "androidx.test.ext.junit.runners.AndroidJUnit4",
+          "specifiers": [
+            "AndroidJUnit4"
+          ]
+        },
+        {
+          "source": "com.example.recime.importing.LocalAiClient",
+          "specifiers": [
+            "LocalAiClient"
+          ]
+        },
+        {
+          "source": "java.io",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "java.util.concurrent.atomic.AtomicReference",
+          "specifiers": [
+            "AtomicReference"
+          ]
+        },
+        {
+          "source": "org.json",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "org.junit.Test",
+          "specifiers": [
+            "Test"
+          ]
+        },
+        {
+          "source": "org.junit.runner.RunWith",
+          "specifiers": [
+            "RunWith"
+          ]
+        }
+      ],
+      "exports": [
+        "androidCanCallRealRecipeModelOnLaptop",
+        "sharedFoodPhotoUsesRealVisionServerThenOpensSourcedRecipe",
+        "AiLaptopIntegrationTest"
+      ],
+      "totalLines": 92,
+      "hasStructuralAnalysis": true
+    },
+    "app/src/androidTest/java/com/example/recime/CatalogDatabaseTest.java": {
+      "filePath": "app/src/androidTest/java/com/example/recime/CatalogDatabaseTest.java",
+      "contentHash": "33cb1942c6816ba781ada92341afdf64f87738876164dac7bd5c4dfdaf516170",
+      "functions": [
+        {
+          "name": "offlineCatalogInstallsIdempotentlyAndPreservesUserEdits",
+          "params": [],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 27
+        },
+        {
+          "name": "migrationOneToThreeKeepsRecipesAndMealForeignKeys",
+          "params": [],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 47
+        }
+      ],
+      "classes": [
+        {
+          "name": "CatalogDatabaseTest",
+          "methods": [
+            "offlineCatalogInstallsIdempotentlyAndPreservesUserEdits",
+            "migrationOneToThreeKeepsRecipesAndMealForeignKeys"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 78
+        }
+      ],
+      "imports": [
+        {
+          "source": "org.junit.Assert",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "android.content.Context",
+          "specifiers": [
+            "Context"
+          ]
+        },
+        {
+          "source": "androidx.room.Room",
+          "specifiers": [
+            "Room"
+          ]
+        },
+        {
+          "source": "androidx.test.core.app.ApplicationProvider",
+          "specifiers": [
+            "ApplicationProvider"
+          ]
+        },
+        {
+          "source": "androidx.test.ext.junit.runners.AndroidJUnit4",
+          "specifiers": [
+            "AndroidJUnit4"
+          ]
+        },
+        {
+          "source": "com.example.recime.data",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "org.junit.Test",
+          "specifiers": [
+            "Test"
+          ]
+        },
+        {
+          "source": "org.junit.runner.RunWith",
+          "specifiers": [
+            "RunWith"
+          ]
+        }
+      ],
+      "exports": [
+        "offlineCatalogInstallsIdempotentlyAndPreservesUserEdits",
+        "migrationOneToThreeKeepsRecipesAndMealForeignKeys",
+        "CatalogDatabaseTest"
+      ],
+      "totalLines": 91,
+      "hasStructuralAnalysis": true
+    },
+    "app/src/androidTest/java/com/example/recime/importing/WebRecipeTest.java": {
+      "filePath": "app/src/androidTest/java/com/example/recime/importing/WebRecipeTest.java",
+      "contentHash": "e9a97588afc1a6e096f1b5afb41d6bc64bab51cfd40c126f41197d5d14ae71c8",
+      "functions": [
+        {
+          "name": "selfCreatedJsonLdGraphAndHowToSectionsParseToReview",
+          "params": [],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 15
+        }
+      ],
+      "classes": [
+        {
+          "name": "WebRecipeTest",
+          "methods": [
+            "selfCreatedJsonLdGraphAndHowToSectionsParseToReview"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 18
+        }
+      ],
+      "imports": [
+        {
+          "source": "org.junit.Assert",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "androidx.test.ext.junit.runners.AndroidJUnit4",
+          "specifiers": [
+            "AndroidJUnit4"
+          ]
+        },
+        {
+          "source": "com.example.recime.domain.RecipeParser",
+          "specifiers": [
+            "RecipeParser"
+          ]
+        },
+        {
+          "source": "org.json",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "org.junit.Test",
+          "specifiers": [
+            "Test"
+          ]
+        },
+        {
+          "source": "org.junit.runner.RunWith",
+          "specifiers": [
+            "RunWith"
+          ]
+        }
+      ],
+      "exports": [
+        "selfCreatedJsonLdGraphAndHowToSectionsParseToReview",
+        "WebRecipeTest"
+      ],
+      "totalLines": 29,
+      "hasStructuralAnalysis": true
+    },
+    "app/src/androidTest/java/com/example/recime/ImportIntegrationTest.java": {
+      "filePath": "app/src/androidTest/java/com/example/recime/ImportIntegrationTest.java",
+      "contentHash": "ff8cf97ea991934dba270d2f6ac325ccb34805f5dd87f2e0525f1f81e048fb5a",
+      "functions": [
+        {
+          "name": "bundledOcrReadsSelfCreatedRecipeImageThenParserReviews",
+          "params": [],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 30
+        },
+        {
+          "name": "webAdapterRefusesPrivateAndSocialInputs",
+          "params": [],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 18
+        }
+      ],
+      "classes": [
+        {
+          "name": "ImportIntegrationTest",
+          "methods": [
+            "bundledOcrReadsSelfCreatedRecipeImageThenParserReviews",
+            "webAdapterRefusesPrivateAndSocialInputs"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 52
+        }
+      ],
+      "imports": [
+        {
+          "source": "org.junit.Assert",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "android.graphics",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "androidx.test.ext.junit.runners.AndroidJUnit4",
+          "specifiers": [
+            "AndroidJUnit4"
+          ]
+        },
+        {
+          "source": "com.example.recime.domain.RecipeParser",
+          "specifiers": [
+            "RecipeParser"
+          ]
+        },
+        {
+          "source": "com.example.recime.importing.PublicWebExtractor",
+          "specifiers": [
+            "PublicWebExtractor"
+          ]
+        },
+        {
+          "source": "com.google.android.gms.tasks.Tasks",
+          "specifiers": [
+            "Tasks"
+          ]
+        },
+        {
+          "source": "com.google.mlkit.vision.common.InputImage",
+          "specifiers": [
+            "InputImage"
+          ]
+        },
+        {
+          "source": "com.google.mlkit.vision.text",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "com.google.mlkit.vision.text.latin.TextRecognizerOptions",
+          "specifiers": [
+            "TextRecognizerOptions"
+          ]
+        },
+        {
+          "source": "java.util.concurrent.TimeUnit",
+          "specifiers": [
+            "TimeUnit"
+          ]
+        },
+        {
+          "source": "org.junit.Test",
+          "specifiers": [
+            "Test"
+          ]
+        },
+        {
+          "source": "org.junit.runner.RunWith",
+          "specifiers": [
+            "RunWith"
+          ]
+        }
+      ],
+      "exports": [
+        "bundledOcrReadsSelfCreatedRecipeImageThenParserReviews",
+        "webAdapterRefusesPrivateAndSocialInputs",
+        "ImportIntegrationTest"
+      ],
+      "totalLines": 69,
+      "hasStructuralAnalysis": true
+    },
+    "app/src/androidTest/java/com/example/recime/LabDatabaseTest.java": {
+      "filePath": "app/src/androidTest/java/com/example/recime/LabDatabaseTest.java",
+      "contentHash": "fec492f705dc48cef545d62b6f355ec5c5efbf189fe2f50084a9c887824a8291",
+      "functions": [
+        {
+          "name": "persistsRecipeMealAndChecklistAndCascadesDelete",
+          "params": [],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 44
+        }
+      ],
+      "classes": [
+        {
+          "name": "LabDatabaseTest",
+          "methods": [
+            "persistsRecipeMealAndChecklistAndCascadesDelete"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 47
+        }
+      ],
+      "imports": [
+        {
+          "source": "org.junit.Assert",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "android.content.Context",
+          "specifiers": [
+            "Context"
+          ]
+        },
+        {
+          "source": "androidx.room.Room",
+          "specifiers": [
+            "Room"
+          ]
+        },
+        {
+          "source": "androidx.test.core.app.ApplicationProvider",
+          "specifiers": [
+            "ApplicationProvider"
+          ]
+        },
+        {
+          "source": "androidx.test.ext.junit.runners.AndroidJUnit4",
+          "specifiers": [
+            "AndroidJUnit4"
+          ]
+        },
+        {
+          "source": "com.example.recime.data",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "org.junit.Test",
+          "specifiers": [
+            "Test"
+          ]
+        },
+        {
+          "source": "org.junit.runner.RunWith",
+          "specifiers": [
+            "RunWith"
+          ]
+        }
+      ],
+      "exports": [
+        "persistsRecipeMealAndChecklistAndCascadesDelete",
+        "LabDatabaseTest"
+      ],
+      "totalLines": 60,
+      "hasStructuralAnalysis": true
+    },
+    "app/src/androidTest/java/com/example/recime/LabUiTest.java": {
+      "filePath": "app/src/androidTest/java/com/example/recime/LabUiTest.java",
+      "contentHash": "9bae4fba7953b8e2bdb75274b19c1f1339c1b11036f9c6b6605eaae8ef754f14",
+      "functions": [
+        {
+          "name": "manualImportSaveSearchDetailScaleAndGroceryPersist",
+          "params": [],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 51
+        },
+        {
+          "name": "tabsHaveRealContentAndInvalidUrlHasRecoverableError",
+          "params": [],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 21
+        }
+      ],
+      "classes": [
+        {
+          "name": "LabUiTest",
+          "methods": [
+            "manualImportSaveSearchDetailScaleAndGroceryPersist",
+            "tabsHaveRealContentAndInvalidUrlHasRecoverableError"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 76
+        }
+      ],
+      "imports": [
+        {
+          "source": "androidx.test.espresso.Espresso.onView",
+          "specifiers": [
+            "onView"
+          ]
+        },
+        {
+          "source": "androidx.test.espresso.action.ViewActions",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "androidx.test.espresso.assertion.ViewAssertions.matches",
+          "specifiers": [
+            "matches"
+          ]
+        },
+        {
+          "source": "androidx.test.espresso.matcher.ViewMatchers",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "org.junit.Assert",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "android.content",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "androidx.test.core.app",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "androidx.test.espresso.Espresso",
+          "specifiers": [
+            "Espresso"
+          ]
+        },
+        {
+          "source": "androidx.test.ext.junit.runners.AndroidJUnit4",
+          "specifiers": [
+            "AndroidJUnit4"
+          ]
+        },
+        {
+          "source": "com.example.recime.data",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "java.util.concurrent.TimeUnit",
+          "specifiers": [
+            "TimeUnit"
+          ]
+        },
+        {
+          "source": "org.junit.Test",
+          "specifiers": [
+            "Test"
+          ]
+        },
+        {
+          "source": "org.junit.runner.RunWith",
+          "specifiers": [
+            "RunWith"
+          ]
+        }
+      ],
+      "exports": [
+        "manualImportSaveSearchDetailScaleAndGroceryPersist",
+        "tabsHaveRealContentAndInvalidUrlHasRecoverableError",
+        "LabUiTest"
+      ],
+      "totalLines": 94,
+      "hasStructuralAnalysis": true
+    },
+    "app/src/androidTest/java/com/example/recime/OcrUiTest.java": {
+      "filePath": "app/src/androidTest/java/com/example/recime/OcrUiTest.java",
+      "contentHash": "1785a42395f3c701c8d947d5d40ed14e43911848d16123e575b20683166550b8",
+      "functions": [
+        {
+          "name": "sharedSelfCreatedImageGoesThroughOcrReviewAndRoom",
+          "params": [],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 76
+        }
+      ],
+      "classes": [
+        {
+          "name": "OcrUiTest",
+          "methods": [
+            "sharedSelfCreatedImageGoesThroughOcrReviewAndRoom"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 79
+        }
+      ],
+      "imports": [
+        {
+          "source": "androidx.test.espresso.Espresso.onView",
+          "specifiers": [
+            "onView"
+          ]
+        },
+        {
+          "source": "androidx.test.espresso.action.ViewActions",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "androidx.test.espresso.assertion.ViewAssertions.matches",
+          "specifiers": [
+            "matches"
+          ]
+        },
+        {
+          "source": "androidx.test.espresso.matcher.ViewMatchers",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "org.junit.Assert",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "android.content",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "android.graphics",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "android.net.Uri",
+          "specifiers": [
+            "Uri"
+          ]
+        },
+        {
+          "source": "android.os.SystemClock",
+          "specifiers": [
+            "SystemClock"
+          ]
+        },
+        {
+          "source": "android.widget.TextView",
+          "specifiers": [
+            "TextView"
+          ]
+        },
+        {
+          "source": "androidx.core.content.FileProvider",
+          "specifiers": [
+            "FileProvider"
+          ]
+        },
+        {
+          "source": "androidx.test.core.app",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "androidx.test.ext.junit.runners.AndroidJUnit4",
+          "specifiers": [
+            "AndroidJUnit4"
+          ]
+        },
+        {
+          "source": "com.example.recime.data",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "java.io",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "java.util.concurrent.TimeUnit",
+          "specifiers": [
+            "TimeUnit"
+          ]
+        },
+        {
+          "source": "java.util.concurrent.atomic.AtomicReference",
+          "specifiers": [
+            "AtomicReference"
+          ]
+        },
+        {
+          "source": "org.junit.Test",
+          "specifiers": [
+            "Test"
+          ]
+        },
+        {
+          "source": "org.junit.runner.RunWith",
+          "specifiers": [
+            "RunWith"
+          ]
+        }
+      ],
+      "exports": [
+        "sharedSelfCreatedImageGoesThroughOcrReviewAndRoom",
+        "OcrUiTest"
+      ],
+      "totalLines": 103,
+      "hasStructuralAnalysis": true
+    },
+    "app/src/androidTest/java/com/example/recime/PlannerUiTest.java": {
+      "filePath": "app/src/androidTest/java/com/example/recime/PlannerUiTest.java",
+      "contentHash": "8b59efe5e8a0113d7921db736a08745e78b3269aca37f948df4094a62fd10b72",
+      "functions": [
+        {
+          "name": "selectMealRecreateAndBuildChecklist",
+          "params": [],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 46
+        }
+      ],
+      "classes": [
+        {
+          "name": "PlannerUiTest",
+          "methods": [
+            "selectMealRecreateAndBuildChecklist"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 49
+        }
+      ],
+      "imports": [
+        {
+          "source": "androidx.test.espresso.Espresso",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "androidx.test.espresso.action.ViewActions",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "androidx.test.espresso.assertion.ViewAssertions.matches",
+          "specifiers": [
+            "matches"
+          ]
+        },
+        {
+          "source": "androidx.test.espresso.matcher.ViewMatchers",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "org.hamcrest.Matchers",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "androidx.test.core.app",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "androidx.test.ext.junit.runners.AndroidJUnit4",
+          "specifiers": [
+            "AndroidJUnit4"
+          ]
+        },
+        {
+          "source": "com.example.recime.data",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "java.util.concurrent.TimeUnit",
+          "specifiers": [
+            "TimeUnit"
+          ]
+        },
+        {
+          "source": "org.junit.Test",
+          "specifiers": [
+            "Test"
+          ]
+        },
+        {
+          "source": "org.junit.runner.RunWith",
+          "specifiers": [
+            "RunWith"
+          ]
+        }
+      ],
+      "exports": [
+        "selectMealRecreateAndBuildChecklist",
+        "PlannerUiTest"
+      ],
+      "totalLines": 65,
+      "hasStructuralAnalysis": true
+    },
+    "app/src/debug/AndroidManifest.xml": {
+      "filePath": "app/src/debug/AndroidManifest.xml",
+      "contentHash": "66104af0bbdb090f526c9f812c39e35e613aa467f79da22a42903d9baf179dcd",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 6,
+      "hasStructuralAnalysis": false
+    },
+    "app/src/main/AndroidManifest.xml": {
+      "filePath": "app/src/main/AndroidManifest.xml",
+      "contentHash": "a223873e65eb060df2f664ad3bae77d2e05b024f985d34ecea301fb7a7c83cef",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 38,
+      "hasStructuralAnalysis": false
+    },
+    "app/src/main/java/com/example/recime/data/CatalogImporter.java": {
+      "filePath": "app/src/main/java/com/example/recime/data/CatalogImporter.java",
+      "contentHash": "21bf6a523abdbca95bb9c35feaa8469925330221fe61d945ffe9f517dc89aedd",
+      "functions": [
+        {
+          "name": "install",
+          "params": [
+            "context",
+            "database"
+          ],
+          "returnType": "int",
+          "exported": true,
+          "lineCount": 70
+        }
+      ],
+      "classes": [
+        {
+          "name": "CatalogImporter",
+          "methods": [
+            "install"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 72
+        }
+      ],
+      "imports": [
+        {
+          "source": "android.content.Context",
+          "specifiers": [
+            "Context"
+          ]
+        },
+        {
+          "source": "java.io",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "java.nio.charset.StandardCharsets",
+          "specifiers": [
+            "StandardCharsets"
+          ]
+        },
+        {
+          "source": "org.json",
+          "specifiers": [
+            "*"
+          ]
+        }
+      ],
+      "exports": [
+        "install",
+        "CatalogImporter"
+      ],
+      "totalLines": 81,
+      "hasStructuralAnalysis": true
+    },
+    "app/src/main/java/com/example/recime/data/Grocery.java": {
+      "filePath": "app/src/main/java/com/example/recime/data/Grocery.java",
+      "contentHash": "bef20ad1df252e66914b7c5a32a7f940f9bba29ef65a90568888faa36a1bed73",
+      "functions": [],
+      "classes": [
+        {
+          "name": "Grocery",
+          "methods": [],
+          "properties": [
+            "id",
+            "name",
+            "unit",
+            "category",
+            "amount",
+            "checked"
+          ],
+          "exported": true,
+          "lineCount": 9
+        }
+      ],
+      "imports": [
+        {
+          "source": "androidx.room",
+          "specifiers": [
+            "*"
+          ]
+        }
+      ],
+      "exports": [
+        "id",
+        "name",
+        "unit",
+        "category",
+        "amount",
+        "checked",
+        "Grocery"
+      ],
+      "totalLines": 14,
+      "hasStructuralAnalysis": true
+    },
+    "app/src/main/java/com/example/recime/data/LabDao.java": {
+      "filePath": "app/src/main/java/com/example/recime/data/LabDao.java",
+      "contentHash": "e387cf703ee0a03605bb4b73fd4e782e2383b5086814ac94e496891bd9aca3f4",
+      "functions": [],
+      "classes": [
+        {
+          "name": "LabDao",
+          "methods": [
+            "recipes",
+            "recipeSnapshot",
+            "find",
+            "recipeCount",
+            "findCatalog",
+            "wasCatalogDeleted",
+            "putTombstone",
+            "insertCatalog",
+            "insert",
+            "update",
+            "delete",
+            "meals",
+            "mealSnapshot",
+            "putMeal",
+            "deleteMeal",
+            "groceries",
+            "grocerySnapshot",
+            "insertGrocery",
+            "updateGrocery",
+            "deleteGrocery"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 62
+        }
+      ],
+      "imports": [
+        {
+          "source": "androidx.lifecycle.LiveData",
+          "specifiers": [
+            "LiveData"
+          ]
+        },
+        {
+          "source": "androidx.room",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "java.util.List",
+          "specifiers": [
+            "List"
+          ]
+        }
+      ],
+      "exports": [
+        "LabDao"
+      ],
+      "totalLines": 69,
+      "hasStructuralAnalysis": true
+    },
+    "app/src/main/java/com/example/recime/data/LabDatabase.java": {
+      "filePath": "app/src/main/java/com/example/recime/data/LabDatabase.java",
+      "contentHash": "42779798874b637669d7c0e9adc384bd9d4450e222dc22b91dfd6b836afc0c4c",
+      "functions": [
+        {
+          "name": "deleteRecipe",
+          "params": [
+            "recipe"
+          ],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 12
+        },
+        {
+          "name": "dao",
+          "params": [],
+          "returnType": "LabDao",
+          "exported": true,
+          "lineCount": 1
+        }
+      ],
+      "classes": [
+        {
+          "name": "LabDatabase",
+          "methods": [
+            "deleteRecipe",
+            "dao"
+          ],
+          "properties": [
+            "MIGRATION_1_2",
+            "MIGRATION_2_3"
+          ],
+          "exported": true,
+          "lineCount": 42
+        }
+      ],
+      "imports": [
+        {
+          "source": "androidx.room",
+          "specifiers": [
+            "*"
+          ]
+        }
+      ],
+      "exports": [
+        "MIGRATION_1_2",
+        "MIGRATION_2_3",
+        "deleteRecipe",
+        "dao",
+        "LabDatabase"
+      ],
+      "totalLines": 47,
+      "hasStructuralAnalysis": true
+    },
+    "app/src/main/java/com/example/recime/data/Meal.java": {
+      "filePath": "app/src/main/java/com/example/recime/data/Meal.java",
+      "contentHash": "4e407b586030239f1fe788763c0ae9e99ab8c84d62f5afd6b6f5f6cfaae337fa",
+      "functions": [],
+      "classes": [
+        {
+          "name": "Meal",
+          "methods": [],
+          "properties": [
+            "slot",
+            "day",
+            "type",
+            "recipeId"
+          ],
+          "exported": true,
+          "lineCount": 14
+        }
+      ],
+      "imports": [
+        {
+          "source": "androidx.annotation.NonNull",
+          "specifiers": [
+            "NonNull"
+          ]
+        },
+        {
+          "source": "androidx.room",
+          "specifiers": [
+            "*"
+          ]
+        }
+      ],
+      "exports": [
+        "slot",
+        "day",
+        "type",
+        "recipeId",
+        "Meal"
+      ],
+      "totalLines": 20,
+      "hasStructuralAnalysis": true
+    },
+    "app/src/main/java/com/example/recime/data/Recipe.java": {
+      "filePath": "app/src/main/java/com/example/recime/data/Recipe.java",
+      "contentHash": "056b1d354f025afc8e620451baceaf131b03c144259ac96b2b0838a799a4b2f1",
+      "functions": [],
+      "classes": [
+        {
+          "name": "Recipe",
+          "methods": [],
+          "properties": [
+            "id",
+            "title",
+            "ingredients",
+            "steps",
+            "cookbook",
+            "tags",
+            "source",
+            "image",
+            "servings",
+            "favorite",
+            "calories",
+            "protein",
+            "carbs",
+            "fat",
+            "nutritionSource",
+            "catalogKey",
+            "attribution",
+            "imageAttribution",
+            "servingsKnown"
+          ],
+          "exported": true,
+          "lineCount": 35
+        }
+      ],
+      "imports": [
+        {
+          "source": "androidx.room",
+          "specifiers": [
+            "*"
+          ]
+        }
+      ],
+      "exports": [
+        "id",
+        "title",
+        "ingredients",
+        "steps",
+        "cookbook",
+        "tags",
+        "source",
+        "image",
+        "servings",
+        "favorite",
+        "calories",
+        "protein",
+        "carbs",
+        "fat",
+        "nutritionSource",
+        "catalogKey",
+        "attribution",
+        "imageAttribution",
+        "servingsKnown",
+        "Recipe"
+      ],
+      "totalLines": 40,
+      "hasStructuralAnalysis": true
+    },
+    "app/src/main/java/com/example/recime/data/RecipeRepository.java": {
+      "filePath": "app/src/main/java/com/example/recime/data/RecipeRepository.java",
+      "contentHash": "3f50137a72ffac3b8434026d8c390843bed703061aa83a5bea9763be84b4091b",
+      "functions": [
+        {
+          "name": "get",
+          "params": [
+            "c"
+          ],
+          "returnType": "RecipeRepository",
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "RecipeRepository",
+          "params": [
+            "c"
+          ],
+          "exported": true,
+          "lineCount": 60
+        },
+        {
+          "name": "seed",
+          "params": [
+            "title",
+            "ing",
+            "steps",
+            "book",
+            "tags"
+          ],
+          "returnType": "void",
+          "exported": false,
+          "lineCount": 10
+        },
+        {
+          "name": "run",
+          "params": [
+            "action"
+          ],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 10
+        },
+        {
+          "name": "save",
+          "params": [
+            "r"
+          ],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "delete",
+          "params": [
+            "r"
+          ],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "addIngredients",
+          "params": [
+            "values",
+            "tsp",
+            "tbsp",
+            "cup"
+          ],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 31
+        }
+      ],
+      "classes": [
+        {
+          "name": "RecipeRepository",
+          "methods": [
+            "get",
+            "RecipeRepository",
+            "seed",
+            "run",
+            "save",
+            "delete",
+            "addIngredients"
+          ],
+          "properties": [
+            "instance",
+            "db",
+            "dao",
+            "io",
+            "extraction",
+            "message",
+            "ready"
+          ],
+          "exported": true,
+          "lineCount": 145
+        }
+      ],
+      "imports": [
+        {
+          "source": "android.content.Context",
+          "specifiers": [
+            "Context"
+          ]
+        },
+        {
+          "source": "androidx.lifecycle",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "androidx.room.Room",
+          "specifiers": [
+            "Room"
+          ]
+        },
+        {
+          "source": "com.example.recime.domain",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "java.util",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "java.util.concurrent",
+          "specifiers": [
+            "*"
+          ]
+        }
+      ],
+      "exports": [
+        "db",
+        "dao",
+        "io",
+        "extraction",
+        "message",
+        "ready",
+        "get",
+        "run",
+        "save",
+        "delete",
+        "addIngredients",
+        "RecipeRepository"
+      ],
+      "totalLines": 155,
+      "hasStructuralAnalysis": true
+    },
+    "app/src/main/java/com/example/recime/domain/GroceryAggregator.java": {
+      "filePath": "app/src/main/java/com/example/recime/domain/GroceryAggregator.java",
+      "contentHash": "e7eb543a1a66dcc441eb3085a4d0c571749f2b899ba5192516b949ead706cda2",
+      "functions": [
+        {
+          "name": "merge",
+          "params": [
+            "input",
+            "tsp",
+            "tbsp",
+            "cup"
+          ],
+          "returnType": "List<Ingredient>",
+          "exported": true,
+          "lineCount": 18
+        },
+        {
+          "name": "category",
+          "params": [
+            "name"
+          ],
+          "returnType": "String",
+          "exported": true,
+          "lineCount": 8
+        }
+      ],
+      "classes": [
+        {
+          "name": "GroceryAggregator",
+          "methods": [
+            "merge",
+            "category"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 29
+        }
+      ],
+      "imports": [
+        {
+          "source": "java.util",
+          "specifiers": [
+            "*"
+          ]
+        }
+      ],
+      "exports": [
+        "merge",
+        "category",
+        "GroceryAggregator"
+      ],
+      "totalLines": 34,
+      "hasStructuralAnalysis": true
+    },
+    "app/src/main/java/com/example/recime/domain/Ingredient.java": {
+      "filePath": "app/src/main/java/com/example/recime/domain/Ingredient.java",
+      "contentHash": "cdebfcb689a556a2128d3edf0e8b6fd0c001353837a564b94364aa18e2855000",
+      "functions": [
+        {
+          "name": "Ingredient",
+          "params": [
+            "name",
+            "amount",
+            "unit"
+          ],
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "scale",
+          "params": [
+            "factor"
+          ],
+          "returnType": "Ingredient",
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "display",
+          "params": [],
+          "returnType": "String",
+          "exported": true,
+          "lineCount": 3
+        }
+      ],
+      "classes": [
+        {
+          "name": "Ingredient",
+          "methods": [
+            "Ingredient",
+            "scale",
+            "display"
+          ],
+          "properties": [
+            "name",
+            "unit",
+            "amount"
+          ],
+          "exported": true,
+          "lineCount": 20
+        }
+      ],
+      "imports": [],
+      "exports": [
+        "name",
+        "unit",
+        "amount",
+        "Ingredient",
+        "scale",
+        "display",
+        "Ingredient"
+      ],
+      "totalLines": 23,
+      "hasStructuralAnalysis": true
+    },
+    "app/src/main/java/com/example/recime/domain/RecipeParser.java": {
+      "filePath": "app/src/main/java/com/example/recime/domain/RecipeParser.java",
+      "contentHash": "54a55d83d2e788ad39f0ddb55904bc566cf3c405aafb650b192e63a78cbeed02",
+      "functions": [
+        {
+          "name": "ingredient",
+          "params": [
+            "raw"
+          ],
+          "returnType": "Ingredient",
+          "exported": true,
+          "lineCount": 30
+        },
+        {
+          "name": "quantity",
+          "params": [
+            "s"
+          ],
+          "returnType": "double",
+          "exported": false,
+          "lineCount": 13
+        },
+        {
+          "name": "ingredients",
+          "params": [
+            "raw"
+          ],
+          "returnType": "List<Ingredient>",
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "parse",
+          "params": [
+            "raw"
+          ],
+          "returnType": "Parsed",
+          "exported": true,
+          "lineCount": 29
+        }
+      ],
+      "classes": [
+        {
+          "name": "RecipeParser",
+          "methods": [
+            "ingredient",
+            "quantity",
+            "ingredients",
+            "parse"
+          ],
+          "properties": [
+            "AMOUNT",
+            "UNITS"
+          ],
+          "exported": true,
+          "lineCount": 112
+        }
+      ],
+      "imports": [
+        {
+          "source": "java.util",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "java.util.regex",
+          "specifiers": [
+            "*"
+          ]
+        }
+      ],
+      "exports": [
+        "ingredient",
+        "ingredients",
+        "parse",
+        "RecipeParser"
+      ],
+      "totalLines": 118,
+      "hasStructuralAnalysis": true
+    },
+    "app/src/main/java/com/example/recime/domain/Units.java": {
+      "filePath": "app/src/main/java/com/example/recime/domain/Units.java",
+      "contentHash": "6b1d372369748a8fdb4b32301f41959ae51d723bc412d57d8a2c62c4ed28a308",
+      "functions": [
+        {
+          "name": "Units",
+          "params": [],
+          "exported": true,
+          "lineCount": 1
+        },
+        {
+          "name": "key",
+          "params": [
+            "s"
+          ],
+          "returnType": "String",
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "canonical",
+          "params": [
+            "s"
+          ],
+          "returnType": "String",
+          "exported": true,
+          "lineCount": 31
+        },
+        {
+          "name": "dimension",
+          "params": [
+            "unit"
+          ],
+          "returnType": "String",
+          "exported": true,
+          "lineCount": 16
+        },
+        {
+          "name": "factor",
+          "params": [
+            "unit",
+            "tsp",
+            "tbsp",
+            "cup"
+          ],
+          "returnType": "double",
+          "exported": true,
+          "lineCount": 17
+        },
+        {
+          "name": "convert",
+          "params": [
+            "value",
+            "from",
+            "to",
+            "tsp",
+            "tbsp",
+            "cup"
+          ],
+          "returnType": "double",
+          "exported": true,
+          "lineCount": 11
+        },
+        {
+          "name": "format",
+          "params": [
+            "d"
+          ],
+          "returnType": "String",
+          "exported": true,
+          "lineCount": 3
+        }
+      ],
+      "classes": [
+        {
+          "name": "Units",
+          "methods": [
+            "Units",
+            "key",
+            "canonical",
+            "dimension",
+            "factor",
+            "convert",
+            "format"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 94
+        }
+      ],
+      "imports": [
+        {
+          "source": "java.text.Normalizer",
+          "specifiers": [
+            "Normalizer"
+          ]
+        },
+        {
+          "source": "java.util.Locale",
+          "specifiers": [
+            "Locale"
+          ]
+        }
+      ],
+      "exports": [
+        "key",
+        "canonical",
+        "dimension",
+        "factor",
+        "convert",
+        "format",
+        "Units"
+      ],
+      "totalLines": 100,
+      "hasStructuralAnalysis": true
+    },
+    "app/src/main/java/com/example/recime/importing/ExtractionAdapter.java": {
+      "filePath": "app/src/main/java/com/example/recime/importing/ExtractionAdapter.java",
+      "contentHash": "5e28b2f5ad2293f4846deb01ceb580cc0abf479cc5296075aa9800e5890a74c7",
+      "functions": [],
+      "classes": [
+        {
+          "name": "ExtractionAdapter",
+          "methods": [
+            "extract"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 3
+        }
+      ],
+      "imports": [],
+      "exports": [
+        "ExtractionAdapter"
+      ],
+      "totalLines": 7,
+      "hasStructuralAnalysis": true
+    },
+    "app/src/main/java/com/example/recime/importing/LocalAiClient.java": {
+      "filePath": "app/src/main/java/com/example/recime/importing/LocalAiClient.java",
+      "contentHash": "d2f75483ee025f4f42b37d1e86496dc7a84e408d60aa997d2dda223808691f1f",
+      "functions": [
+        {
+          "name": "LocalAiClient",
+          "params": [
+            "context"
+          ],
+          "exported": true,
+          "lineCount": 10
+        },
+        {
+          "name": "request",
+          "params": [
+            "path",
+            "body"
+          ],
+          "returnType": "JSONObject",
+          "exported": false,
+          "lineCount": 20
+        },
+        {
+          "name": "health",
+          "params": [],
+          "returnType": "JSONObject",
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "text",
+          "params": [
+            "text"
+          ],
+          "returnType": "JSONObject",
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "tiktok",
+          "params": [
+            "url"
+          ],
+          "returnType": "JSONObject",
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "image",
+          "params": [
+            "file"
+          ],
+          "returnType": "JSONObject",
+          "exported": true,
+          "lineCount": 36
+        }
+      ],
+      "classes": [
+        {
+          "name": "LocalAiClient",
+          "methods": [
+            "LocalAiClient",
+            "request",
+            "health",
+            "text",
+            "tiktok",
+            "image"
+          ],
+          "properties": [
+            "base",
+            "http"
+          ],
+          "exported": true,
+          "lineCount": 94
+        }
+      ],
+      "imports": [
+        {
+          "source": "android.content.Context",
+          "specifiers": [
+            "Context"
+          ]
+        },
+        {
+          "source": "android.graphics",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "java.io",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "java.util.concurrent.TimeUnit",
+          "specifiers": [
+            "TimeUnit"
+          ]
+        },
+        {
+          "source": "org.json",
+          "specifiers": [
+            "*"
+          ]
+        }
+      ],
+      "exports": [
+        "LocalAiClient",
+        "health",
+        "text",
+        "tiktok",
+        "image",
+        "LocalAiClient"
+      ],
+      "totalLines": 105,
+      "hasStructuralAnalysis": true
+    },
+    "app/src/main/java/com/example/recime/importing/PublicWebExtractor.java": {
+      "filePath": "app/src/main/java/com/example/recime/importing/PublicWebExtractor.java",
+      "contentHash": "d92fffd3a9e8bf59ddf45f7206735655c9f9285270f218b9277138297be2d8bd",
+      "functions": [
+        {
+          "name": "validate",
+          "params": [
+            "value"
+          ],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 14
+        },
+        {
+          "name": "checkAddress",
+          "params": [
+            "a"
+          ],
+          "returnType": "void",
+          "exported": false,
+          "lineCount": 10
+        },
+        {
+          "name": "extract",
+          "params": [
+            "input"
+          ],
+          "returnType": "String",
+          "exported": true,
+          "lineCount": 61
+        },
+        {
+          "name": "find",
+          "params": [
+            "o"
+          ],
+          "returnType": "JSONObject",
+          "exported": false,
+          "lineCount": 17
+        },
+        {
+          "name": "toText",
+          "params": [
+            "r"
+          ],
+          "returnType": "String",
+          "exported": false,
+          "lineCount": 12
+        },
+        {
+          "name": "instructions",
+          "params": [
+            "o",
+            "b"
+          ],
+          "returnType": "void",
+          "exported": false,
+          "lineCount": 10
+        }
+      ],
+      "classes": [
+        {
+          "name": "PublicWebExtractor",
+          "methods": [
+            "validate",
+            "checkAddress",
+            "extract",
+            "find",
+            "toText",
+            "instructions"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 131
+        }
+      ],
+      "imports": [
+        {
+          "source": "java.net",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "java.util",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "java.util.concurrent.TimeUnit",
+          "specifiers": [
+            "TimeUnit"
+          ]
+        },
+        {
+          "source": "org.json",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "org.jsoup.Jsoup",
+          "specifiers": [
+            "Jsoup"
+          ]
+        },
+        {
+          "source": "org.jsoup.nodes.Element",
+          "specifiers": [
+            "Element"
+          ]
+        }
+      ],
+      "exports": [
+        "validate",
+        "extract",
+        "PublicWebExtractor"
+      ],
+      "totalLines": 142,
+      "hasStructuralAnalysis": true
+    },
+    "app/src/main/java/com/example/recime/MainActivity.java": {
+      "filePath": "app/src/main/java/com/example/recime/MainActivity.java",
+      "contentHash": "1a25777cb9d30d9c0846b8b2861d8fb9e1e85e2568a269014302b49586a56039",
+      "functions": [
+        {
+          "name": "onCreate",
+          "params": [
+            "state"
+          ],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 46
+        },
+        {
+          "name": "onNewIntent",
+          "params": [
+            "intent"
+          ],
+          "returnType": "void",
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "handleShare",
+          "params": [
+            "i"
+          ],
+          "returnType": "void",
+          "exported": false,
+          "lineCount": 12
+        },
+        {
+          "name": "open",
+          "params": [
+            "f"
+          ],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 13
+        }
+      ],
+      "classes": [
+        {
+          "name": "MainActivity",
+          "methods": [
+            "onCreate",
+            "onNewIntent",
+            "handleShare",
+            "open"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 82
+        }
+      ],
+      "imports": [
+        {
+          "source": "android.content.Intent",
+          "specifiers": [
+            "Intent"
+          ]
+        },
+        {
+          "source": "android.os.Bundle",
+          "specifiers": [
+            "Bundle"
+          ]
+        },
+        {
+          "source": "androidx.appcompat.app.AppCompatActivity",
+          "specifiers": [
+            "AppCompatActivity"
+          ]
+        },
+        {
+          "source": "androidx.core.view",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "androidx.fragment.app.Fragment",
+          "specifiers": [
+            "Fragment"
+          ]
+        },
+        {
+          "source": "com.example.recime.ui",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "com.google.android.material.bottomnavigation.BottomNavigationView",
+          "specifiers": [
+            "BottomNavigationView"
+          ]
+        }
+      ],
+      "exports": [
+        "onCreate",
+        "open",
+        "MainActivity"
+      ],
+      "totalLines": 93,
+      "hasStructuralAnalysis": true
+    },
+    "app/src/main/java/com/example/recime/ui/AiSettingsFragment.java": {
+      "filePath": "app/src/main/java/com/example/recime/ui/AiSettingsFragment.java",
+      "contentHash": "a6ca6601e51e1f96d1dbdce24c651760266cf05b513f025fd544bd3cf8199121",
+      "functions": [
+        {
+          "name": "AiSettingsFragment",
+          "params": [],
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "onViewCreated",
+          "params": [
+            "view",
+            "state"
+          ],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 68
+        }
+      ],
+      "classes": [
+        {
+          "name": "AiSettingsFragment",
+          "methods": [
+            "AiSettingsFragment",
+            "onViewCreated"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 74
+        }
+      ],
+      "imports": [
+        {
+          "source": "android.os.Bundle",
+          "specifiers": [
+            "Bundle"
+          ]
+        },
+        {
+          "source": "android.view.View",
+          "specifiers": [
+            "View"
+          ]
+        },
+        {
+          "source": "android.widget.EditText",
+          "specifiers": [
+            "EditText"
+          ]
+        },
+        {
+          "source": "androidx.fragment.app.Fragment",
+          "specifiers": [
+            "Fragment"
+          ]
+        },
+        {
+          "source": "com.example.recime.R",
+          "specifiers": [
+            "R"
+          ]
+        },
+        {
+          "source": "com.example.recime.importing.LocalAiClient",
+          "specifiers": [
+            "LocalAiClient"
+          ]
+        },
+        {
+          "source": "java.util.concurrent.Executors",
+          "specifiers": [
+            "Executors"
+          ]
+        }
+      ],
+      "exports": [
+        "AiSettingsFragment",
+        "onViewCreated",
+        "AiSettingsFragment"
+      ],
+      "totalLines": 85,
+      "hasStructuralAnalysis": true
+    },
+    "app/src/main/java/com/example/recime/ui/BoardFragment.java": {
+      "filePath": "app/src/main/java/com/example/recime/ui/BoardFragment.java",
+      "contentHash": "47bddb9ffc4fde585b7fba22492a982664de64f78abe0c793617ffb7035e1d87",
+      "functions": [
+        {
+          "name": "BoardFragment",
+          "params": [],
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "create",
+          "params": [
+            "planner"
+          ],
+          "returnType": "BoardFragment",
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "day",
+          "params": [
+            "c"
+          ],
+          "returnType": "String",
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "onViewCreated",
+          "params": [
+            "v",
+            "state"
+          ],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 71
+        },
+        {
+          "name": "recipe",
+          "params": [
+            "id"
+          ],
+          "returnType": "Recipe",
+          "exported": false,
+          "lineCount": 4
+        },
+        {
+          "name": "render",
+          "params": [],
+          "returnType": "void",
+          "exported": false,
+          "lineCount": 51
+        },
+        {
+          "name": "selectMeal",
+          "params": [
+            "row"
+          ],
+          "returnType": "void",
+          "exported": false,
+          "lineCount": 62
+        },
+        {
+          "name": "planGroceries",
+          "params": [],
+          "returnType": "void",
+          "exported": false,
+          "lineCount": 31
+        },
+        {
+          "name": "groceryEditor",
+          "params": [
+            "original"
+          ],
+          "returnType": "void",
+          "exported": false,
+          "lineCount": 62
+        },
+        {
+          "name": "share",
+          "params": [],
+          "returnType": "void",
+          "exported": false,
+          "lineCount": 12
+        },
+        {
+          "name": "onSaveInstanceState",
+          "params": [
+            "b"
+          ],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "onDestroyView",
+          "params": [],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 5
+        }
+      ],
+      "classes": [
+        {
+          "name": "BoardFragment",
+          "methods": [
+            "BoardFragment",
+            "create",
+            "day",
+            "onViewCreated",
+            "recipe",
+            "render",
+            "selectMeal",
+            "planGroceries",
+            "groceryEditor",
+            "share",
+            "onSaveInstanceState",
+            "onDestroyView"
+          ],
+          "properties": [
+            "planner",
+            "vm",
+            "root",
+            "week",
+            "recipes",
+            "meals",
+            "groceries",
+            "rows",
+            "adapter"
+          ],
+          "exported": true,
+          "lineCount": 404
+        }
+      ],
+      "imports": [
+        {
+          "source": "android.content.Intent",
+          "specifiers": [
+            "Intent"
+          ]
+        },
+        {
+          "source": "android.os.Bundle",
+          "specifiers": [
+            "Bundle"
+          ]
+        },
+        {
+          "source": "android.view",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "android.widget",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "androidx.fragment.app.Fragment",
+          "specifiers": [
+            "Fragment"
+          ]
+        },
+        {
+          "source": "androidx.lifecycle.ViewModelProvider",
+          "specifiers": [
+            "ViewModelProvider"
+          ]
+        },
+        {
+          "source": "androidx.recyclerview.widget",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "com.example.recime",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "com.example.recime.data",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "com.example.recime.domain",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "com.google.android.material.dialog.MaterialAlertDialogBuilder",
+          "specifiers": [
+            "MaterialAlertDialogBuilder"
+          ]
+        },
+        {
+          "source": "java.text.SimpleDateFormat",
+          "specifiers": [
+            "SimpleDateFormat"
+          ]
+        },
+        {
+          "source": "java.util",
+          "specifiers": [
+            "*"
+          ]
+        }
+      ],
+      "exports": [
+        "BoardFragment",
+        "create",
+        "onViewCreated",
+        "onSaveInstanceState",
+        "onDestroyView",
+        "BoardFragment"
+      ],
+      "totalLines": 421,
+      "hasStructuralAnalysis": true
+    },
+    "app/src/main/java/com/example/recime/ui/DetailFragment.java": {
+      "filePath": "app/src/main/java/com/example/recime/ui/DetailFragment.java",
+      "contentHash": "a763712a39ab24b7236c3f3ace1af4109c5d719e8c04f2ce447fc7ca607afa58",
+      "functions": [
+        {
+          "name": "DetailFragment",
+          "params": [],
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "create",
+          "params": [
+            "id"
+          ],
+          "returnType": "DetailFragment",
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "onViewCreated",
+          "params": [
+            "v",
+            "state"
+          ],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 81
+        },
+        {
+          "name": "scaled",
+          "params": [],
+          "returnType": "List<Ingredient>",
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "render",
+          "params": [],
+          "returnType": "void",
+          "exported": false,
+          "lineCount": 68
+        },
+        {
+          "name": "macro",
+          "params": [
+            "d"
+          ],
+          "returnType": "String",
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "settings",
+          "params": [],
+          "returnType": "void",
+          "exported": false,
+          "lineCount": 48
+        },
+        {
+          "name": "onSaveInstanceState",
+          "params": [
+            "b"
+          ],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "onDestroyView",
+          "params": [],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 5
+        }
+      ],
+      "classes": [
+        {
+          "name": "DetailFragment",
+          "methods": [
+            "DetailFragment",
+            "create",
+            "onViewCreated",
+            "scaled",
+            "render",
+            "macro",
+            "settings",
+            "onSaveInstanceState",
+            "onDestroyView"
+          ],
+          "properties": [
+            "recipe",
+            "portions",
+            "root"
+          ],
+          "exported": true,
+          "lineCount": 240
+        }
+      ],
+      "imports": [
+        {
+          "source": "android.os.Bundle",
+          "specifiers": [
+            "Bundle"
+          ]
+        },
+        {
+          "source": "android.view",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "android.widget",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "androidx.fragment.app.Fragment",
+          "specifiers": [
+            "Fragment"
+          ]
+        },
+        {
+          "source": "androidx.lifecycle.ViewModelProvider",
+          "specifiers": [
+            "ViewModelProvider"
+          ]
+        },
+        {
+          "source": "com.example.recime",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "com.example.recime.data",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "com.example.recime.domain",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "com.google.android.material.dialog.MaterialAlertDialogBuilder",
+          "specifiers": [
+            "MaterialAlertDialogBuilder"
+          ]
+        },
+        {
+          "source": "java.util",
+          "specifiers": [
+            "*"
+          ]
+        }
+      ],
+      "exports": [
+        "DetailFragment",
+        "create",
+        "onViewCreated",
+        "onSaveInstanceState",
+        "onDestroyView",
+        "DetailFragment"
+      ],
+      "totalLines": 254,
+      "hasStructuralAnalysis": true
+    },
+    "app/src/main/java/com/example/recime/ui/EditorFragment.java": {
+      "filePath": "app/src/main/java/com/example/recime/ui/EditorFragment.java",
+      "contentHash": "8fc236719a6dd5adfbf591bc5ffbbaa19231a6b76c08dd590182d3fc10c5bdd0",
+      "functions": [
+        {
+          "name": "EditorFragment",
+          "params": [],
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "create",
+          "params": [
+            "id",
+            "raw",
+            "source",
+            "image"
+          ],
+          "returnType": "EditorFragment",
+          "exported": true,
+          "lineCount": 10
+        },
+        {
+          "name": "onViewCreated",
+          "params": [
+            "v",
+            "state"
+          ],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 97
+        },
+        {
+          "name": "optional",
+          "params": [
+            "v",
+            "id"
+          ],
+          "returnType": "Double",
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "fill",
+          "params": [
+            "v"
+          ],
+          "returnType": "void",
+          "exported": false,
+          "lineCount": 14
+        }
+      ],
+      "classes": [
+        {
+          "name": "EditorFragment",
+          "methods": [
+            "EditorFragment",
+            "create",
+            "onViewCreated",
+            "optional",
+            "fill"
+          ],
+          "properties": [
+            "recipe",
+            "saving"
+          ],
+          "exported": true,
+          "lineCount": 141
+        }
+      ],
+      "imports": [
+        {
+          "source": "android.os.Bundle",
+          "specifiers": [
+            "Bundle"
+          ]
+        },
+        {
+          "source": "android.view",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "android.widget",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "androidx.fragment.app.Fragment",
+          "specifiers": [
+            "Fragment"
+          ]
+        },
+        {
+          "source": "androidx.lifecycle.ViewModelProvider",
+          "specifiers": [
+            "ViewModelProvider"
+          ]
+        },
+        {
+          "source": "com.example.recime",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "com.example.recime.data",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "com.example.recime.domain",
+          "specifiers": [
+            "*"
+          ]
+        }
+      ],
+      "exports": [
+        "EditorFragment",
+        "create",
+        "onViewCreated",
+        "EditorFragment"
+      ],
+      "totalLines": 153,
+      "hasStructuralAnalysis": true
+    },
+    "app/src/main/java/com/example/recime/ui/ImportFragment.java": {
+      "filePath": "app/src/main/java/com/example/recime/ui/ImportFragment.java",
+      "contentHash": "df6cbd6dd8d135ba4cb580af3f22f67b922817731d6faf69924147355731f1c8",
+      "functions": [
+        {
+          "name": "ImportFragment",
+          "params": [],
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "onViewCreated",
+          "params": [
+            "v",
+            "state"
+          ],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 91
+        },
+        {
+          "name": "open",
+          "params": [
+            "raw"
+          ],
+          "returnType": "void",
+          "exported": false,
+          "lineCount": 4
+        },
+        {
+          "name": "status",
+          "params": [
+            "s"
+          ],
+          "returnType": "void",
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "loading",
+          "params": [
+            "on"
+          ],
+          "returnType": "void",
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "fetch",
+          "params": [],
+          "returnType": "void",
+          "exported": false,
+          "lineCount": 41
+        },
+        {
+          "name": "ocr",
+          "params": [
+            "uri"
+          ],
+          "returnType": "void",
+          "exported": false,
+          "lineCount": 111
+        },
+        {
+          "name": "aiRequest",
+          "params": [
+            "kind",
+            "input"
+          ],
+          "returnType": "void",
+          "exported": false,
+          "lineCount": 49
+        },
+        {
+          "name": "showCandidates",
+          "params": [
+            "result"
+          ],
+          "returnType": "void",
+          "exported": false,
+          "lineCount": 52
+        },
+        {
+          "name": "onSaveInstanceState",
+          "params": [
+            "b"
+          ],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "onDestroyView",
+          "params": [],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 5
+        }
+      ],
+      "classes": [
+        {
+          "name": "ImportFragment",
+          "methods": [
+            "ImportFragment",
+            "onViewCreated",
+            "open",
+            "status",
+            "loading",
+            "fetch",
+            "ocr",
+            "aiRequest",
+            "showCandidates",
+            "onSaveInstanceState",
+            "onDestroyView"
+          ],
+          "properties": [
+            "root",
+            "image",
+            "cameraUri",
+            "busy",
+            "dishPhoto",
+            "picker",
+            "camera"
+          ],
+          "exported": true,
+          "lineCount": 407
+        }
+      ],
+      "imports": [
+        {
+          "source": "android.net.Uri",
+          "specifiers": [
+            "Uri"
+          ]
+        },
+        {
+          "source": "android.os.Bundle",
+          "specifiers": [
+            "Bundle"
+          ]
+        },
+        {
+          "source": "android.view",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "android.widget",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "androidx.activity.result",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "androidx.activity.result.contract.ActivityResultContracts",
+          "specifiers": [
+            "ActivityResultContracts"
+          ]
+        },
+        {
+          "source": "androidx.core.content.FileProvider",
+          "specifiers": [
+            "FileProvider"
+          ]
+        },
+        {
+          "source": "androidx.fragment.app.Fragment",
+          "specifiers": [
+            "Fragment"
+          ]
+        },
+        {
+          "source": "androidx.lifecycle.ViewModelProvider",
+          "specifiers": [
+            "ViewModelProvider"
+          ]
+        },
+        {
+          "source": "com.example.recime",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "com.example.recime.importing.LocalAiClient",
+          "specifiers": [
+            "LocalAiClient"
+          ]
+        },
+        {
+          "source": "com.example.recime.importing.PublicWebExtractor",
+          "specifiers": [
+            "PublicWebExtractor"
+          ]
+        },
+        {
+          "source": "com.google.android.material.dialog.MaterialAlertDialogBuilder",
+          "specifiers": [
+            "MaterialAlertDialogBuilder"
+          ]
+        },
+        {
+          "source": "com.google.mlkit.vision.common.InputImage",
+          "specifiers": [
+            "InputImage"
+          ]
+        },
+        {
+          "source": "com.google.mlkit.vision.text.TextRecognition",
+          "specifiers": [
+            "TextRecognition"
+          ]
+        },
+        {
+          "source": "com.google.mlkit.vision.text.TextRecognizer",
+          "specifiers": [
+            "TextRecognizer"
+          ]
+        },
+        {
+          "source": "com.google.mlkit.vision.text.latin.TextRecognizerOptions",
+          "specifiers": [
+            "TextRecognizerOptions"
+          ]
+        },
+        {
+          "source": "java.io",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "org.json",
+          "specifiers": [
+            "*"
+          ]
+        }
+      ],
+      "exports": [
+        "ImportFragment",
+        "onViewCreated",
+        "onSaveInstanceState",
+        "onDestroyView",
+        "ImportFragment"
+      ],
+      "totalLines": 430,
+      "hasStructuralAnalysis": true
+    },
+    "app/src/main/java/com/example/recime/ui/LabViewModel.java": {
+      "filePath": "app/src/main/java/com/example/recime/ui/LabViewModel.java",
+      "contentHash": "ac4061cc0ae6dc347219101865cb6fe7e0a1835e232065cb3ba6e8d23affe1d2",
+      "functions": [
+        {
+          "name": "LabViewModel",
+          "params": [
+            "app"
+          ],
+          "exported": true,
+          "lineCount": 7
+        }
+      ],
+      "classes": [
+        {
+          "name": "LabViewModel",
+          "methods": [
+            "LabViewModel"
+          ],
+          "properties": [
+            "repository",
+            "recipes",
+            "meals",
+            "groceries"
+          ],
+          "exported": true,
+          "lineCount": 14
+        }
+      ],
+      "imports": [
+        {
+          "source": "android.app.Application",
+          "specifiers": [
+            "Application"
+          ]
+        },
+        {
+          "source": "androidx.lifecycle",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "com.example.recime.data",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "java.util.List",
+          "specifiers": [
+            "List"
+          ]
+        }
+      ],
+      "exports": [
+        "repository",
+        "recipes",
+        "meals",
+        "groceries",
+        "LabViewModel",
+        "LabViewModel"
+      ],
+      "totalLines": 22,
+      "hasStructuralAnalysis": true
+    },
+    "app/src/main/java/com/example/recime/ui/Motion.java": {
+      "filePath": "app/src/main/java/com/example/recime/ui/Motion.java",
+      "contentHash": "33137447ad4662c4154d014938139b78ada743b2085e80db6f43b1a0e3d2762b",
+      "functions": [
+        {
+          "name": "enabled",
+          "params": [
+            "view"
+          ],
+          "returnType": "boolean",
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "enter",
+          "params": [
+            "view"
+          ],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 11
+        },
+        {
+          "name": "card",
+          "params": [
+            "view"
+          ],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 17
+        }
+      ],
+      "classes": [
+        {
+          "name": "Motion",
+          "methods": [
+            "enabled",
+            "enter",
+            "card"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 39
+        }
+      ],
+      "imports": [
+        {
+          "source": "android.view",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "android.view.animation.DecelerateInterpolator",
+          "specifiers": [
+            "DecelerateInterpolator"
+          ]
+        }
+      ],
+      "exports": [
+        "enter",
+        "card",
+        "Motion"
+      ],
+      "totalLines": 46,
+      "hasStructuralAnalysis": true
+    },
+    "app/src/main/java/com/example/recime/ui/RecipesFragment.java": {
+      "filePath": "app/src/main/java/com/example/recime/ui/RecipesFragment.java",
+      "contentHash": "11201be7e5b344e862d405853a678b73e789c29a9a1298d6c6196334787b60be",
+      "functions": [
+        {
+          "name": "RecipesFragment",
+          "params": [],
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "create",
+          "params": [
+            "discover"
+          ],
+          "returnType": "RecipesFragment",
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "onViewCreated",
+          "params": [
+            "v",
+            "state"
+          ],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 98
+        },
+        {
+          "name": "filter",
+          "params": [],
+          "returnType": "void",
+          "exported": false,
+          "lineCount": 31
+        },
+        {
+          "name": "onDestroyView",
+          "params": [],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 5
+        }
+      ],
+      "classes": [
+        {
+          "name": "RecipesFragment",
+          "methods": [
+            "RecipesFragment",
+            "create",
+            "onViewCreated",
+            "filter",
+            "onDestroyView"
+          ],
+          "properties": [
+            "all",
+            "shown",
+            "root",
+            "adapter",
+            "book",
+            "vm",
+            "category"
+          ],
+          "exported": true,
+          "lineCount": 189
+        }
+      ],
+      "imports": [
+        {
+          "source": "android.os.Bundle",
+          "specifiers": [
+            "Bundle"
+          ]
+        },
+        {
+          "source": "android.text",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "android.view",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "android.widget",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "androidx.fragment.app.Fragment",
+          "specifiers": [
+            "Fragment"
+          ]
+        },
+        {
+          "source": "androidx.lifecycle.ViewModelProvider",
+          "specifiers": [
+            "ViewModelProvider"
+          ]
+        },
+        {
+          "source": "androidx.recyclerview.widget",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "com.example.recime",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "com.example.recime.data.Recipe",
+          "specifiers": [
+            "Recipe"
+          ]
+        },
+        {
+          "source": "com.example.recime.domain.Units",
+          "specifiers": [
+            "Units"
+          ]
+        },
+        {
+          "source": "java.util",
+          "specifiers": [
+            "*"
+          ]
+        }
+      ],
+      "exports": [
+        "RecipesFragment",
+        "create",
+        "onViewCreated",
+        "onDestroyView",
+        "RecipesFragment"
+      ],
+      "totalLines": 204,
+      "hasStructuralAnalysis": true
+    },
+    "app/src/main/java/com/example/recime/ui/Ui.java": {
+      "filePath": "app/src/main/java/com/example/recime/ui/Ui.java",
+      "contentHash": "2e8e6a819a6851aedb62d765a3ed786db708b9780fabdf9099662609c1cd5441",
+      "functions": [
+        {
+          "name": "text",
+          "params": [
+            "v",
+            "id"
+          ],
+          "returnType": "String",
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "set",
+          "params": [
+            "v",
+            "id",
+            "value"
+          ],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "prefs",
+          "params": [
+            "c"
+          ],
+          "returnType": "android.content.SharedPreferences",
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "tsp",
+          "params": [
+            "c"
+          ],
+          "returnType": "double",
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "tbsp",
+          "params": [
+            "c"
+          ],
+          "returnType": "double",
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "cup",
+          "params": [
+            "c"
+          ],
+          "returnType": "double",
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "image",
+          "params": [
+            "view",
+            "path"
+          ],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 12
+        },
+        {
+          "name": "field",
+          "params": [
+            "c",
+            "parent",
+            "hint",
+            "text"
+          ],
+          "returnType": "EditText",
+          "exported": true,
+          "lineCount": 7
+        }
+      ],
+      "classes": [
+        {
+          "name": "Ui",
+          "methods": [
+            "text",
+            "set",
+            "prefs",
+            "tsp",
+            "tbsp",
+            "cup",
+            "image",
+            "field"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 46
+        }
+      ],
+      "imports": [
+        {
+          "source": "android.content",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "android.view",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "android.widget",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "com.example.recime.R",
+          "specifiers": [
+            "R"
+          ]
+        }
+      ],
+      "exports": [
+        "text",
+        "set",
+        "prefs",
+        "tsp",
+        "tbsp",
+        "cup",
+        "image",
+        "field",
+        "Ui"
+      ],
+      "totalLines": 54,
+      "hasStructuralAnalysis": true
+    },
+    "app/src/main/keepRules/rules.keep": {
+      "filePath": "app/src/main/keepRules/rules.keep",
+      "contentHash": "cd9f36ade2d8604e1b7cf24eff5b171f9c0816c0aa013ba7eb55be4fe2e1dac7",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 12,
+      "hasStructuralAnalysis": false
+    },
+    "app/src/main/res/drawable/food_art.xml": {
+      "filePath": "app/src/main/res/drawable/food_art.xml",
+      "contentHash": "d93638e42a36de14ae8c436db44b871c41e684e0623679d78b11543e8a21c00a",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 2,
+      "hasStructuralAnalysis": false
+    },
+    "app/src/main/res/drawable/hero_scrim.xml": {
+      "filePath": "app/src/main/res/drawable/hero_scrim.xml",
+      "contentHash": "f94ed162b96a671625585a0cea8b87b1061489b6663f0eea9d16bc107f19af0e",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 11,
+      "hasStructuralAnalysis": false
+    },
+    "app/src/main/res/drawable/ic_discover.xml": {
+      "filePath": "app/src/main/res/drawable/ic_discover.xml",
+      "contentHash": "751f8fce963604b7e2e8180552ed0075cf027d24da6e1697e7d7bae929571d83",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 2,
+      "hasStructuralAnalysis": false
+    },
+    "app/src/main/res/drawable/ic_grocery.xml": {
+      "filePath": "app/src/main/res/drawable/ic_grocery.xml",
+      "contentHash": "6ed91fa6b364c9f69bf24c2b86b2ca1e8b984b0a2237be6c64786443d80f6671",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 2,
+      "hasStructuralAnalysis": false
+    },
+    "app/src/main/res/drawable/ic_import.xml": {
+      "filePath": "app/src/main/res/drawable/ic_import.xml",
+      "contentHash": "99d1f8c95f0779923033c075b02b896ef29a63f7e1ff808ed0a04486e64cacee",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 2,
+      "hasStructuralAnalysis": false
+    },
+    "app/src/main/res/drawable/ic_launcher_background.xml": {
+      "filePath": "app/src/main/res/drawable/ic_launcher_background.xml",
+      "contentHash": "ed423c73a6f40a4d2909f0901e60527b3a807cd59e1b5593bcaae1808b1c6321",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 171,
+      "hasStructuralAnalysis": false
+    },
+    "app/src/main/res/drawable/ic_launcher_foreground.xml": {
+      "filePath": "app/src/main/res/drawable/ic_launcher_foreground.xml",
+      "contentHash": "01d1a6a6c1234eb7fe270d097eb283d72b9c95ae5118886f1b6573aad280f1f7",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 30,
+      "hasStructuralAnalysis": false
+    },
+    "app/src/main/res/drawable/ic_leaf.xml": {
+      "filePath": "app/src/main/res/drawable/ic_leaf.xml",
+      "contentHash": "4fb6f97508c5fd6bf07d7b62c7e866b99dea4f6629376cd18fe11dce9681e2b7",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 2,
+      "hasStructuralAnalysis": false
+    },
+    "app/src/main/res/drawable/ic_plan.xml": {
+      "filePath": "app/src/main/res/drawable/ic_plan.xml",
+      "contentHash": "5cd4c3fe8fd1a8b876bb8859b57ae0ae62d247e8f527d2dc27197b16e4ecc6f7",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 2,
+      "hasStructuralAnalysis": false
+    },
+    "app/src/main/res/drawable/ic_recipes.xml": {
+      "filePath": "app/src/main/res/drawable/ic_recipes.xml",
+      "contentHash": "36088cecfd527d8307baf6d305139b1b60e0705cc6381ae1aa37c0ee8df3758b",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 2,
+      "hasStructuralAnalysis": false
+    },
+    "app/src/main/res/layout/activity_main.xml": {
+      "filePath": "app/src/main/res/layout/activity_main.xml",
+      "contentHash": "98590a29d7c3edff6060fa541a4835103f9ab51874ed4aa3c5d91829c60dfa2e",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 27,
+      "hasStructuralAnalysis": false
+    },
+    "app/src/main/res/layout/dialog_recipe_picker.xml": {
+      "filePath": "app/src/main/res/layout/dialog_recipe_picker.xml",
+      "contentHash": "37cefca3789c381b710e57bcad552242f0188facd7292ae26f679fa182a2d54b",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 25,
+      "hasStructuralAnalysis": false
+    },
+    "app/src/main/res/layout/fragment_ai_settings.xml": {
+      "filePath": "app/src/main/res/layout/fragment_ai_settings.xml",
+      "contentHash": "9e5099857c58283aba6680be987bbcd168e600c590ebc2c232ef52b7f6c380c2",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 72,
+      "hasStructuralAnalysis": false
+    },
+    "app/src/main/res/layout/fragment_board.xml": {
+      "filePath": "app/src/main/res/layout/fragment_board.xml",
+      "contentHash": "393686e9eecbf88cbb1758a5eeef4eac9a3701283c5ed8e9ead6f7e38cdf67bd",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 82,
+      "hasStructuralAnalysis": false
+    },
+    "app/src/main/res/layout/fragment_detail.xml": {
+      "filePath": "app/src/main/res/layout/fragment_detail.xml",
+      "contentHash": "a6026d14e70c2b082ddb10905b6c08bdd35b48db6e888ae7eacf31d602faed80",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 168,
+      "hasStructuralAnalysis": false
+    },
+    "app/src/main/res/layout/fragment_editor.xml": {
+      "filePath": "app/src/main/res/layout/fragment_editor.xml",
+      "contentHash": "b57c6a1bce4e2cde40788f10070023c834af48511f49c4756b141af1321f3504",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 150,
+      "hasStructuralAnalysis": false
+    },
+    "app/src/main/res/layout/fragment_import.xml": {
+      "filePath": "app/src/main/res/layout/fragment_import.xml",
+      "contentHash": "6298876123fd2491236c3d3e9d11d1229dcc119288e0499b79e66f1129014547",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 195,
+      "hasStructuralAnalysis": false
+    },
+    "app/src/main/res/layout/fragment_recipes.xml": {
+      "filePath": "app/src/main/res/layout/fragment_recipes.xml",
+      "contentHash": "815f1dc70eefb67945635d915c8ef81a957a2a0c8e2c641a64ffb3f45d77e1db",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 251,
+      "hasStructuralAnalysis": false
+    },
+    "app/src/main/res/layout/item_board.xml": {
+      "filePath": "app/src/main/res/layout/item_board.xml",
+      "contentHash": "51f588204f4d9c81dfae4a1512e50f47a684b03af9c20f71628da7de4dfb7c03",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 59,
+      "hasStructuralAnalysis": false
+    },
+    "app/src/main/res/layout/item_recipe.xml": {
+      "filePath": "app/src/main/res/layout/item_recipe.xml",
+      "contentHash": "43dc83530f2f91fb992b531ce85f96f0eca6e4bdd2af298a4fa3255bcd1ef0ec",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 61,
+      "hasStructuralAnalysis": false
+    },
+    "app/src/main/res/layout/preview_app_home.xml": {
+      "filePath": "app/src/main/res/layout/preview_app_home.xml",
+      "contentHash": "a6fb9c6ba82a7e41a10f1174b57e3515cced3a127e21456edce0b02983ebfeca",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 26,
+      "hasStructuralAnalysis": false
+    },
+    "app/src/main/res/menu/bottom_nav.xml": {
+      "filePath": "app/src/main/res/menu/bottom_nav.xml",
+      "contentHash": "c5686e8d18ceafc5878da1d7575b0e45031037cb001b5581e6316c10def57b1b",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 2,
+      "hasStructuralAnalysis": false
+    },
+    "app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml": {
+      "filePath": "app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml",
+      "contentHash": "88f7653499ef524126ea5018a99baf9cc3269e7e584d6205dfdd76db39f39cc0",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 6,
+      "hasStructuralAnalysis": false
+    },
+    "app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml": {
+      "filePath": "app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml",
+      "contentHash": "88f7653499ef524126ea5018a99baf9cc3269e7e584d6205dfdd76db39f39cc0",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 6,
+      "hasStructuralAnalysis": false
+    },
+    "app/src/main/res/mipmap-hdpi/ic_launcher_round.webp": {
+      "filePath": "app/src/main/res/mipmap-hdpi/ic_launcher_round.webp",
+      "contentHash": "1d6430f8afad81f4f2289906ebb818376a2af6a33b24cee754c84ea66b9df1d4",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 16,
+      "hasStructuralAnalysis": false
+    },
+    "app/src/main/res/mipmap-hdpi/ic_launcher.webp": {
+      "filePath": "app/src/main/res/mipmap-hdpi/ic_launcher.webp",
+      "contentHash": "cd7c79b42736c3a125052194a44ac61e71014412c4ab46b46dde6106380d60a5",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 7,
+      "hasStructuralAnalysis": false
+    },
+    "app/src/main/res/mipmap-mdpi/ic_launcher_round.webp": {
+      "filePath": "app/src/main/res/mipmap-mdpi/ic_launcher_round.webp",
+      "contentHash": "8c79ff7b9a5878c91a1bd8386e98f9bad8dd411808364d05ba81be2a23eecd15",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 8,
+      "hasStructuralAnalysis": false
+    },
+    "app/src/main/res/mipmap-mdpi/ic_launcher.webp": {
+      "filePath": "app/src/main/res/mipmap-mdpi/ic_launcher.webp",
+      "contentHash": "b8e9f262d70e1f44370bd914e16c5fa6472d98e5b37b67e19319b3d56a956352",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 2,
+      "hasStructuralAnalysis": false
+    },
+    "app/src/main/res/mipmap-xhdpi/ic_launcher_round.webp": {
+      "filePath": "app/src/main/res/mipmap-xhdpi/ic_launcher_round.webp",
+      "contentHash": "8db2bba728276835d67c6d50dc3c48ae8040583f0f687dd78f6787d1ee922f2d",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 16,
+      "hasStructuralAnalysis": false
+    },
+    "app/src/main/res/mipmap-xhdpi/ic_launcher.webp": {
+      "filePath": "app/src/main/res/mipmap-xhdpi/ic_launcher.webp",
+      "contentHash": "b97ffe2af001a60a27bed22c6bc16c369465bbd62bf2f7d5574eb376aca116c5",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 9,
+      "hasStructuralAnalysis": false
+    },
+    "app/src/main/res/mipmap-xxhdpi/ic_launcher_round.webp": {
+      "filePath": "app/src/main/res/mipmap-xxhdpi/ic_launcher_round.webp",
+      "contentHash": "e70dee4785ea66f8715a42dad8d4a476e491a33e059d6d735ac38224b0798271",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 19,
+      "hasStructuralAnalysis": false
+    },
+    "app/src/main/res/mipmap-xxhdpi/ic_launcher.webp": {
+      "filePath": "app/src/main/res/mipmap-xxhdpi/ic_launcher.webp",
+      "contentHash": "dab7348a3756ff531cdaed105804affbc50a12121408c137da2c5d3f296f359b",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 10,
+      "hasStructuralAnalysis": false
+    },
+    "app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.webp": {
+      "filePath": "app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.webp",
+      "contentHash": "319de08d6bcb0ef1faef4f50a1e732af76d999ac0dcc767312ce57a0a9722d8b",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 34,
+      "hasStructuralAnalysis": false
+    },
+    "app/src/main/res/mipmap-xxxhdpi/ic_launcher.webp": {
+      "filePath": "app/src/main/res/mipmap-xxxhdpi/ic_launcher.webp",
+      "contentHash": "eb92aeb0a3039e2e693ee185d5ceebb3e9f4cebaf1d0e1159fad883ae8dc29b8",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 19,
+      "hasStructuralAnalysis": false
+    },
+    "app/src/main/res/values-night/themes.xml": {
+      "filePath": "app/src/main/res/values-night/themes.xml",
+      "contentHash": "716f72cb2f277f4b422e6113cf1ea1fc216e6e97241efece2ae2fd0480f30131",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 20,
+      "hasStructuralAnalysis": false
+    },
+    "app/src/main/res/values/colors.xml": {
+      "filePath": "app/src/main/res/values/colors.xml",
+      "contentHash": "efb70d7499549a57cea32b00e790ef0632cb0c95cdaeefd16903c8cd12c889e4",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 5,
+      "hasStructuralAnalysis": false
+    },
+    "app/src/main/res/values/strings.xml": {
+      "filePath": "app/src/main/res/values/strings.xml",
+      "contentHash": "faa8257f7a370ff0839760c3cd0ff6f42f813b1480ee399e57999b2a96d144ce",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 2,
+      "hasStructuralAnalysis": false
+    },
+    "app/src/main/res/values/themes.xml": {
+      "filePath": "app/src/main/res/values/themes.xml",
+      "contentHash": "716f72cb2f277f4b422e6113cf1ea1fc216e6e97241efece2ae2fd0480f30131",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 20,
+      "hasStructuralAnalysis": false
+    },
+    "app/src/main/res/xml/backup_rules.xml": {
+      "filePath": "app/src/main/res/xml/backup_rules.xml",
+      "contentHash": "6cf1a27e6807b1d24e41d3fbe7ddc1bfe1f42226027964f6eaf477d71b43b283",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 13,
+      "hasStructuralAnalysis": false
+    },
+    "app/src/main/res/xml/data_extraction_rules.xml": {
+      "filePath": "app/src/main/res/xml/data_extraction_rules.xml",
+      "contentHash": "cb1fc47ab4a984530ed60e0e6ee638929c3038290e7e7e0b4b03a3a30fbe7381",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 19,
+      "hasStructuralAnalysis": false
+    },
+    "app/src/main/res/xml/file_paths.xml": {
+      "filePath": "app/src/main/res/xml/file_paths.xml",
+      "contentHash": "dc43176c52968825cc9467911dae2c7b99e52cba4c1a024f4a770b4b6b200766",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 2,
+      "hasStructuralAnalysis": false
+    },
+    "app/src/test/java/com/example/recime/RecipeDomainTest.java": {
+      "filePath": "app/src/test/java/com/example/recime/RecipeDomainTest.java",
+      "contentHash": "a406f021da1ef5340efcb494d560c77f24955199a8e410849c7269c12e380908",
+      "functions": [
+        {
+          "name": "quantityRangesRemainUnquantifiedForReview",
+          "params": [],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 9
+        },
+        {
+          "name": "portionsAlwaysScaleOriginalAndDoNotMutate",
+          "params": [],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "metricAndConfiguredVolumeConversions",
+          "params": [],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "refusesMassVolumeWithoutDensity",
+          "params": [],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "refusesDifferentCountUnits",
+          "params": [],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "refusesInvalidPortions",
+          "params": [],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "vietnameseAndEnglishUnitsAndFractions",
+          "params": [],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 26
+        },
+        {
+          "name": "parserPreservesUnknownQuantitiesAndSeparatesSteps",
+          "params": [],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 21
+        },
+        {
+          "name": "groceryAggregationNormalizesCompatibleDimensionsOnly",
+          "params": [],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 19
+        },
+        {
+          "name": "searchNormalizesVietnameseAccents",
+          "params": [],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 4
+        }
+      ],
+      "classes": [
+        {
+          "name": "RecipeDomainTest",
+          "methods": [
+            "quantityRangesRemainUnquantifiedForReview",
+            "portionsAlwaysScaleOriginalAndDoNotMutate",
+            "metricAndConfiguredVolumeConversions",
+            "refusesMassVolumeWithoutDensity",
+            "refusesDifferentCountUnits",
+            "refusesInvalidPortions",
+            "vietnameseAndEnglishUnitsAndFractions",
+            "parserPreservesUnknownQuantitiesAndSeparatesSteps",
+            "groceryAggregationNormalizesCompatibleDimensionsOnly",
+            "searchNormalizesVietnameseAccents"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 118
+        }
+      ],
+      "imports": [
+        {
+          "source": "org.junit.Assert",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "com.example.recime.domain",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "java.util",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "org.junit.Test",
+          "specifiers": [
+            "Test"
+          ]
+        }
+      ],
+      "exports": [
+        "quantityRangesRemainUnquantifiedForReview",
+        "portionsAlwaysScaleOriginalAndDoNotMutate",
+        "metricAndConfiguredVolumeConversions",
+        "refusesMassVolumeWithoutDensity",
+        "refusesDifferentCountUnits",
+        "refusesInvalidPortions",
+        "vietnameseAndEnglishUnitsAndFractions",
+        "parserPreservesUnknownQuantitiesAndSeparatesSteps",
+        "groceryAggregationNormalizesCompatibleDimensionsOnly",
+        "searchNormalizesVietnameseAccents",
+        "RecipeDomainTest"
+      ],
+      "totalLines": 127,
+      "hasStructuralAnalysis": true
+    },
+    "backend/__init__.py": {
+      "filePath": "backend/__init__.py",
+      "contentHash": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 2,
+      "hasStructuralAnalysis": true
+    },
+    "backend/app.py": {
+      "filePath": "backend/app.py",
+      "contentHash": "a7f479af4d32d45f4d5d28384b06701116d218adb056ab8d56d0f7b4e4fd4ce1",
+      "functions": [
+        {
+          "name": "engine",
+          "params": [],
+          "exported": true,
+          "lineCount": 1
+        },
+        {
+          "name": "health",
+          "params": [],
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "text",
+          "params": [
+            "body"
+          ],
+          "exported": true,
+          "lineCount": 2
+        },
+        {
+          "name": "image",
+          "params": [
+            "photo"
+          ],
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "tiktok_caption",
+          "params": [
+            "value"
+          ],
+          "exported": true,
+          "lineCount": 19
+        },
+        {
+          "name": "tiktok",
+          "params": [
+            "body"
+          ],
+          "exported": true,
+          "lineCount": 4
+        }
+      ],
+      "classes": [
+        {
+          "name": "TextInput",
+          "methods": [],
+          "properties": [
+            "text"
+          ],
+          "exported": true,
+          "lineCount": 1
+        },
+        {
+          "name": "LinkInput",
+          "methods": [],
+          "properties": [
+            "url"
+          ],
+          "exported": true,
+          "lineCount": 1
+        }
+      ],
+      "imports": [
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "re",
+          "specifiers": [
+            "re"
+          ]
+        },
+        {
+          "source": "urllib.parse",
+          "specifiers": [
+            "urllib.parse"
+          ]
+        },
+        {
+          "source": "functools",
+          "specifiers": [
+            "lru_cache"
+          ]
+        },
+        {
+          "source": "requests",
+          "specifiers": [
+            "requests"
+          ]
+        },
+        {
+          "source": "fastapi",
+          "specifiers": [
+            "FastAPI",
+            "UploadFile",
+            "File",
+            "HTTPException"
+          ]
+        },
+        {
+          "source": "pydantic",
+          "specifiers": [
+            "BaseModel",
+            "Field"
+          ]
+        },
+        {
+          "source": "backend.engine",
+          "specifiers": [
+            "RecipeEngine"
+          ]
+        }
+      ],
+      "exports": [
+        "engine",
+        "TextInput",
+        "LinkInput",
+        "health",
+        "text",
+        "image",
+        "tiktok_caption",
+        "tiktok"
+      ],
+      "totalLines": 59,
+      "hasStructuralAnalysis": true
+    },
+    "backend/download_model.py": {
+      "filePath": "backend/download_model.py",
+      "contentHash": "74d4d256a31e5620e1b62fb4174efe81fff79b8d2a022d58a77c2dc8e26a3622",
+      "functions": [
+        {
+          "name": "main",
+          "params": [],
+          "exported": true,
+          "lineCount": 20
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "pathlib",
+          "specifiers": [
+            "Path"
+          ]
+        },
+        {
+          "source": "hashlib",
+          "specifiers": [
+            "hashlib"
+          ]
+        },
+        {
+          "source": "json",
+          "specifiers": [
+            "json"
+          ]
+        },
+        {
+          "source": "requests",
+          "specifiers": [
+            "requests"
+          ]
+        }
+      ],
+      "exports": [
+        "main"
+      ],
+      "totalLines": 30,
+      "hasStructuralAnalysis": true
+    },
+    "backend/engine.py": {
+      "filePath": "backend/engine.py",
+      "contentHash": "48fc2ce2b771da2f06cbf2a06dea4ab2d7c8fb34b9cb43566f05e4dc6d581b46",
+      "functions": [
+        {
+          "name": "normalized",
+          "params": [
+            "text"
+          ],
+          "exported": true,
+          "lineCount": 2
+        }
+      ],
+      "classes": [
+        {
+          "name": "RecipeEngine",
+          "methods": [
+            "__init__",
+            "compact",
+            "text",
+            "vision_available",
+            "_load_vision",
+            "_embedding",
+            "image"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 102
+        }
+      ],
+      "imports": [
+        {
+          "source": "pathlib",
+          "specifiers": [
+            "Path"
+          ]
+        },
+        {
+          "source": "hashlib",
+          "specifiers": [
+            "hashlib"
+          ]
+        },
+        {
+          "source": "io",
+          "specifiers": [
+            "io"
+          ]
+        },
+        {
+          "source": "json",
+          "specifiers": [
+            "json"
+          ]
+        },
+        {
+          "source": "re",
+          "specifiers": [
+            "re"
+          ]
+        },
+        {
+          "source": "sqlite3",
+          "specifiers": [
+            "sqlite3"
+          ]
+        },
+        {
+          "source": "threading",
+          "specifiers": [
+            "threading"
+          ]
+        },
+        {
+          "source": "unicodedata",
+          "specifiers": [
+            "unicodedata"
+          ]
+        },
+        {
+          "source": "numpy",
+          "specifiers": [
+            "np"
+          ]
+        },
+        {
+          "source": "PIL",
+          "specifiers": [
+            "Image",
+            "ImageOps"
+          ]
+        },
+        {
+          "source": "sklearn.feature_extraction.text",
+          "specifiers": [
+            "TfidfVectorizer"
+          ]
+        },
+        {
+          "source": "sklearn.metrics.pairwise",
+          "specifiers": [
+            "cosine_similarity"
+          ]
+        }
+      ],
+      "exports": [
+        "normalized",
+        "RecipeEngine"
+      ],
+      "totalLines": 118,
+      "hasStructuralAnalysis": true
+    },
+    "backend/README.md": {
+      "filePath": "backend/README.md",
+      "contentHash": "a0c86738a63d4acd1027dd0e2a25f340e3bf89149da006db3c623b58369bdc9e",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 82,
+      "hasStructuralAnalysis": true
+    },
+    "backend/requirements.txt": {
+      "filePath": "backend/requirements.txt",
+      "contentHash": "24d9e64e5665734f1b93c06e07b1a98805f75c11a2282e73499b60a0857b5b2a",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 11,
+      "hasStructuralAnalysis": false
+    },
+    "backend/run.ps1": {
+      "filePath": "backend/run.ps1",
+      "contentHash": "a339b51e452b641b70f303da9077b8b8bae94f084c467513fc59d47b0214371f",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 10,
+      "hasStructuralAnalysis": false
+    },
+    "backend/test_backend.py": {
+      "filePath": "backend/test_backend.py",
+      "contentHash": "b0d0e65b52bc46c878398e98e969aad11fe0700b5badd3c079051ff6bc9b6479",
+      "functions": [],
+      "classes": [
+        {
+          "name": "RecipeBackendTests",
+          "methods": [
+            "setUpClass",
+            "test_catalog_has_real_licensed_content_and_offline_photos",
+            "test_recipe_model_finds_named_recipe_and_refuses_unrelated_text",
+            "test_health_and_text_api_return_sources",
+            "test_invalid_image_is_recoverable",
+            "test_tiktok_only_allows_official_https_hosts",
+            "test_tiktok_caption_uses_oembed_and_does_not_download_video",
+            "test_real_onnx_image_model_roundtrip_with_reference"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 45
+        }
+      ],
+      "imports": [
+        {
+          "source": "io",
+          "specifiers": [
+            "io"
+          ]
+        },
+        {
+          "source": "json",
+          "specifiers": [
+            "json"
+          ]
+        },
+        {
+          "source": "unittest",
+          "specifiers": [
+            "unittest"
+          ]
+        },
+        {
+          "source": "pathlib",
+          "specifiers": [
+            "Path"
+          ]
+        },
+        {
+          "source": "unittest.mock",
+          "specifiers": [
+            "patch"
+          ]
+        },
+        {
+          "source": "fastapi.testclient",
+          "specifiers": [
+            "TestClient"
+          ]
+        },
+        {
+          "source": "PIL",
+          "specifiers": [
+            "Image"
+          ]
+        },
+        {
+          "source": "backend.app",
+          "specifiers": [
+            "app",
+            "tiktok_caption"
+          ]
+        },
+        {
+          "source": "backend.engine",
+          "specifiers": [
+            "RecipeEngine",
+            "CATALOG"
+          ]
+        }
+      ],
+      "exports": [
+        "RecipeBackendTests"
+      ],
+      "totalLines": 56,
+      "hasStructuralAnalysis": true
+    },
+    "backend/train_recipe_model.py": {
+      "filePath": "backend/train_recipe_model.py",
+      "contentHash": "82f872cc9a5fadeac1cba1b1860e9c85f430c5a0373c3023fb93a89e8735bb33",
+      "functions": [
+        {
+          "name": "main",
+          "params": [],
+          "exported": true,
+          "lineCount": 17
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "pathlib",
+          "specifiers": [
+            "Path"
+          ]
+        },
+        {
+          "source": "hashlib",
+          "specifiers": [
+            "hashlib"
+          ]
+        },
+        {
+          "source": "json",
+          "specifiers": [
+            "json"
+          ]
+        },
+        {
+          "source": "time",
+          "specifiers": [
+            "time"
+          ]
+        },
+        {
+          "source": "scipy.sparse",
+          "specifiers": [
+            "save_npz"
+          ]
+        },
+        {
+          "source": "backend.engine",
+          "specifiers": [
+            "RecipeEngine",
+            "MODELS",
+            "CATALOG"
+          ]
+        }
+      ],
+      "exports": [
+        "main"
+      ],
+      "totalLines": 30,
+      "hasStructuralAnalysis": true
+    },
+    "backend/train_vision_scratch.py": {
+      "filePath": "backend/train_vision_scratch.py",
+      "contentHash": "1b751aa45128fde76ca389da731ec906969645766fae5910938a024e8c74eef0",
+      "functions": [
+        {
+          "name": "features",
+          "params": [
+            "path"
+          ],
+          "exported": true,
+          "lineCount": 13
+        },
+        {
+          "name": "main",
+          "params": [],
+          "exported": true,
+          "lineCount": 30
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "pathlib",
+          "specifiers": [
+            "Path"
+          ]
+        },
+        {
+          "source": "argparse",
+          "specifiers": [
+            "argparse"
+          ]
+        },
+        {
+          "source": "hashlib",
+          "specifiers": [
+            "hashlib"
+          ]
+        },
+        {
+          "source": "json",
+          "specifiers": [
+            "json"
+          ]
+        },
+        {
+          "source": "time",
+          "specifiers": [
+            "time"
+          ]
+        },
+        {
+          "source": "numpy",
+          "specifiers": [
+            "np"
+          ]
+        },
+        {
+          "source": "PIL",
+          "specifiers": [
+            "Image",
+            "ImageOps"
+          ]
+        },
+        {
+          "source": "sklearn.model_selection",
+          "specifiers": [
+            "train_test_split"
+          ]
+        },
+        {
+          "source": "sklearn.linear_model",
+          "specifiers": [
+            "SGDClassifier"
+          ]
+        },
+        {
+          "source": "sklearn.metrics",
+          "specifiers": [
+            "accuracy_score",
+            "balanced_accuracy_score",
+            "confusion_matrix"
+          ]
+        }
+      ],
+      "exports": [
+        "features",
+        "main"
+      ],
+      "totalLines": 62,
+      "hasStructuralAnalysis": true
+    },
+    "build.gradle.kts": {
+      "filePath": "build.gradle.kts",
+      "contentHash": "5dad2d59c54beb7d7801e06e1c795456d1bea58c0ccbeddfce159cd8f58c2fa8",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 4,
+      "hasStructuralAnalysis": false
+    },
+    "docs/archive/IMPLEMENTATION_STATUS_V1.md": {
+      "filePath": "docs/archive/IMPLEMENTATION_STATUS_V1.md",
+      "contentHash": "340ad01e1339775a6920381277263cd2e4ef7b43922480ac6c48e90774da2d6d",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 79,
+      "hasStructuralAnalysis": true
+    },
+    "docs/archive/README_V1.md": {
+      "filePath": "docs/archive/README_V1.md",
+      "contentHash": "e9f800badb5d7178eda64f8cdac08b5abd651210913e26cde385f38fef5ea501",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 89,
+      "hasStructuralAnalysis": true
+    },
+    "docs/DATASET_AND_AI.md": {
+      "filePath": "docs/DATASET_AND_AI.md",
+      "contentHash": "abad680b12d431ef466d0d5ceb4a3976c9608d681510fa7f4703f8e22ab0c194",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 65,
+      "hasStructuralAnalysis": true
+    },
+    "docs/FEATURE_MATRIX.md": {
+      "filePath": "docs/FEATURE_MATRIX.md",
+      "contentHash": "75861f231f69edc993bbc57bd8413479d41942d607417267fe7b017e2f62a11e",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 19,
+      "hasStructuralAnalysis": true
+    },
+    "docs/IMPLEMENTATION_STATUS.md": {
+      "filePath": "docs/IMPLEMENTATION_STATUS.md",
+      "contentHash": "340ad01e1339775a6920381277263cd2e4ef7b43922480ac6c48e90774da2d6d",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 79,
+      "hasStructuralAnalysis": true
+    },
+    "docs/REA_ANALYSIS.md": {
+      "filePath": "docs/REA_ANALYSIS.md",
+      "contentHash": "c86f22a02a51d92d44a4ad6fcbbe9dbb7d544c9fcc755ec51adcb61ddeea4194",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 70,
+      "hasStructuralAnalysis": true
+    },
+    "gradle.properties": {
+      "filePath": "gradle.properties",
+      "contentHash": "42795f0af73d122cd68d7a4920e86a8158eaf53f1f354d4aec3bc246b332c460",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 17,
+      "hasStructuralAnalysis": false
+    },
+    "gradle/gradle-daemon-jvm.properties": {
+      "filePath": "gradle/gradle-daemon-jvm.properties",
+      "contentHash": "df06bae5b72891fd058a23f625a878d68f34952fb3c7369422b3a4243847a1b4",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 3,
+      "hasStructuralAnalysis": false
+    },
+    "gradle/libs.versions.toml": {
+      "filePath": "gradle/libs.versions.toml",
+      "contentHash": "519b62d9f17bf88e802e2831454bdc27f323079d72335c25f7ab433c0e5ae335",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 23,
+      "hasStructuralAnalysis": true
+    },
+    "gradle/wrapper/gradle-wrapper.jar": {
+      "filePath": "gradle/wrapper/gradle-wrapper.jar",
+      "contentHash": "d2630fec8f65fdcd2a08975c64008a029299d6d100ff71272f95a8c88178dc2d",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 160,
+      "hasStructuralAnalysis": false
+    },
+    "gradle/wrapper/gradle-wrapper.properties": {
+      "filePath": "gradle/wrapper/gradle-wrapper.properties",
+      "contentHash": "66322190a318e9cd3f1e4c6e83225d78fdf91459399a4790c062a5c64da66889",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 10,
+      "hasStructuralAnalysis": false
+    },
+    "gradlew": {
+      "filePath": "gradlew",
+      "contentHash": "3238afb2aed5cb16eb7d6718077e7138059108f007b54179e9cc157c5a6e0e89",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 252,
+      "hasStructuralAnalysis": false
+    },
+    "gradlew.bat": {
+      "filePath": "gradlew.bat",
+      "contentHash": "1d297e00bd21de3ace22b4d7f2de1f9dfa858883d66bbf7c1ccbecccec8f4f3b",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 95,
+      "hasStructuralAnalysis": false
+    },
+    "README.md": {
+      "filePath": "README.md",
+      "contentHash": "e9f800badb5d7178eda64f8cdac08b5abd651210913e26cde385f38fef5ea501",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 89,
+      "hasStructuralAnalysis": true
+    },
+    "settings.gradle.kts": {
+      "filePath": "settings.gradle.kts",
+      "contentHash": "25650951a15c1927d5181bc7ed33ce79f044fd6f0fb776d235d545fa74e7ff71",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 28,
+      "hasStructuralAnalysis": false
+    },
+    "tools/add_layout_previews.py": {
+      "filePath": "tools/add_layout_previews.py",
+      "contentHash": "678449221a2e5892eca0f323ef1f2b822f0b62e2c8fae890605fc9a9268c3307",
+      "functions": [
+        {
+          "name": "attributes",
+          "params": [
+            "source",
+            "name",
+            "values"
+          ],
+          "exported": true,
+          "lineCount": 11
+        },
+        {
+          "name": "main",
+          "params": [],
+          "exported": true,
+          "lineCount": 20
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "pathlib",
+          "specifiers": [
+            "Path"
+          ]
+        },
+        {
+          "source": "re",
+          "specifiers": [
+            "re"
+          ]
+        },
+        {
+          "source": "json",
+          "specifiers": [
+            "json"
+          ]
+        },
+        {
+          "source": "shutil",
+          "specifiers": [
+            "shutil"
+          ]
+        },
+        {
+          "source": "xml.sax.saxutils",
+          "specifiers": [
+            "quoteattr"
+          ]
+        },
+        {
+          "source": "xml.dom",
+          "specifiers": [
+            "minidom"
+          ]
+        }
+      ],
+      "exports": [
+        "attributes",
+        "main"
+      ],
+      "totalLines": 52,
+      "hasStructuralAnalysis": true
+    },
+    "tools/add_translated_staples.py": {
+      "filePath": "tools/add_translated_staples.py",
+      "contentHash": "c5a3f11ef23f775151ee1b3ad5878dca65c1dbb0efce8c6d059f450e0b623357",
+      "functions": [
+        {
+          "name": "main",
+          "params": [],
+          "exported": true,
+          "lineCount": 12
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "pathlib",
+          "specifiers": [
+            "Path"
+          ]
+        },
+        {
+          "source": "json",
+          "specifiers": [
+            "json"
+          ]
+        },
+        {
+          "source": "urllib.parse",
+          "specifiers": [
+            "urllib.parse"
+          ]
+        }
+      ],
+      "exports": [
+        "main"
+      ],
+      "totalLines": 38,
+      "hasStructuralAnalysis": true
+    },
+    "tools/collect_food_photos.py": {
+      "filePath": "tools/collect_food_photos.py",
+      "contentHash": "d5f40bba99440fbb9cd4a7c4f14eed5be751476e1d68f9eb1ca92879b3788cf9",
+      "functions": [
+        {
+          "name": "fetch",
+          "params": [
+            "api",
+            "params"
+          ],
+          "exported": true,
+          "lineCount": 11
+        },
+        {
+          "name": "plain",
+          "params": [
+            "s"
+          ],
+          "exported": true,
+          "lineCount": 1
+        },
+        {
+          "name": "main",
+          "params": [],
+          "exported": true,
+          "lineCount": 71
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "pathlib",
+          "specifiers": [
+            "Path"
+          ]
+        },
+        {
+          "source": "urllib.parse",
+          "specifiers": [
+            "quote"
+          ]
+        },
+        {
+          "source": "concurrent.futures",
+          "specifiers": [
+            "concurrent.futures"
+          ]
+        },
+        {
+          "source": "hashlib",
+          "specifiers": [
+            "hashlib"
+          ]
+        },
+        {
+          "source": "json",
+          "specifiers": [
+            "json"
+          ]
+        },
+        {
+          "source": "re",
+          "specifiers": [
+            "re"
+          ]
+        },
+        {
+          "source": "time",
+          "specifiers": [
+            "time"
+          ]
+        },
+        {
+          "source": "unicodedata",
+          "specifiers": [
+            "unicodedata"
+          ]
+        },
+        {
+          "source": "requests",
+          "specifiers": [
+            "requests"
+          ]
+        },
+        {
+          "source": "bs4",
+          "specifiers": [
+            "BeautifulSoup"
+          ]
+        }
+      ],
+      "exports": [
+        "fetch",
+        "plain",
+        "main"
+      ],
+      "totalLines": 104,
+      "hasStructuralAnalysis": true
+    },
+    "tools/collect_open_recipes.py": {
+      "filePath": "tools/collect_open_recipes.py",
+      "contentHash": "f01bae65a41cac6fac5c63078c9656fcd2c1782ab686d40657ede13b3803096b",
+      "functions": [
+        {
+          "name": "key",
+          "params": [
+            "text"
+          ],
+          "exported": true,
+          "lineCount": 2
+        },
+        {
+          "name": "api",
+          "params": [
+            "params",
+            "cache_name"
+          ],
+          "exported": true,
+          "lineCount": 19
+        },
+        {
+          "name": "clean",
+          "params": [
+            "s"
+          ],
+          "exported": true,
+          "lineCount": 15
+        },
+        {
+          "name": "parse",
+          "params": [
+            "page"
+          ],
+          "exported": true,
+          "lineCount": 37
+        },
+        {
+          "name": "main",
+          "params": [],
+          "exported": true,
+          "lineCount": 27
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "pathlib",
+          "specifiers": [
+            "Path"
+          ]
+        },
+        {
+          "source": "argparse",
+          "specifiers": [
+            "argparse"
+          ]
+        },
+        {
+          "source": "concurrent.futures",
+          "specifiers": [
+            "concurrent.futures"
+          ]
+        },
+        {
+          "source": "hashlib",
+          "specifiers": [
+            "hashlib"
+          ]
+        },
+        {
+          "source": "html",
+          "specifiers": [
+            "html"
+          ]
+        },
+        {
+          "source": "json",
+          "specifiers": [
+            "json"
+          ]
+        },
+        {
+          "source": "re",
+          "specifiers": [
+            "re"
+          ]
+        },
+        {
+          "source": "time",
+          "specifiers": [
+            "time"
+          ]
+        },
+        {
+          "source": "unicodedata",
+          "specifiers": [
+            "unicodedata"
+          ]
+        },
+        {
+          "source": "urllib.parse",
+          "specifiers": [
+            "quote"
+          ]
+        },
+        {
+          "source": "requests",
+          "specifiers": [
+            "requests"
+          ]
+        }
+      ],
+      "exports": [
+        "key",
+        "api",
+        "clean",
+        "parse",
+        "main"
+      ],
+      "totalLines": 123,
+      "hasStructuralAnalysis": true
+    },
+    "tools/enrich_source_images.py": {
+      "filePath": "tools/enrich_source_images.py",
+      "contentHash": "fe28249a3e91a019c3c392f98cc179ff21515025be7a3fb44bd7d8227cd27465",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "pathlib",
+          "specifiers": [
+            "Path"
+          ]
+        },
+        {
+          "source": "json",
+          "specifiers": [
+            "json"
+          ]
+        },
+        {
+          "source": "re",
+          "specifiers": [
+            "re"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 16,
+      "hasStructuralAnalysis": true
+    },
+    "tools/prepare_scratch_training.py": {
+      "filePath": "tools/prepare_scratch_training.py",
+      "contentHash": "d4e37cca37b088cd99949cc8d93458c7ceb62145829684bb2d52f564efa24962",
+      "functions": [
+        {
+          "name": "key",
+          "params": [
+            "value"
+          ],
+          "exported": true,
+          "lineCount": 1
+        },
+        {
+          "name": "main",
+          "params": [],
+          "exported": true,
+          "lineCount": 21
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "pathlib",
+          "specifiers": [
+            "Path"
+          ]
+        },
+        {
+          "source": "hashlib",
+          "specifiers": [
+            "hashlib"
+          ]
+        },
+        {
+          "source": "json",
+          "specifiers": [
+            "json"
+          ]
+        },
+        {
+          "source": "re",
+          "specifiers": [
+            "re"
+          ]
+        },
+        {
+          "source": "shutil",
+          "specifiers": [
+            "shutil"
+          ]
+        },
+        {
+          "source": "unicodedata",
+          "specifiers": [
+            "unicodedata"
+          ]
+        }
+      ],
+      "exports": [
+        "key",
+        "main"
+      ],
+      "totalLines": 35,
+      "hasStructuralAnalysis": true
+    },
+    "tools/redesign_xml.py": {
+      "filePath": "tools/redesign_xml.py",
+      "contentHash": "08f305918285a32a786598c8ff1f6c40c050ef6ed33c5efabce6127aebea5ccb",
+      "functions": [
+        {
+          "name": "write",
+          "params": [
+            "name",
+            "source"
+          ],
+          "exported": true,
+          "lineCount": 13
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "pathlib",
+          "specifiers": [
+            "Path"
+          ]
+        },
+        {
+          "source": "xml.dom",
+          "specifiers": [
+            "minidom",
+            "Node"
+          ]
+        },
+        {
+          "source": "xml.sax.saxutils",
+          "specifiers": [
+            "quoteattr"
+          ]
+        }
+      ],
+      "exports": [
+        "write"
+      ],
+      "totalLines": 108,
+      "hasStructuralAnalysis": true
+    }
+  }
+}

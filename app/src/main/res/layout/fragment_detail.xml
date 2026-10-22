@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".ui.DetailFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,7 +24,8 @@
             android:layout_height="180dp"
             android:src="@drawable/food_art"
             android:scaleType="centerCrop"
-            android:contentDescription="Ảnh món ăn" />
+            android:contentDescription="Ảnh món ăn"
+            tools:src="@drawable/preview_bun_bo_hue" />
 
         <TextView
             android:id="@+id/detail_title"
@@ -30,13 +33,15 @@
             android:layout_height="wrap_content"
             android:textSize="30sp"
             android:fontFamily="serif"
-            android:textColor="#173F33" />
+            android:textColor="#123B2D"
+            tools:text="Bún bò Huế" />
 
         <TextView
             android:id="@+id/detail_meta"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="10dp" />
+            android:layout_marginVertical="10dp"
+            tools:text="Món nước · Wikibooks" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -89,7 +94,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                tools:text="1 mẻ công thức" />
 
             <Button
                 android:id="@+id/plus"
@@ -116,7 +122,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="17sp"
-            android:lineSpacingExtra="8dp" />
+            android:lineSpacingExtra="8dp"
+            tools:text="• Bún và thịt theo công thức nguồn&#10;• Sả, gia vị và rau ăn kèm" />
 
         <Button
             android:id="@+id/to_grocery"
@@ -137,19 +144,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="17sp"
-            android:lineSpacingExtra="8dp" />
+            android:lineSpacingExtra="8dp"
+            tools:text="1. Sơ chế nguyên liệu theo hướng dẫn.&#10;&#10;2. Nấu nước dùng và hoàn thiện món." />
 
         <TextView
             android:id="@+id/nutrition"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingVertical="20dp" />
+            android:paddingVertical="20dp"
+            tools:text="Dinh dưỡng: chưa đủ dữ liệu" />
 
         <TextView
             android:id="@+id/source"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textIsSelectable="true" />
+            android:textIsSelectable="true"
+        android:autoLink="web"
+            tools:text="Wikibooks · CC BY-SA 4.0&#10;Tác giả và giấy phép ảnh có trong chi tiết nguồn." />
 
     </LinearLayout>
 

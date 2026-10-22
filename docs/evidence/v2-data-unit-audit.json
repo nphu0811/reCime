@@ -1,0 +1,22 @@
+{
+  "recipes": 547,
+  "uniqueKeys": 547,
+  "photoRecipes": 211,
+  "photoFiles": 178,
+  "sqliteIntegrity": "ok",
+  "tables": [
+    [
+      "recipes"
+    ]
+  ],
+  "unitTest": {
+    "name": "com.example.recime.RecipeDomainTest",
+    "tests": "10",
+    "skipped": "0",
+    "failures": "0",
+    "errors": "0",
+    "timestamp": "2026-10-22T13:24:20.035Z",
+    "hostname": "CHIPIU",
+    "time": "0.139"
+  }
+}

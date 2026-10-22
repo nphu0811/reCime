@@ -31,41 +31,16 @@ public final class Ui {
   }
 
   public static void image(ImageView view, String path) {
-    view.setImageResource(R.drawable.food_art);
-    if (path == null || path.isEmpty()) return;
-    try {
-      android.graphics.BitmapFactory.Options options = new android.graphics.BitmapFactory.Options();
-      options.inJustDecodeBounds = true;
-      android.graphics.BitmapFactory.decodeFile(path, options);
-      if (options.outWidth <= 0 || options.outHeight <= 0) return;
-      options.inSampleSize = 1;
-      while (Math.max(options.outWidth, options.outHeight) / options.inSampleSize > 800)
-        options.inSampleSize *= 2;
-      options.inJustDecodeBounds = false;
-      android.graphics.Bitmap bitmap = android.graphics.BitmapFactory.decodeFile(path, options);
-      if (bitmap != null) {
-        int orientation = 1;
-        try {
-          orientation =
-              new android.media.ExifInterface(path)
-                  .getAttributeInt(android.media.ExifInterface.TAG_ORIENTATION, 1);
-        } catch (java.io.IOException ignored) {
-        }
-        int degrees = orientation == 6 ? 90 : orientation == 3 ? 180 : orientation == 8 ? 270 : 0;
-        if (degrees != 0) {
-          android.graphics.Matrix matrix = new android.graphics.Matrix();
-          matrix.postRotate(degrees);
-          android.graphics.Bitmap rotated =
-              android.graphics.Bitmap.createBitmap(
-                  bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-          if (rotated != bitmap) bitmap.recycle();
-          bitmap = rotated;
-        }
-        view.setImageBitmap(bitmap);
-      }
-    } catch (Exception ignored) {
-      view.setImageResource(R.drawable.food_art);
-    }
+    Object model =
+        path == null || path.isEmpty()
+            ? null
+            : path.startsWith("file://") ? path : new java.io.File(path);
+    com.bumptech.glide.Glide.with(view)
+        .load(model)
+        .placeholder(R.drawable.food_art)
+        .error(R.drawable.food_art)
+        .centerCrop()
+        .into(view);
   }
 
   public static EditText field(Context c, LinearLayout parent, String hint, String text) {

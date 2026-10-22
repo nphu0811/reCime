@@ -177,27 +177,61 @@ public class BoardFragment extends Fragment {
           .show();
       return;
     }
-    String[] names = new String[recipes.size() + 1];
-    names[0] = "Bỏ món khỏi bữa này";
-    for (int i = 0; i < recipes.size(); i++) names[i + 1] = recipes.get(i).title;
-    new MaterialAlertDialogBuilder(requireContext())
-        .setTitle(row.day + " · " + row.type)
-        .setItems(
-            names,
-            (d, w) -> {
-              if (w == 0) {
-                if (row.meal != null)
-                  vm.repository.run(() -> vm.repository.dao.deleteMeal(row.meal));
-              } else {
-                Meal m = new Meal();
-                m.day = row.day;
-                m.type = row.type;
-                m.slot = row.day + "|" + row.type;
-                m.recipeId = recipes.get(w - 1).id;
-                vm.repository.run(() -> vm.repository.dao.putMeal(m));
-              }
-            })
-        .show();
+    View content =
+        LayoutInflater.from(requireContext()).inflate(R.layout.dialog_recipe_picker, null);
+    EditText search = content.findViewById(R.id.meal_search);
+    ListView list = content.findViewById(R.id.meal_recipe_list);
+    java.util.List<Recipe> matching = new ArrayList<>();
+    ArrayAdapter<String> adapter =
+        new ArrayAdapter<>(
+            requireContext(), android.R.layout.simple_list_item_1, new ArrayList<>());
+    list.setAdapter(adapter);
+    Runnable filter =
+        () -> {
+          String query = Units.key(search.getText().toString());
+          matching.clear();
+          adapter.setNotifyOnChange(false);
+          adapter.clear();
+          adapter.add("Bỏ món khỏi bữa này");
+          for (Recipe r : recipes)
+            if (Units.key(r.title + " " + r.tags).contains(query)) {
+              matching.add(r);
+              adapter.add(r.title);
+            }
+          adapter.notifyDataSetChanged();
+        };
+    filter.run();
+    search.addTextChangedListener(
+        new android.text.TextWatcher() {
+          public void beforeTextChanged(CharSequence s, int a, int c, int d) {}
+
+          public void onTextChanged(CharSequence s, int a, int b, int c) {
+            filter.run();
+          }
+
+          public void afterTextChanged(android.text.Editable e) {}
+        });
+    androidx.appcompat.app.AlertDialog dialog =
+        new MaterialAlertDialogBuilder(requireContext())
+            .setTitle(row.day + " · " + row.type)
+            .setView(content)
+            .setNegativeButton("Đóng", null)
+            .create();
+    list.setOnItemClickListener(
+        (parent, view, position, id) -> {
+          if (position == 0) {
+            if (row.meal != null) vm.repository.run(() -> vm.repository.dao.deleteMeal(row.meal));
+          } else {
+            Meal meal = new Meal();
+            meal.day = row.day;
+            meal.type = row.type;
+            meal.slot = row.day + "|" + row.type;
+            meal.recipeId = matching.get(position - 1).id;
+            vm.repository.run(() -> vm.repository.dao.putMeal(meal));
+          }
+          dialog.dismiss();
+        });
+    dialog.show();
   }
 
   private void planGroceries() {

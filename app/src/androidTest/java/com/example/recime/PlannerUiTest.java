@@ -41,7 +41,14 @@ public class PlannerUiTest {
                   controller.loopMainThreadUntilIdle();
                 }
               });
-      onView(withText("Trứng cà chua")).perform(click());
+      onView(withId(R.id.meal_search))
+          .inRoot(androidx.test.espresso.matcher.RootMatchers.isDialog())
+          .perform(
+              replaceText("Trứng cà chua"),
+              androidx.test.espresso.action.ViewActions.closeSoftKeyboard());
+      onView(allOf(withId(android.R.id.text1), withText("Trứng cà chua")))
+          .inRoot(androidx.test.espresso.matcher.RootMatchers.isDialog())
+          .perform(click());
       repo.io.submit(() -> {}).get(20, TimeUnit.SECONDS);
       onIdle();
       scenario.recreate();

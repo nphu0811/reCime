@@ -1,0 +1,7 @@
+INFO:     127.0.0.1:50932 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64447 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64447 - "POST /analyze/text HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64457 - "POST /analyze/image HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54532 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54532 - "POST /analyze/text HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54539 - "POST /analyze/image HTTP/1.1" 200 OK

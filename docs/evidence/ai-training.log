@@ -1,0 +1,57 @@
+{
+  "modelType": "TF-IDF recipe retriever trained from scratch on catalog text, not an LLM",
+  "recipes": 547,
+  "vocabularySize": 13098,
+  "weightsBytes": 792809,
+  "seconds": 0.25,
+  "sanityQueries": [
+    {
+      "query": "phở bò nước dùng",
+      "top5": [
+        "Phở bò",
+        "Phở bò viên đuôi bò",
+        "Phở bò viên chay",
+        "Bò ướp tiêu sốt rượu vang đỏ",
+        "Bò nướng sốt rượu vang đỏ"
+      ]
+    },
+    {
+      "query": "bún bò Huế",
+      "top5": [
+        "Bún bò Huế",
+        "Bún bò giò heo",
+        "Bún bò gân",
+        "Bún bò xào củ hành",
+        "Bún bò xào sả"
+      ]
+    },
+    {
+      "query": "bánh xèo",
+      "top5": [
+        "Bánh xèo",
+        "Ốc nhồi nấu chuối"
+      ]
+    },
+    {
+      "query": "cơm tấm",
+      "top5": [
+        "Cơm tấm",
+        "Canh mùng",
+        "Cơm rang",
+        "Cốm dẹp trộn dừa",
+        "Hạt đác rim dâu tằm"
+      ]
+    },
+    {
+      "query": "gỏi cuốn",
+      "top5": [
+        "Gỏi cuốn tôm thịt",
+        "Cuộn đậu",
+        "Trứng cuộn tôm",
+        "Bánh cuốn lạp xưởng",
+        "Cá cuốn bún"
+      ]
+    }
+  ],
+  "evaluationLimit": "Sanity queries against indexed recipes only; not held-out/generalization accuracy. No claim that all Vietnamese recipes are covered."
+}

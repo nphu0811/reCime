@@ -1,0 +1,13 @@
+{
+  "changedFiles": 319,
+  "matchedNodes": 57,
+  "affectedNodesOneHop": 0,
+  "affectedLayers": [
+    "Android UI",
+    "Android persistence",
+    "Import and domain",
+    "Laptop AI",
+    "Documentation"
+  ],
+  "risk": "Partial graph with sparse resolved imports; source-level review is primary evidence, no low-risk conclusion from small edge count."
+}

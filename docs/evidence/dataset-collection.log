@@ -1,0 +1,22 @@
+Inventory: 656
+40/656 pages; 35 complete recipes
+80/656 pages; 72 complete recipes
+120/656 pages; 109 complete recipes
+160/656 pages; 147 complete recipes
+200/656 pages; 176 complete recipes
+240/656 pages; 215 complete recipes
+280/656 pages; 251 complete recipes
+320/656 pages; 289 complete recipes
+Traceback (most recent call last):
+  File "C:\Users\admin\AndroidStudioProjects\reCIme\tools\collect_open_recipes.py", line 113, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "C:\Users\admin\AndroidStudioProjects\reCIme\tools\collect_open_recipes.py", line 100, in main
+    batch=api({'action':'query','pageids':ids,'prop':'revisions','rvprop':'ids|timestamp|content','rvslots':'main'},f'revisions-{digest}.json')
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\admin\AndroidStudioProjects\reCIme\tools\collect_open_recipes.py", line 27, in api
+    response.raise_for_status();data=response.json()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\admin\AppData\Local\Programs\Python\Python311\Lib\site-packages\requests\models.py", line 1167, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 429 Client Error: Too Many Requests for url: https://vi.wikibooks.org/w/api.php?format=json&action=query&pageids=12233%7C12227%7C12241%7C12242%7C12244%7C12246%7C12247%7C12249%7C12251%7C12255%7C11459%7C12259%7C12257%7C12258%7C12263%7C26017%7C12268%7C12270%7C12237%7C12277%7C12096%7C12313%7C67499%7C37826%7C11785%7C12297%7C12299%7C11325%7C17907%7C12301%7C110051%7C9884%7C23996%7C11806%7C12304%7C12303%7C9885%7C9879%7C17848%7C11548&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main

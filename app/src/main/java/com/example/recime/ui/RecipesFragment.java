@@ -18,6 +18,7 @@ public class RecipesFragment extends Fragment {
   private RecipeAdapter adapter;
   private String book = "Tất cả";
   private LabViewModel vm;
+  private String category = "all";
 
   public RecipesFragment() {
     super(R.layout.fragment_recipes);
@@ -34,11 +35,32 @@ public class RecipesFragment extends Fragment {
   @Override
   public void onViewCreated(View v, Bundle state) {
     root = v;
+    Motion.enter(v);
     vm = new ViewModelProvider(requireActivity()).get(LabViewModel.class);
     if (getArguments() != null && getArguments().getBoolean("discover")) {
       Ui.set(v, R.id.heading, "Khám phá từ căn bếp");
       Ui.set(v, R.id.eyebrow, "Ý TƯỞNG OFFLINE · NGUYÊN LIỆU CÓ SẴN");
     }
+    v.findViewById(R.id.ai_camera)
+        .setOnClickListener(
+            x ->
+                ((com.google.android.material.bottomnavigation.BottomNavigationView)
+                        requireActivity().findViewById(R.id.bottom))
+                    .setSelectedItemId(R.id.nav_import));
+    ((com.google.android.material.chip.ChipGroup) v.findViewById(R.id.category_chips))
+        .setOnCheckedStateChangeListener(
+            (group, ids) -> {
+              int selected = ids.isEmpty() ? R.id.chip_all : ids.get(0);
+              category =
+                  selected == R.id.chip_soup
+                      ? "soup"
+                      : selected == R.id.chip_main
+                          ? "main"
+                          : selected == R.id.chip_vegan
+                              ? "vegan"
+                              : selected == R.id.chip_sweet ? "sweet" : "all";
+              filter();
+            });
     RecyclerView list = v.findViewById(R.id.list);
     list.setLayoutManager(new GridLayoutManager(requireContext(), 2));
     adapter = new RecipeAdapter();
@@ -72,6 +94,28 @@ public class RecipesFragment extends Fragment {
         getViewLifecycleOwner(),
         items -> {
           all = items;
+          Recipe featured = null;
+          for (Recipe r : all)
+            if (!r.image.isEmpty()) {
+              featured = r;
+              if (r.title.equalsIgnoreCase("Bún bò Huế")) break;
+            }
+          if (featured != null) {
+            final Recipe selected = featured;
+            Ui.image(v.findViewById(R.id.hero_photo), selected.image);
+            Ui.set(v, R.id.hero_title, selected.title);
+            Ui.set(
+                v,
+                R.id.hero_meta,
+                selected.catalogKey == null
+                    ? "Món của bạn · Xem công thức →"
+                    : "Wikibooks · Công thức mở →");
+            v.findViewById(R.id.hero_card)
+                .setOnClickListener(
+                    x ->
+                        ((MainActivity) requireActivity())
+                            .open(DetailFragment.create(selected.id)));
+          }
           LinkedHashSet<String> books = new LinkedHashSet<>();
           books.add("Tất cả");
           for (Recipe r : all) books.add(r.cookbook);
@@ -95,9 +139,18 @@ public class RecipesFragment extends Fragment {
     for (Recipe r : all) {
       String hay = Units.key(r.title + " " + r.tags + " " + r.ingredients);
       boolean ok = true;
+      String type = Units.key(r.title + " " + r.cookbook);
+      boolean categoryOk =
+          category.equals("all")
+              || category.equals("soup") && type.matches(".*(bun|pho|canh|lau|hu tieu|mi quang).*")
+              || category.equals("vegan") && type.contains("chay")
+              || category.equals("sweet") && type.matches(".*(banh|che |xoi|kem).*")
+              || category.equals("main") && !type.matches(".*(banh|che |kem|canh|bun|pho).*");
       for (String token : q.split("[,\\s]+")) if (!hay.contains(token)) ok = false;
-      if (ok && (!favorite || r.favorite) && (book.equals("Tất cả") || book.equals(r.cookbook)))
-        shown.add(r);
+      if (ok
+          && categoryOk
+          && (!favorite || r.favorite)
+          && (book.equals("Tất cả") || book.equals(r.cookbook))) shown.add(r);
     }
     Ui.set(
         root,
@@ -106,7 +159,7 @@ public class RecipesFragment extends Fragment {
             ? (Boolean.TRUE.equals(vm.repository.ready.getValue())
                 ? "Chưa có công thức phù hợp. Thêm món đầu tiên của bạn."
                 : "Đang tải…")
-            : shown.size() + " công thức · lưu trên thiết bị");
+            : shown.size() + " công thức · sẵn sàng khi offline");
     adapter.notifyDataSetChanged();
   }
 
@@ -126,8 +179,11 @@ public class RecipesFragment extends Fragment {
       Ui.set(
           h.itemView,
           R.id.meta,
-          (r.favorite ? "♥ · " : "") + r.cookbook + " · " + Units.format(r.servings) + " phần");
+          (r.favorite ? "♥ · " : "")
+              + (r.catalogKey == null ? r.cookbook : "Wikibooks · CC BY-SA 4.0")
+              + (r.servingsKnown ? " · " + Units.format(r.servings) + " phần" : ""));
       Ui.image(h.itemView.findViewById(R.id.photo), r.image);
+      Motion.card(h.itemView);
       h.itemView.setOnClickListener(
           v -> ((MainActivity) requireActivity()).open(DetailFragment.create(r.id)));
     }

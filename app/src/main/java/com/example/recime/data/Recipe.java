@@ -2,7 +2,13 @@ package com.example.recime.data;
 
 import androidx.room.*;
 
-@Entity(tableName = "recipes")
+@Entity(
+    tableName = "recipes",
+    indices = {
+      @Index(
+          value = {"catalogKey"},
+          unique = true)
+    })
 public class Recipe {
   @PrimaryKey(autoGenerate = true)
   public long id;
@@ -19,4 +25,15 @@ public class Recipe {
   // Manual values per original serving, never guessed from ingredient text.
   public Double calories, protein, carbs, fat;
   public String nutritionSource = "";
+
+  @androidx.annotation.Nullable public String catalogKey;
+
+  @ColumnInfo(defaultValue = "''")
+  public String attribution = "";
+
+  @ColumnInfo(defaultValue = "''")
+  public String imageAttribution = "";
+
+  @ColumnInfo(defaultValue = "1")
+  public boolean servingsKnown = true;
 }

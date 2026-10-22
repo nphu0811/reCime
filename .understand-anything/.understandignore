@@ -1,0 +1,10 @@
+backend/.venv/
+backend/models/
+datasets/raw/
+photos/
+**/build/
+docs/evidence/
+archive/original-project/
+app/src/main/assets/catalog/
+*.sqlite3
+.gradle/

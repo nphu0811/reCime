@@ -1,0 +1,1 @@
+{"status":"ready","recipes":547,"visionModelDownloaded":true,"cost":"local, no API fee","engine":"CLIP ONNX image retrieval + recipe-only TF-IDF","privacy":"Images processed in memory; uploads not logged or saved."}

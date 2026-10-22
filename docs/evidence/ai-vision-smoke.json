@@ -1,0 +1,194 @@
+{
+  "inputTitle": "Bún bò Huế",
+  "testType": "in-gallery reference smoke; NOT held-out accuracy",
+  "result": {
+    "candidates": [
+      {
+        "catalogKey": "viwikibooks:9892",
+        "title": "Bún bò Huế",
+        "ingredients": "1 kg xương bò chặt khúc\n1 cái giò heo trước\n1 bó sả\n1/2 kg thịt bò nạm\n3 lít nước\n1/2 muỗng cà phê muối\n1 cây chả lụa\n2 muỗng canh mắm ruốc\n2 củ hành tây\n1 muỗng cà phê ớt bột\n1 muỗng canh bột hột điều\n1 bó nhỏ hành lá\n1 bó ngò gai\n1 bó rau quế\n1 bắp chuối\nGiá, chanh\n1 gói bún lớn\n1 bó rau muống",
+        "steps": "Bắc nồi nước lên bếp nấu cho sôi, rồi thả xương, giò heo, thịt nạm, 2/3 bó sả, muối vào. Chờ đến khi nước sôi trở lại thì hớt bọt cho kỹ để tránh làm hôi nước lèo. Sau khi vớt hết bọt, vặn lửa nhỏ lại, để lửa riu riu hầm cho thịt chín. Nhớ canh thịt đừng để rục không ngon, thịt giò heo chín trước, vớt ra ngâm vô thau nước và 1/2 muỗng cà phê muối ngâm để thịt không bị đen. Kế đến thịt nạm chín cũng vớt ra và ngâm vào thau nước muối. Hầm tiếp xương đuôi bò cho chín tới, vớt sả ra bỏ rồi nêm mắm ruốc lượt qua rây, 1 muỗng cà phê đường, 2 muỗng súp nước mắm, nêm cho vừa ăn.\nBún đem luộc chín để ráo.\nBắt chảo dầu nóng, cho 1/3 sả còn lại bầm nhuyển vào xào cho thơm, kế cho ớt bột, bột hột điều vào xào rồi đổ qua rây vào soong nước lèo, 1/2 hành xắt nhuyển và 1/3 ngò gai xắt nhuyển vào.\nCủ hành xắt khoanh mỏng, 1/2 hành lá còn lại cũng xắt nhuyễn. Thịt giò heo và thịt nạm vớt ra cho ráo nước rồi cho vào nồi nước lèo. Khi nào gần ăn thì vớt ra xắt mỏng.\nChả lụa xắt lát mỏng.\nBắp chuối xắt nhuyễn ngâm vào thau nước có pha nước chanh để được trắng.\nRau muống cọng bào nhuyển ngâm vào thau nước rửa sạch.\nRau quế, tía tô, húng lủi, giá rửa sạch để ráo.\nChanh xắt miếng.\nỚt xắt lát.",
+        "servings": 2,
+        "servingsKnown": true,
+        "cookbook": "Món bún",
+        "tags": "Wikibooks, Món bún",
+        "source": "https://vi.wikibooks.org/w/index.php?oldid=542149",
+        "sourcePage": "https://vi.wikibooks.org/wiki/N%E1%BA%A5u_%C4%83n%3AB%C3%BAn_b%C3%B2_Hu%E1%BA%BF",
+        "authors": "Cộng tác viên Wikibooks tiếng Việt",
+        "history": "https://vi.wikibooks.org/w/index.php?title=N%E1%BA%A5u%20%C4%83n%3AB%C3%BAn%20b%C3%B2%20Hu%E1%BA%BF&action=history",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "revision": 542149,
+        "imageFile": "",
+        "image": "images/bf8c3c46cb9ed65e.jpg",
+        "imageAttribution": "Kham Tran - www.khamtran.com",
+        "imageLicense": "CC BY 3.0",
+        "imageSource": "https://commons.wikimedia.org/wiki/File:Bun-Bo-Hue-from-Huong-Giang-2011.jpg",
+        "modifications": "Tách mục nguyên liệu/cách làm, bỏ markup wiki; không thêm định lượng còn thiếu.",
+        "imageLicenseUrl": "https://creativecommons.org/licenses/by/3.0",
+        "imageModification": "Resized to <=640px; JPEG conversion for offline app.",
+        "imageMatch": "Ảnh cùng tên món từ Wikipedia/Commons",
+        "score": 1.0,
+        "method": "clip-image-retrieval-local",
+        "scoreMeaning": "độ tương đồng, không phải xác suất đúng",
+        "requiresConfirmation": true,
+        "relatedRecipes": [
+          {
+            "catalogKey": "viwikibooks:9892",
+            "title": "Bún bò Huế"
+          }
+        ]
+      },
+      {
+        "catalogKey": "viwikibooks:23998",
+        "title": "Bún mắm",
+        "ingredients": "Mắm cá linh 150 gr\nTôm tươi 200 gr\nMực ống 1 con\nSườn heo 200 gr\nSả 2 cây, ớt 2 trái, cà tím 1 trái\nThịt heo quay 200 gr\nĐường trắng 2 gr, hạt nêm 2 muỗng cà phê, muối 1 muỗng cà phê, dầu ăn 5 ml\nBún tươi 1 kg\nNgò rí 100 gr, hành lá 100 gr\nDụng cụ: Nồi, chảo, tô, muỗng,...",
+        "steps": "Bước 1: Sơ chế nguyên liệu:\nMực làm sạch, cắt thành khoanh tròn. Ớt, rau ngò rí, hành lá rửa sạch, cắt nhỏ.\nTôm rửa sạch, cắt bỏ râu và đầu tôm.\nSả đập dập, cắt nhỏ còn cà tím cắt khúc dài vừa ăn.\nSườn heo rửa sạch, chặt khúc.\nBước 2:\nDùng một nồi nhỏ nấu sôi 200 ml nước, khi nước sôi, cho mắm cá linh vào, nấu đến khi mắm cá dẻo, mềm là được.\nSau đó, múc nước mắm cá ra, lọc qua rây, bỏ phần xác chỉ lấy phần nước.\nNước sôi cho mắm cá linh vào nấu đến khi dẻo mềm\nBước 3:\nĐặt một nồi khác lên bếp cho 500 ml nước và sườn heo vào nồi, nấu sôi khoảng 20 phút.\nPhi thơm sả với dầu ăn trong chảo, cho cà tím vào xào 3 phút.\nBước 4:\nTiếp theo, cho cà tím đã xào, ớt, nước mắm cá linh vào nồi sườn heo nấu cùng. Nêm gia vị 1 muỗng cà phê muối, 2 muỗng cà phê hạt nêm, 2 muỗng canh đường trắng sao cho vừa ăn, nấu thêm khoảng 10 phút.\nThịt heo quay cắt miếng nhỏ, vừa ăn. Tôm, mực ống đem luộc chín. Khi tôm chín sẽ chuyển sang màu hồng cam và cong lại.",
+        "servings": 4,
+        "servingsKnown": true,
+        "cookbook": "Món nước",
+        "tags": "Wikibooks, Món nước",
+        "source": "https://vi.wikibooks.org/w/index.php?oldid=227890",
+        "sourcePage": "https://vi.wikibooks.org/wiki/N%E1%BA%A5u_%C4%83n%3AB%C3%BAn_m%E1%BA%AFm",
+        "authors": "Cộng tác viên Wikibooks tiếng Việt",
+        "history": "https://vi.wikibooks.org/w/index.php?title=N%E1%BA%A5u%20%C4%83n%3AB%C3%BAn%20m%E1%BA%AFm&action=history",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "revision": 227890,
+        "imageFile": "",
+        "image": "images/2d779bde2e7621ad.jpg",
+        "imageAttribution": "SauceSupreme",
+        "imageLicense": "CC BY 2.0",
+        "imageSource": "https://commons.wikimedia.org/wiki/File:B%C3%BAn_m%E1%BA%AFm.jpg",
+        "modifications": "Tách mục nguyên liệu/cách làm, bỏ markup wiki; không thêm định lượng còn thiếu.",
+        "imageLicenseUrl": "https://creativecommons.org/licenses/by/2.0",
+        "imageModification": "Resized to <=640px; JPEG conversion for offline app.",
+        "imageMatch": "Ảnh cùng tên món từ Wikipedia/Commons",
+        "score": 0.8531,
+        "method": "clip-image-retrieval-local",
+        "scoreMeaning": "độ tương đồng, không phải xác suất đúng",
+        "requiresConfirmation": true,
+        "relatedRecipes": [
+          {
+            "catalogKey": "viwikibooks:23998",
+            "title": "Bún mắm"
+          },
+          {
+            "catalogKey": "viwikibooks:26928",
+            "title": "Bún mắm cua"
+          }
+        ]
+      },
+      {
+        "catalogKey": "viwikibooks:11513",
+        "title": "Hủ tiếu Nam Vang",
+        "ingredients": "1/2 kg xương heo\n300 g gan heo\n1 tim heo\n1 trái cật\n200 g thịt xay\nTôm khô: 1 nhúm\nTôm: 200-300 g\nKhô mực đã nướng: 1 con (loại vừa, không lớn lắm, để ngọt thịt)\nHủ tiếu dai: 1 bịch\nCủ cải trắng\nRau ăn kèm: giá, hẹ, cần, xà lách\nGia vị nêm nếm: muối, hạt nêm, tiêu",
+        "steps": "Tôm khô ngâm nước ấm.\nXương heo rửa sạch, trụng sơ cho hết chất dơ, cho vô nồi, ít muối và cục đường phèn hầm.\nKhi thấy nồi xương sôi thì cho củ hành tây, tôm khô, khô mực, củ cải trắng và hạt nêm vô, hạ lửa trung bình thấp , nhớ canh chừng hớt bọt cho nồi nước lèo được trong, hầm trong khoảng 45-60 phút.\nTrong khi hầm xương thì chuẩn bị phần nhân:\nTôm rửa sạch, rút chỉ bụng, lưng, ướp tí muối.\nThịt xay nêm nếm ít muối, hạt nêm, tiêu. Bắc chảo lên bếp, cho tí dầu ăn vào với ít nước xào cho ráo nước, lấy ra tô nhỏ.\nCật cắt làm 2 theo chiều dài, cắt bỏ màng trắng bên trong cho hết hôi, pha 1 chén nước với 2 muỗng rượu trắng và vài lát gừng cho cật vào ngâm khoảng 10-15 phút cho hết hôi rồi xả lại bằng nước lạnh.\nLuộc tim, gan, cật nấu nồi nước sôi, bỏ tí muối và vài lát gừng vào. Khi nước bắt đầu sôi (bắt đầu nổi bọt) thì cho tim, gan, cật vô, để sôi lại chừng 1 phút tắt lửa, đậy nắp lại vẫn để trên bếp chừng 15 phút cho tim, gan, cật chín từ từ, làm như vậy tim, gan, cật chín mà không bị khô. Sau đó lấy ra xả lại bằng nước lạnh, khi nào gần ăn thì mới thái.\nTỏi phi: tỏi bằm nhỏ, cho dầu vào nồi, khi dầu nóng cho tỏi vào phi thấy hơi vàng thì tắt lửa, nhắc bếp ra khỏi lò, đừng để nồi trên bếp, hơi nóng của bếp sẽ làm tỏi cháy đen.\nNồi nước dùng nấu sôi lại, cho tôm vào luộc (luộc chung như vậy nước dùng càng thêm đậm đà), nêm nếm lại nồi nước dùng cho vừa ăn. Múc 1 hay 2 muỗng tỏi phi bỏ vào nồi nước dùng cho thơm.",
+        "servings": 1,
+        "servingsKnown": false,
+        "cookbook": "Món bún",
+        "tags": "Wikibooks, Món bún",
+        "source": "https://vi.wikibooks.org/w/index.php?oldid=152690",
+        "sourcePage": "https://vi.wikibooks.org/wiki/N%E1%BA%A5u_%C4%83n%3AH%E1%BB%A7_ti%E1%BA%BFu_Nam_Vang",
+        "authors": "Cộng tác viên Wikibooks tiếng Việt",
+        "history": "https://vi.wikibooks.org/w/index.php?title=N%E1%BA%A5u%20%C4%83n%3AH%E1%BB%A7%20ti%E1%BA%BFu%20Nam%20Vang&action=history",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "revision": 152690,
+        "imageFile": "",
+        "image": "images/ce9eef01b4d9e1f1.jpg",
+        "imageAttribution": "Phương Huy ( thảo luận )",
+        "imageLicense": "Public domain",
+        "imageSource": "https://commons.wikimedia.org/wiki/File:H%E1%BB%A7_ti%E1%BA%BFu_nam_vang_gi%C3%B2_4.jpg",
+        "modifications": "Tách mục nguyên liệu/cách làm, bỏ markup wiki; không thêm định lượng còn thiếu.",
+        "imageLicenseUrl": "",
+        "imageModification": "Resized to <=640px; JPEG conversion for offline app.",
+        "imageMatch": "Ảnh cùng tên món từ Wikipedia/Commons",
+        "score": 0.8403,
+        "method": "clip-image-retrieval-local",
+        "scoreMeaning": "độ tương đồng, không phải xác suất đúng",
+        "requiresConfirmation": true,
+        "relatedRecipes": [
+          {
+            "catalogKey": "viwikibooks:11513",
+            "title": "Hủ tiếu Nam Vang"
+          }
+        ]
+      },
+      {
+        "catalogKey": "viwikibooks:11664",
+        "title": "Bún mọc",
+        "ingredients": "Xương heo hoặc xương gà\n500 g giò sống\nVài cái nấm mèo ngâm nở thái hạt lựu nhỏ\n200 g chả lụa (nếu thích)\nBún\nRau sống, chanh, ớt ăn kèm",
+        "steps": "Xương heo rửa sạch, trụng sơ, bắt lên bếp hầm lấy nước ngọt (nhớ cho vào nồi hầm xương 1 củ hành tây, 1 cục đường phèn, muối), trong khi hầm thì nhớ vớt bọt thường xuyên. Nồi nước dùng hầm khoảng 45-60 phút thì mình lấy xương ra lọc lại nước dùng.\nGiò sống chia làm 3 phần, 1 phần trộn chung với nấm mèo, 1 phần vo viên đem chiên vàng, phần còn lại cũng vo viên để đó khi nước dùng sôi thì thả vào nồi nước dùng.\nNồi nước dùng để sôi lại, múc từng muỗng giò sống đã trộn với nấm mèo vào, tiếp theo cho những viên giò đã vo viên vào, giò sống nổi lên là lúc giò sống chín, nêm nếm nước dùng cho vừa ăn, vặn nhỏ lửa lại.\nBún luộc rồi xả lại nước lạnh.\nCho bún vào tô, cho mỗi loại giò vài viên vào tô, xếp chả lụa lên, chan nước dùng, rải hành lá, thế là măm măm thôi. Dùng nóng với rau sống, chanh ớt (nếu thích).",
+        "servings": 1,
+        "servingsKnown": false,
+        "cookbook": "Món bún",
+        "tags": "Wikibooks, Món bún",
+        "source": "https://vi.wikibooks.org/w/index.php?oldid=243150",
+        "sourcePage": "https://vi.wikibooks.org/wiki/N%E1%BA%A5u_%C4%83n%3AB%C3%BAn_m%E1%BB%8Dc",
+        "authors": "Cộng tác viên Wikibooks tiếng Việt",
+        "history": "https://vi.wikibooks.org/w/index.php?title=N%E1%BA%A5u%20%C4%83n%3AB%C3%BAn%20m%E1%BB%8Dc&action=history",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "revision": 243150,
+        "imageFile": "",
+        "image": "images/ac398a382abc48b1.jpg",
+        "imageAttribution": "SauceSupreme",
+        "imageLicense": "CC BY 2.0",
+        "imageSource": "https://commons.wikimedia.org/wiki/File:Bun_Moc_Ha_Noi.jpg",
+        "modifications": "Tách mục nguyên liệu/cách làm, bỏ markup wiki; không thêm định lượng còn thiếu.",
+        "imageLicenseUrl": "https://creativecommons.org/licenses/by/2.0",
+        "imageModification": "Resized to <=640px; JPEG conversion for offline app.",
+        "imageMatch": "Ảnh cùng tên món từ Wikipedia/Commons",
+        "score": 0.8401,
+        "method": "clip-image-retrieval-local",
+        "scoreMeaning": "độ tương đồng, không phải xác suất đúng",
+        "requiresConfirmation": true,
+        "relatedRecipes": [
+          {
+            "catalogKey": "viwikibooks:11664",
+            "title": "Bún mọc"
+          }
+        ]
+      },
+      {
+        "catalogKey": "viwikibooks:11512",
+        "title": "Bún riêu cua",
+        "ingredients": "Xương heo (khoảng 800 g)\n1 hộp cua đồng (160 g)\nCà chua: 2-3 quả cắt múi cau\nTrứng: 1 cái\nĐậu hũ: 2 cái\nHột điều màu\nBún 1 bịch\nMắm tôm\nHành lá\nRau sống các loại (rau muống chẻ, xà lách, tía tô, canh giới…)",
+        "steps": "Xương heo hầm lấy nước ngọt.\nĐậu hủ cắt miếng, chiên vàng.\nCà chua 1 phân nữa xào cho ra màu.\nHạt màu điều xào lấy màu.\nTrứng đánh tan trộn với hộp cua\nBún luộc, xã nước lạnh, để ráo.\nNồi nước dùng sôi, đổ hỗn hợp trứng và cua vào, đợi nước sôi vặn nhỏ lửa, riêu chín nổi lên mặt nước.\nĐổ dầu màu điều và cà chua đã xào vào nồi riêu.\nPhân nữa cà chua còn lại và đậu hũ đổ vào nồi riêu.\nNêm nếm lại vừa ăn.\nBỏ bún vào tô, múc nước riêu cua, cà chua, đậu hũ vào tô.\nRắc hành lá lên.\nĂn kèm với các loại rau muống, canh giới, tía tô, sà lách, mắm nêm, ớt.",
+        "servings": 1,
+        "servingsKnown": false,
+        "cookbook": "Món bún",
+        "tags": "Wikibooks, Món bún",
+        "source": "https://vi.wikibooks.org/w/index.php?oldid=243272",
+        "sourcePage": "https://vi.wikibooks.org/wiki/N%E1%BA%A5u_%C4%83n%3AB%C3%BAn_ri%C3%AAu_cua",
+        "authors": "Cộng tác viên Wikibooks tiếng Việt",
+        "history": "https://vi.wikibooks.org/w/index.php?title=N%E1%BA%A5u%20%C4%83n%3AB%C3%BAn%20ri%C3%AAu%20cua&action=history",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "revision": 243272,
+        "imageFile": "",
+        "image": "images/981145030db0d711.jpg",
+        "imageAttribution": "Alpha",
+        "imageLicense": "CC BY-SA 2.0",
+        "imageSource": "https://commons.wikimedia.org/wiki/File:B%C3%BAn_ri%C3%AAu_cua_n%C6%B0%E1%BB%9Bc.jpg",
+        "modifications": "Tách mục nguyên liệu/cách làm, bỏ markup wiki; không thêm định lượng còn thiếu.",
+        "imageLicenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+        "imageModification": "Resized to <=640px; JPEG conversion for offline app.",
+        "imageMatch": "Ảnh cùng tên món từ Wikipedia/Commons",
+        "score": 0.8281,
+        "method": "clip-image-retrieval-local",
+        "scoreMeaning": "độ tương đồng, không phải xác suất đúng",
+        "requiresConfirmation": true,
+        "relatedRecipes": [
+          {
+            "catalogKey": "viwikibooks:11512",
+            "title": "Bún riêu cua"
+          }
+        ]
+      }
+    ],
+    "referenceImages": 86,
+    "warning": "Ảnh không thể xác minh toàn bộ nguyên liệu, định lượng hay chất gây dị ứng. Chọn món để đọc công thức nguồn; các biến thể trong nhóm có thể khác ảnh."
+  }
+}

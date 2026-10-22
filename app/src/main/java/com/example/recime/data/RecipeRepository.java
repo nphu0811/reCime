@@ -12,6 +12,7 @@ public class RecipeRepository {
   public final LabDatabase db;
   public final LabDao dao;
   public final ExecutorService io = Executors.newSingleThreadExecutor();
+  public final ExecutorService extraction = Executors.newFixedThreadPool(2);
   public final MutableLiveData<String> message = new MutableLiveData<>();
   public final MutableLiveData<Boolean> ready = new MutableLiveData<>(false);
 
@@ -24,7 +25,10 @@ public class RecipeRepository {
   }
 
   private RecipeRepository(Context c) {
-    db = Room.databaseBuilder(c, LabDatabase.class, "myrecipelab.db").build();
+    db =
+        Room.databaseBuilder(c, LabDatabase.class, "myrecipelab.db")
+            .addMigrations(LabDatabase.MIGRATION_1_2, LabDatabase.MIGRATION_2_3)
+            .build();
     dao = db.dao();
     run(
         () -> {
@@ -64,6 +68,19 @@ public class RecipeRepository {
                   });
             c.getSharedPreferences("lab", 0).edit().putBoolean("seeded", true).apply();
           }
+          if (!c.getSharedPreferences("lab", 0).getBoolean("catalog-v2-547-photos178", false)) {
+            int count;
+            try {
+              count = CatalogImporter.install(c, db);
+            } catch (Exception e) {
+              throw new IllegalStateException("Không nạp được thư viện mở", e);
+            }
+            c.getSharedPreferences("lab", 0)
+                .edit()
+                .putBoolean("catalog-v2-547-photos178", true)
+                .apply();
+            message.postValue("Đã cập nhật thư viện offline · " + count + " công thức mới.");
+          }
           ready.postValue(true);
         });
   }
@@ -100,7 +117,7 @@ public class RecipeRepository {
   }
 
   public void delete(Recipe r) {
-    run(() -> dao.delete(r));
+    run(() -> db.deleteRecipe(r));
   }
 
   public void addIngredients(List<Ingredient> values, double tsp, double tbsp, double cup) {

@@ -67,3 +67,8 @@ OCR tiếng Việt và chữ viết tay có thể sai: luôn review, không tự
 ## Phụ lục sau triển khai (không phải bằng chứng về ReciMe)
 
 Đã cài/chạy app độc lập `com.example.recime`, gọi REA `inspect-adb-package emulator-5554 com.example.recime` và `capture-adb-screen` cho5 màn hình. Kết quả ở `evidence/rea-myrecipelab-package.json`, `evidence/screenshot-*.json` và `evidence/screenshots/`. Dữ liệu này chỉ thuộc MyRecipeLab tự xây; tuyệt đối không dùng để kết luận về manifest/code của ReciMe. Build/unit/instrumentation/lint và các giới hạn test cuối ở IMPLEMENTATION_STATUS.md. Việc cài lại sau connected tests là cần thiết vì runner đã gỡ app test-target sau lượt chạy; đã chạy adb install và launcher thành công.
+
+
+## Nâng cấp dataset/AI local (22/10/2026)
+
+Bản nâng cấp độc lập bổ sung547 công thức nguồn mở, ảnh có giấy phép, Room schema3 và AI chạy laptop. Chi tiết/bằng chứng ở DATASET_AND_AI.md, IMPLEMENTATION_STATUS.md và REVIEW_V2.md. Không có bằng chứng mới về cấu trúc nội bộ hay backend ReciMe; không suy diễn từ triển khai MyRecipeLab sang ReciMe.

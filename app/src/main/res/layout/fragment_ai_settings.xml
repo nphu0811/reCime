@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.AiSettingsFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <Button
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:text="‹ Quay lại"
+            style="@style/Widget.Material3.Button.TextButton" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Căn bếp có AI"
+            android:fontFamily="serif"
+            android:textSize="32sp"
+            android:textColor="#123B2D" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="16dp"
+            android:text="Kết nối laptop của bạn để nhận diện món và tìm công thức. Không cần tài khoản hay phí API. Ảnh chỉ được gửi tới địa chỉ bạn cấu hình khi chọn phân tích AI."
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/ai_endpoint"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:hint="Địa chỉ laptop AI"
+            android:inputType="textUri"
+            android:singleLine="true" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/ai_check"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="Lưu &amp; kiểm tra kết nối"
+            app:cornerRadius="14dp" />
+
+        <TextView
+            android:id="@+id/ai_health"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="16dp"
+            android:text="Chưa kiểm tra kết nối."
+            android:textSize="15sp"
+            android:textIsSelectable="true" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nếu chưa chạy server, xem README trong thư mục backend. Kết nối USB có thể dùng ADB reverse; dùng Wi-Fi cần địa chỉ LAN và cùng mạng.  AI chỉ gợi ý món từ ảnh. Không thể biết chắc định lượng, chất gây dị ứng hay toàn bộ cách nấu từ một bức ảnh. Hãy kiểm tra công thức nguồn trước khi dùng."
+            android:textSize="13sp"
+            android:lineSpacingExtra="4dp" />
+
+    </LinearLayout>
+
+</ScrollView>

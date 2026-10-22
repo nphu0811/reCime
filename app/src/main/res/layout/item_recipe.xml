@@ -2,11 +2,16 @@
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
-    app:cardCornerRadius="18dp"
-    app:strokeWidth="0dp"
+    android:clickable="true"
+    android:focusable="true"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="2dp"
+    app:strokeColor="#E7E4D9"
+    app:strokeWidth="1dp"
     app:cardBackgroundColor="#FFFFFF">
 
     <LinearLayout
@@ -17,28 +22,38 @@
         <ImageView
             android:id="@+id/photo"
             android:layout_width="match_parent"
-            android:layout_height="116dp"
+            android:layout_height="114dp"
+            android:scaleType="centerCrop"
             android:src="@drawable/food_art"
-            android:contentDescription="Ảnh minh họa công thức"
-            android:scaleType="centerCrop" />
+            android:contentDescription="Ảnh món ăn; xem tác giả và giấy phép trong chi tiết"
+            tools:src="@drawable/preview_bun_bo_hue" />
 
         <TextView
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="17sp"
+            android:minLines="2"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:paddingHorizontal="12dp"
+            android:paddingTop="10dp"
+            android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="#173F33"
-            android:padding="12dp"
-            android:minLines="2" />
+            android:textColor="#123B2D"
+            tools:text="Bún bò Huế" />
 
         <TextView
             android:id="@+id/meta"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
+            android:maxLines="2"
+            android:ellipsize="end"
             android:paddingHorizontal="12dp"
-            android:paddingBottom="14dp" />
+            android:paddingTop="5dp"
+            android:paddingBottom="12dp"
+            android:textSize="10sp"
+            android:textColor="#687469"
+            tools:text="Wikibooks • CC BY-SA 4.0" />
 
     </LinearLayout>
 

@@ -17,3 +17,11 @@ local.properties
 /.idea/
 **/__pycache__/
 /.tools/
+/backend/.venv/
+/backend/models/
+/backend/__pycache__/
+/datasets/raw/
+/datasets/training-scratch/
+
+/.understand-anything/tmp/
+/.understand-anything/intermediate/

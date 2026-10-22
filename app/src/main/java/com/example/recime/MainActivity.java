@@ -77,8 +77,14 @@ public class MainActivity extends AppCompatActivity {
   }
 
   public void open(Fragment f) {
+    // Fade is a native resource animation; no web runtime or scripting dependency.
     getSupportFragmentManager()
         .beginTransaction()
+        .setCustomAnimations(
+            android.R.anim.fade_in,
+            android.R.anim.fade_out,
+            android.R.anim.fade_in,
+            android.R.anim.fade_out)
         .replace(R.id.host, f)
         .addToBackStack(null)
         .commit();

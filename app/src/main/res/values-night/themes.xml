@@ -1,1 +1,19 @@
-<resources><style name="Base.Theme.ReCIme" parent="Theme.Material3.Light.NoActionBar"><item name="colorPrimary">#245D4B</item><item name="colorSecondary">#B65C39</item><item name="android:colorBackground">#FAF7EF</item><item name="android:fontFamily">sans</item><item name="android:windowLightStatusBar">true</item><item name="android:navigationBarColor">#FAF7EF</item></style><style name="Theme.ReCIme" parent="Base.Theme.ReCIme" /></resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Base.Theme.ReCIme" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">#123B2D</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorSecondary">#A35431</item>
+        <item name="colorSecondaryContainer">#DFE8D9</item>
+        <item name="colorOnSecondaryContainer">#123B2D</item>
+        <item name="colorSurface">#F8F5EC</item>
+        <item name="colorSurfaceContainer">#F2F0E7</item>
+        <item name="colorOutline">#D7DCCF</item>
+        <item name="android:colorBackground">#F8F5EC</item>
+        <item name="android:fontFamily">sans</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:navigationBarColor">#F8F5EC</item>
+        <item name="android:colorAccent">#123B2D</item>
+    </style>
+    <style name="Theme.ReCIme" parent="Base.Theme.ReCIme" />
+</resources>

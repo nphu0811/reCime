@@ -41,6 +41,9 @@ public final class RecipeParser {
             .replace("¼", " 1/4")
             .replace("¾", " 3/4")
             .trim();
+    // Preserve ranges for review, including bullet-prefixed and fractional amounts.
+    if (line.matches("^\\d+(?:\\s+\\d+/\\d+|/\\d+|[.,]\\d+)?\\s*[–—-]\\s*\\d+.*"))
+      return new Ingredient(line, null, "");
     Matcher m = AMOUNT.matcher(line);
     if (!m.matches()) return new Ingredient(line, null, "");
     double number;

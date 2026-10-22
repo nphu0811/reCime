@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Local laptop development only. Release builds keep Android's HTTPS default. -->
+    <application android:usesCleartextTraffic="true" />
+</manifest>

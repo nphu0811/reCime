@@ -8,6 +8,16 @@ import org.junit.Test;
 
 public class RecipeDomainTest {
   @Test
+  public void quantityRangesRemainUnquantifiedForReview() {
+    for (String input :
+        new String[] {"- 4–8 con tôm", "• 1/2–1 cup sữa", "½–1 cup sữa", "1 1/2–2 cup bột"})
+      assertNull(input, RecipeParser.ingredient(input).amount);
+    Ingredient range = RecipeParser.ingredient("4–8 con tôm");
+    assertNull(range.amount);
+    assertEquals("4–8 con tôm", range.display());
+  }
+
+  @Test
   public void portionsAlwaysScaleOriginalAndDoNotMutate() {
     Ingredient original = new Ingredient("bột", 150.0, "g");
     assertEquals(225, original.scale(3.0 / 2).amount, 0.00001);

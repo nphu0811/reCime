@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    tools:context=".ui.ImportFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,84 +17,177 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Từ ý tưởng tới bữa ăn"
-            android:fontFamily="serif"
-            android:textSize="30sp"
-            android:textColor="#173F33" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Nhập nội dung bạn có quyền sử dụng. Luôn kiểm tra kết quả OCR và định lượng trước khi lưu."
-            android:layout_marginVertical="16dp" />
-
-        <Button
-            android:id="@+id/manual"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Viết công thức mới" />
+            android:text="TỪ CẢM HỨNG ĐẾN CĂN BẾP"
+            android:textSize="10sp"
+            android:letterSpacing="0.12"
+            android:textStyle="bold"
+            android:textColor="#A35431" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
 
-            <Button
-                android:id="@+id/pick"
+            <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Chọn ảnh"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:text="Mang món ngon về"
+                android:fontFamily="serif"
+                android:textSize="30sp"
+                android:textColor="#123B2D" />
 
-            <Button
-                android:id="@+id/camera"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="Chụp ảnh"
-                android:layout_weight="1" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/ai_settings"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:text="Kết nối AI"
+                android:textSize="11sp"
+                style="@style/Widget.Material3.Button.TextButton" />
 
         </LinearLayout>
 
-        <EditText
-            android:id="@+id/url"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:hint="https://… trang công thức công khai"
-            android:inputType="textUri"
-            android:singleLine="true" />
-
-        <Button
-            android:id="@+id/fetch"
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Đọc Recipe JSON-LD từ URL" />
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="20dp"
+            app:cardBackgroundColor="#E8EEE5"
+            app:strokeWidth="0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="18dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="✦ Nhìn món ăn, tìm công thức"
+                    android:textSize="20sp"
+                    android:fontFamily="serif"
+                    android:textColor="#123B2D" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="AI trên laptop gợi ý món tương tự. Bạn chọn món rồi xem công thức có nguồn trong thư viện."
+                    android:textSize="13sp"
+                    android:textColor="#526455" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/ai_pick"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:layout_marginTop="10dp"
+                    android:text="Chọn ảnh món ăn"
+                    app:cornerRadius="14dp" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/pick"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:text="Ảnh công thức"
+                android:textSize="12sp"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                app:cornerRadius="14dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/camera"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:text="Chụp ảnh"
+                android:textSize="12sp"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                app:cornerRadius="14dp" />
+
+        </LinearLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/url"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:hint="Link TikTok hoặc trang công thức"
+                android:inputType="textUri"
+                android:singleLine="true"
+                android:textSize="13sp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/fetch"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Lấy nội dung từ link"
+            app:cornerRadius="14dp" />
 
         <ProgressBar
             android:id="@+id/progress"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
             android:visibility="gone" />
 
         <TextView
             android:id="@+id/status"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Social video, speech và LLM: chưa hỗ trợ. Dán caption hoặc dùng screenshot. URL chỉ hỗ trợ Recipe JSON-LD công khai."
-            android:layout_marginVertical="12dp" />
+            android:layout_marginVertical="12dp"
+            android:text="Ảnh có chữ dùng OCR trên điện thoại. TikTok đọc caption công khai khi nền tảng cho phép. Luôn kiểm tra kết quả trước khi lưu."
+            android:textSize="12sp"
+            android:textColor="#647265" />
 
         <EditText
             android:id="@+id/raw"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:minLines="5"
             android:gravity="top"
-            android:hint="Tên món Nguyên liệu 200 g đậu phụ 1 muỗng canh dầu Cách làm Áp chảo đậu."
+            android:hint="Dán caption, ghi chú hoặc sửa chữ vừa nhận từ ảnh…"
             android:inputType="textMultiLine|textCapSentences"
-            android:minLines="8" />
+            android:textSize="14sp" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/ai_text"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="✦ Tìm món từ caption / nguyên liệu"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            app:cornerRadius="14dp" />
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/review"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Phân tích → kiểm tra &amp; sửa" />
+            android:layout_height="52dp"
+            android:text="Tách công thức → kiểm tra &amp; lưu"
+            app:cornerRadius="14dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/manual"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Hoặc viết công thức của bạn"
+            style="@style/Widget.Material3.Button.TextButton" />
 
     </LinearLayout>
 

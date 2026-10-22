@@ -1,0 +1,12 @@
+test_catalog_has_real_licensed_content_and_offline_photos (backend.test_backend.RecipeBackendTests.test_catalog_has_real_licensed_content_and_offline_photos) ... ok
+test_health_and_text_api_return_sources (backend.test_backend.RecipeBackendTests.test_health_and_text_api_return_sources) ... ok
+test_invalid_image_is_recoverable (backend.test_backend.RecipeBackendTests.test_invalid_image_is_recoverable) ... ok
+test_real_onnx_image_model_roundtrip_with_reference (backend.test_backend.RecipeBackendTests.test_real_onnx_image_model_roundtrip_with_reference) ... ok
+test_recipe_model_finds_named_recipe_and_refuses_unrelated_text (backend.test_backend.RecipeBackendTests.test_recipe_model_finds_named_recipe_and_refuses_unrelated_text) ... ok
+test_tiktok_caption_uses_oembed_and_does_not_download_video (backend.test_backend.RecipeBackendTests.test_tiktok_caption_uses_oembed_and_does_not_download_video) ... ok
+test_tiktok_only_allows_official_https_hosts (backend.test_backend.RecipeBackendTests.test_tiktok_only_allows_official_https_hosts) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 2.326s
+
+OK

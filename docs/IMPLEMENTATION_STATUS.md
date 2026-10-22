@@ -1,78 +1,53 @@
-# Trạng thái bàn giao MyRecipeLab — 22/10/2026
+# Trạng thái MyRecipeLab — 22/10/2026
 
-Đây là MVP offline chạy thật bằng Java/XML, mở trực tiếp trong Android Studio. Phân biệt trạng thái theo phạm vi kiểm thử dưới đây; không coi việc biên dịch là bằng chứng đã thử mọi tương tác.
+## Bằng chứng lần nâng cấp này
 
-## Kết quả thực thi
+- `gradlew.bat assembleDebug testDebugUnitTest lintDebug`: **PASS**,10 unit tests; lint0errors/140warnings (`evidence/v2-build-unit-lint-final.log`, `evidence/v2-all-tests-final.log`).
+- Android instrumentation: **12/12 PASS**,0failure/error/skip trên Medium_Phone API37; `evidence/v2-all-tests-final.log`, `evidence/tests-v2/instrumented.xml`.
+- `backend/.venv/Scripts/python.exe -m unittest backend.test_backend -v`: **7/7 PASS** (`evidence/backend-tests-final.log`). Bao gồm ONNX thật với ảnh tham chiếu, không phải accuracy ảnh mới.
+- SQLite độc lập:547 hàng, `integrity_check=ok`; JSON547 catalogKey duy nhất;211 có ảnh/178 file. Audit độc lập trong `REVIEW_V2.md`.
+-11 layout XML parse hợp lệ;6 control động trong board có tools:text. Chưa trực tiếp xác minh Android Studio Layout Editor bằng tương tác IDE.
 
-| Lệnh | Kết quả thực tế | Bằng chứng |
+## Tính năng
+
+| Tính năng | Trạng thái | Code / bằng chứng / giới hạn |
 |---|---|---|
-| `gradlew.bat assembleDebug` | PASS, APK debug tạo được | `evidence/verification-final-pass.log`, `evidence/delivery-check.log` |
-| `gradlew.bat testDebugUnitTest` | PASS **9 tests**, 0 failure/error/skip | `evidence/tests/unit.xml` |
-| `gradlew.bat connectedDebugAndroidTest` | PASS **8 tests**, 0 failure/error/skip, Medium_Phone Android17/API37 x86_64 | `evidence/tests/instrumented.xml`, `evidence/verification-final-pass.log` |
-| `gradlew.bat lintDebug` | PASS, **0 errors**, warnings còn lại (text chưa tách strings, autofill/style, dependency updates, ExifInterface…) | `evidence/tests/lint.txt` |
-| `adb install -r …app-debug.apk` + `am start -n com.example.recime/.MainActivity` | Success, app mở trên emulator | Các screenshot REA và `evidence/rea-myrecipelab-package.json` |
-| REA 6.7.0 setup / doctor / ADB client/devices/package resolution | Đã gọi thực sự, Codex registration ready; ReciMe không cài trên AVD | `evidence/rea-*.json` và `REA_ANALYSIS.md` |
+| Catalog mở547 món và nguồn/giấy phép | Implemented & tested | assets/catalog; CatalogImporter, CatalogDatabaseTest; không đại diện mọi món Việt, có món quốc tế |
+| Ảnh thật | Partial |211 món/178 ảnh, Glide;336 món thiếu ảnh thật, có ảnh minh họa chung nhóm được ghi nhãn |
+| Room CRUD/yêu thích/lưu offline | Implemented & tested | LabDatabase/Dao/Repository; schema3/migrations1→2→3; tombstone ngăn phục hồi món đã xóa khi cập nhật |
+| Recipes/Discover, cookbook/search | Implemented & tested | RecipesFragment; nhãn1 cookbook/món, không có cookbook rỗng/multiple membership |
+| Java/XML redesign | Implemented & tested | Material ripple/elevation, Motion, theme; native runtime/build; Preview attrs kiểm tra XML, chưa quan sát IDE |
+| Planner tuần | Implemented & tested | BoardFragment, Meal, PlannerUiTest; hộp chọn có tìm kiếm |
+| Grocery CRUD/checkbox/gom nguyên liệu | Implemented & tested | BoardFragment, GroceryAggregator, domain/instrumentation tests; không đặt hàng |
+| Manual import/parser Việt/Anh | Implemented & tested | ImportFragment, RecipeParser; giữ khoảng lượng nguyên văn để review |
+| Photo Picker/camera/OCR | Implemented & tested | ML Kit bundled; instrumentation OCR có từ V1; camera vật lý/OCR chữ viết tay chưa kiểm định |
+| Public URL Recipe JSON-LD | Implemented & tested | PublicRecipeImporter, tests; không hỗ trợ mọi site/JS/auth |
+| Share ảnh/text | Implemented & tested | MainActivity ACTION_SEND; test ảnh món→AI→chi tiết công thức |
+| Laptop AI settings/client/server | Implemented & tested | LocalAiClient, AiSettingsFragment, backend/app.py; actual Android→127.0.0.1 via adb reverse |
+| Nhận diện ảnh món | Partial | CLIP ONNX/gallery178 ảnh, chọn ứng viên có nguồn; chưa kiểm định ảnh ngoài gallery, không đảm bảo định lượng đúng chỉ từ ảnh |
+| Recipe-only TF-IDF tự train | Implemented & tested | backend/engine.py + train_recipe_model.py;547 món/13,098 features; retrieval chứ không phải generative LLM |
+| Model ảnh train từ đầu | Partial | train_vision_scratch.py;133train/45validation,46.67% accuracy <53.33% majority; không bật để chọn công thức |
+| TikTok metadata/caption | Partial | official oEmbed adapter + mock/host tests; live ví dụ không có caption, fallback dán caption/screenshot |
+| TikTok video/audio extraction | Unsupported | Không có adapter tải hoặc speech; không có nút giả |
+| Nutrition tự động từ nguyên liệu | Unsupported | Chưa có dữ liệu dinh dưỡng đáng tin cậy; không bịa số |
+| Nutrition nhập tay có nguồn | Implemented & tested | Editor/Detail; thiếu dữ liệu có nhãn rõ |
+| Portions/units | Implemented & tested | Domain tests; lạng100g, volume chuẩn tùy chỉnh; không đổi mass↔volume thiếu mật độ |
+| LLM chuyên công thức/fine-tune | Unsupported | Chưa có LLM fine-tune được kiểm định; không yêu cầu API key/cloud |
+| Sync đa thiết bị/tài khoản | Unsupported | DB local; chưa có backend đồng bộ dữ liệu cá nhân |
 
-Sau khi định dạng mã bằng google-java-format1.28.0 đã chạy lại assembleDebug + unit tests + lint: PASS (`delivery-check.log`). Bộ 8 test thiết bị pass trước bước định dạng; không thay đổi logic sau lượt pass này. Formatter lấy từ [release chính thức](https://github.com/google/google-java-format/releases/tag/v1.28.0), SHA256 `32342e7c1b4600f80df3471da46aee8012d3e1445d5ea1be1fb71289b07cc735`, chỉ chạy local, không là dependency app.
+## Review và các lần sửa
 
-Các lượt lỗi được giữ để minh bạch: lỗi import R trùng ML Kit (`build.log`), thay đổi intent action làm ActivityScenario không khớp (`verification-first-failure.log`), matcher test trùng ô search/title và lint constant (`verification-second-failure.log`). Đã sửa và chạy lại đến PASS, không bỏ qua test hoặc tắt lint errors.
+Dùng skill understand-diff cùng skill hỗ trợ understand: dependency/plugin build + scan/graph/diff chạy thật, phạm vi graph17 file chính/59nodes được ghi rõ, không tuyên bố semantic coverage toàn bộ repo. Độc lập tìm2 lỗi P2 (catalog resurrect và khoảng lượng); đã sửa, có hồi quy. Binary scratch branch được xử lý defensively nhưng model không đạt vẫn bị tắt. Xem REVIEW_V2.md.
 
-## Ma trận tính năng
+Planner từng gặp3 lượt lỗi (item ngoài màn hình, ambiguous closeSoftKeyboard ở test, root không focus). Đã tạm gác theo yêu cầu để sửa Preview/review dữ liệu, sau đó quay lại thêm root dialog matcher và kiểm thử. Lượt tổng thể tiếp theo gặp emulator mất package/activity service; khởi động lạnh emulator, không sửa/xóa dữ liệu người dùng để che lỗi. Kết quả cuối ở đầu trang; các log thất bại giữ để kiểm tra.
 
-Đường dẫn dưới đây tính từ `app/src/main/java/com/example/recime/`, trừ khi ghi rõ.
+## Tiếp theo
 
-| Tính năng | Trạng thái | Mã / bằng chứng / giới hạn |
-|---|---|---|
-| Java + XML, AndroidX/Material, BottomNavigation + fragments | Implemented & tested | `MainActivity.java`, `ui/*Fragment.java`, `res/layout/*`; LabUiTest và screenshots |
-| Grid ảnh và 4 món mẫu offline | Implemented & tested | RecipesFragment, RecipeRepository.seed, food_art.xml; sample illustration riêng, không dùng ảnh/logo ReciMe |
-| Tạo/đọc công thức, form review, source và các bước | Implemented & tested | EditorFragment, DetailFragment, Recipe entity; LabUiTest manualImport… + OcrUiTest |
-| Sửa/xóa công thức + cascade meal | Implemented & tested (data); UI implemented not tested | LabDatabaseTest xác minh update/delete/FK; UI có form Sửa và dialog Xóa, chưa có test riêng nút sửa/xóa |
-| Yêu thích | Implemented not tested | DetailFragment favorite flag, RecipesFragment filter; lưu Room, chưa có assertion UI riêng |
-| Cookbook | Partial | Nhãn bộ sưu tập nhập/sửa theo món và dropdown lọc. Chưa có cookbook trống, nhiều cookbook/món, màn quản lý/đổi tên hàng loạt |
-| Tìm tên/tag/nguyên liệu không phân biệt dấu | Implemented & tested | Units.key + RecipesFragment.filter; search test UI và unit test normalization |
-| Discover | Implemented & tested (local) | Tìm trong thư viện offline; LabUiTest tabs; chưa có dịch vụ tìm web hoặc recommendation |
-| Nhập thủ công / dán text VI/EN | Implemented & tested | RecipeParser + Editor/Import; 9 unit tests gồm g/kg/ml/l/tsp/tbsp/cup/quả/củ/lạng và phân số |
-| ACTION_SEND text và ảnh | Implemented & tested | MainActivity + manifest; LabUiTest/OcrUiTest gửi intent thật vào activity |
-| ACTION_SEND URL | Implemented not tested end-to-end | Route URI/text tới ImportFragment URL box; chưa gọi website thật xuyên suốt từ Sharesheet |
-| Photo Picker | Implemented not tested qua UI hệ thống | ImportFragment PickVisualMedia; fallback do AndroidX; shared-image path được test riêng |
-| Camera intent/FileProvider | Implemented not tested bằng camera thật | TakePicture + FileProvider; lỗi không có camera được xử lý. Test dùng file tự tạo, không giả vờ đã chụp camera |
-| OCR bundled ML Kit → sửa text → parser → review → Room + ảnh private | Implemented & tested | ImportIntegrationTest đọc ảnh synthetic; OcrUiTest kiểm tra toàn luồng và giữ draft qua recreate; chưa đo accuracy tiếng Việt/viết tay |
-| URL HTTPS Recipe JSON-LD | Partial | PublicWebExtractor: OkHttp + Jsoup + JSON-LD, graph/HowToSection support, timeout20s/body2MB/redirect3 lần. WebRecipeTest test fixture tự tạo; chặn private/social đã test. **Chưa thử fetch thành công website ngoài trên thiết bị** |
-| Lỗi URL và thử lại | Implemented & tested | LabUiTest invalid-url xác nhận thông báo và nút retry enabled |
-| Social caption/screenshot fallback | Implemented & tested cho text/ảnh | Chặn social URL với thông báo; không tự trích xuất video/caption từ nền tảng |
-| Video/audio/speech/LLM | Unsupported | ExtractionAdapter là interface mở rộng; chưa có adapter, không nút giả |
-| Meal plan tuần 3 bữa/ngày, trước/sau tuần, thay/bỏ món | Implemented & tested cho chọn/lưu/đổi tuần | BoardFragment + Meal; PlannerUiTest chọn món/recreate/tạo groceries; data cascade tested. Chưa test UI riêng mọi nhánh xóa/thay món |
-| Giỏ từ công thức theo portions | Implemented & tested | DetailFragment.scaled + Repository.addIngredients; LabUiTest và domain tests |
-| Giỏ từ meal plan | Implemented & tested | BoardFragment.planGroceries; PlannerUiTest. Snapshot cộng thêm có xác nhận, chưa tự sync ngược khi sửa lịch |
-| Gom ingredient compatible và nhóm hàng | Implemented & tested | GroceryAggregator.merge/category; unit tests khác dimension/count; không gộp lượng không biết và không đoán đồng nghĩa |
-| Checkbox, thêm/sửa/xóa tay groceries | Implemented & tested (data); UI implemented not tested | LabDatabaseTest grocery persistence/update/delete; BoardFragment dialog/check/long click chưa có test UI riêng |
-| Chia sẻ checklist | Implemented not tested với ứng dụng nhận | Android ACTION_SEND chooser, không đặt hàng thực tế |
-| Portions và chuyển unit cùng dimension | Implemented & tested | Units, Ingredient.scale, DetailFragment; unit tests baseline, density refusal, custom cup; UI test từ200g→300g |
-| Cấu hình tsp/tbsp/cup | Implemented & tested cho converter; settings UI not tested | SharedPreferences, dialog validate positive finite values; default5/15/240ml; lạng100g |
-| Nutrition tự nhập, nguồn, thiếu data | Partial | Recipe nullable macros + Editor validation + Detail display. Đã build/visual layout, chưa test UI nutrition; **không có tính tự động/ước tính từ ingredient dataset** |
-| Room + Repository + ViewModel/LiveData | Implemented & tested | LabDatabaseTest reopen + CRUD/cascade; UI lifecycle recreate tests; không main-thread DB |
-| Loading/error/empty/retry | Implemented & tested một phần | Empty grid/grocery screenshots; invalid URL UI; OCR success; camera denied/corrupt image/offline retry chưa có test riêng |
-| Backend bắt buộc | Unsupported / không cần | App mở và CRUD offline, không có backend, không cần key |
-| Cloud sync, auth, ordering, full backup | Unsupported | Chưa triển khai, không có nút giả; Android hệ thống backup giữ cấu hình từ template |
+Thu thập nguồn mở có phép cho336 món thiếu ảnh; bổ sung tập ảnh mới tách độc lập theo món/nguồn để đo nhận diện; cải thiện dataset tiếng Việt có biên tập; chỉ đưa model mới vào quyết định sau đánh giá đáng tin cậy. Nutrition cần bộ dữ liệu nguồn rõ, chưa dùng ảnh để khẳng định an toàn thực phẩm/dị ứng.
 
-## Test nghiệp vụ cụ thể
+V1 docs được lưu tại archive/. Nghiên cứu REA cũ là bằng chứng lịch sử; không có APK ReciMe hợp lệ để xác minh internal implementation. Bản nâng cấp hiện tại là triển khai độc lập.
 
-`RecipeDomainTest`: portionsAlwaysScaleOriginalAndDoNotMutate; metricAndConfiguredVolumeConversions; refusesMassVolumeWithoutDensity; refusesDifferentCountUnits; refusesInvalidPortions; vietnameseAndEnglishUnitsAndFractions; parserPreservesUnknownQuantitiesAndSeparatesSteps; groceryAggregationNormalizesCompatibleDimensionsOnly; searchNormalizesVietnameseAccents.
 
-8 test thiết bị nằm trong LabDatabaseTest (1), ImportIntegrationTest (2), LabUiTest (2), OcrUiTest (1), PlannerUiTest (1), importing.WebRecipeTest (1). Không tính test cộng2+2 hoặc context template; chúng đã được bỏ, bản gốc còn trong evidence/original-project.
+## Ảnh chụp runtime cuối
 
-## Screenshots thực tế
-
-REA `capture-adb-screen` trên app tự xây đã cài trên emulator; không phải mockup/render HTML. Các file1080×2400 và SHA256 ở `evidence/screenshot-*.json`:
-
-- `evidence/screenshots/recipes/screen.png`: grid4 món mẫu, tìm kiếm/cookbook/favorite và bottom nav.
-- `evidence/screenshots/detail/screen.png`: chi tiết, khẩu phần, nguyên liệu và chuyển giỏ.
-- `evidence/screenshots/import/screen.png`: manual/photo/camera/URL/text và review.
-- `evidence/screenshots/planner/screen.png`: tuần19–25/10/2026,3 bữa/ngày (ảnh trạng thái trống).
-- `evidence/screenshots/groceries/screen.png`: empty state và nhập/chia sẻ checklist.
-
-Đã mở từng screenshot kiểm tra chữ/nút/bố cục không tràn màn hình1080×2400. Chưa xác minh đầy đủ máy nhỏ, tablet, font scale lớn hoặc mọi phiên bản Android24–36.
-
-## Việc tiếp theo
-
-Ưu tiên test camera/Photo Picker trên máy thật, test live web Recipe JSON-LD có phép sử dụng, test UI nutrition/settings/CRUD nâng cao. Sau đó thêm quản lý cookbook nhiều-nhiều, source-aware grocery sync không cộng trùng, xuất/khôi phục backup và dọn ảnh mồ côi. Nếu bổ sung dữ liệu nutrition cần có nguồn/license, portion weights và coverage rõ; nếu thiếu vẫn giữ null. Chỉ triển khai social/audio qua nguồn được phép và adapter có thật. Khi có APK ReciMe hợp lệ mới bổ sung phân tích static/runtime REA, không hồi tố các suy luận hiện tại thành CONFIRMED.
+Đã cài lại APK sau test, mở và chụp thật bằng ADB; đã xem trực tiếp ảnh home/import/AI settings. File tại evidence/screenshots-v2/: home.png, import.png, ai-settings.png, planner.png, detail.png. Đây không phải ảnh Android Studio Preview.
