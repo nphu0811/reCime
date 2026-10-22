@@ -118,6 +118,21 @@ public class DetailFragment extends Fragment {
                     Ui.tbsp(requireContext()),
                     Ui.cup(requireContext()));
             });
+    v.findViewById(R.id.add_to_book).setOnClickListener(x->{
+      if(recipe==null)return;
+      List<String> books=vm.repository.dao.bookNamesSnapshot();
+      if(books.isEmpty()){
+        Toast.makeText(requireContext(),"Hãy tạo cookbook trong Home",Toast.LENGTH_SHORT).show();
+        return;
+      }
+      long recipeId=recipe.id;
+      new MaterialAlertDialogBuilder(requireContext()).setTitle("Thêm vào cookbook")
+        .setItems(books.toArray(new String[0]),(dialog,which)->
+          vm.repository.run(()->{
+            vm.repository.dao.addRecipeToCookbook(recipeId,books.get(which));
+            vm.repository.message.postValue("Đã thêm công thức vào "+books.get(which));
+          })).show();
+    });
     v.findViewById(R.id.cooking_mode).setOnClickListener(x->{
       if(recipe!=null)((MainActivity)requireActivity()).open(CookingFragment.create(recipe.id));
     });
