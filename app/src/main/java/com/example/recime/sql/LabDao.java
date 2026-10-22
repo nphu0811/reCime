@@ -392,10 +392,33 @@ public class LabDao {
     try(Cursor c=db.rawQuery("SELECT id FROM cookbooks WHERE name=? COLLATE NOCASE",
         new String[]{name})){if(c.moveToFirst()) bookId=c.getLong(0);}
     if(bookId<=0)return;
-    db.delete("cookbook_members","recipeId=?",new String[]{String.valueOf(id)});
     ContentValues member=new ContentValues();
     member.put("cookbookId",bookId);member.put("recipeId",id);
     db.insertWithOnConflict("cookbook_members",null,member,SQLiteDatabase.CONFLICT_IGNORE);
+  }
+
+  /** A recipe may appear in several cookbooks, independent of the legacy primary label. */
+  public void addRecipeToCookbook(long recipeId,String bookName){
+    SQLiteDatabase db=helper.getWritableDatabase();
+    long bookId=0;
+    try(Cursor c=db.rawQuery("SELECT id FROM cookbooks WHERE name=? COLLATE NOCASE",
+        new String[]{bookName})){if(c.moveToFirst())bookId=c.getLong(0);}
+    if(bookId<=0)throw new IllegalArgumentException("Cookbook không tồn tại");
+    if(find(recipeId)==null)throw new IllegalArgumentException("Công thức không tồn tại");
+    ContentValues values=new ContentValues();
+    values.put("recipeId",recipeId);values.put("cookbookId",bookId);
+    db.insertWithOnConflict("cookbook_members",null,values,SQLiteDatabase.CONFLICT_IGNORE);
+    refresh();
+  }
+
+  public java.util.Set<Long> recipeIdsForCookbook(String name){
+    java.util.Set<Long> ids=new java.util.HashSet<>();
+    try(Cursor c=helper.getReadableDatabase().rawQuery(
+        "SELECT cr.recipeId FROM cookbook_members cr JOIN cookbooks c ON c.id=cr.cookbookId"+
+        " WHERE c.name=? COLLATE NOCASE",new String[]{name})){
+      while(c.moveToNext())ids.add(c.getLong(0));
+    }
+    return ids;
   }
 
   public List<String> bookNamesSnapshot(){
