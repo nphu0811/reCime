@@ -1,6 +1,6 @@
 # AI công thức chạy miễn phí trên laptop
 
-App Java/XML dùng Room trên điện thoại. Backend này chạy trên laptop theo lựa chọn của bạn, không phải dịch vụ cloud và không cần tài khoản/API key. Thư viện công thức và CRUD vẫn mở khi backend tắt. Đã thử trên Windows, Python3.11, RTX4050 6GB; inference hiện dùng CPU để cài đặt nhẹ và không cần CUDA/PyTorch.
+App Java/XML dùng SQLiteOpenHelper v4 trên điện thoại. Backend này chạy trên laptop. CLIP và TF-IDF không cần API key; tính năng hỏi AI theo công thức là tùy chọn và cần `OPENAI_API_KEY` trong env server riêng. Thư viện công thức và CRUD vẫn mở khi backend tắt. Đã thử trên Windows, Python3.11, RTX4050 6GB; inference hiện dùng CPU để cài đặt nhẹ và không cần CUDA/PyTorch.
 
 ## Chạy
 
@@ -79,3 +79,8 @@ POST /import/tiktok   {"url":"https://www.tiktok.com/@creator/video/..."}
 ```
 
 Backend tạo SQLite thật tại `backend/models/catalog.sqlite3`. Bản catalog SQLite có thể mở riêng tại `datasets/recipe_catalog.sqlite3`; app dùng database riêng `myrecipelab.db` trong private storage. Không cần PostgreSQL hoặc dịch vụ thu phí cho quy mô hiện tại.
+
+
+## Trợ lý công thức (tùy chọn, tính phí API riêng)
+
+Tạo file `backend/.env` bằng cách copy `backend/.env.example`, điền `OPENAI_API_KEY` trên máy, không commit vào Git. Khởi động `.\\backend\\run.ps1` để nạp file env. Android gọi `POST /assistant/ask` qua backend; không lưu key vào APK. Nếu chưa có key, endpoint trả 503 thay vì câu trả lời giả. Xem `docs/EXTERNAL_INTEGRATIONS_AND_GATES.md`.
