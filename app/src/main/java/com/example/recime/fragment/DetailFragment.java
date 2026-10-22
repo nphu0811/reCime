@@ -139,6 +139,38 @@ public class DetailFragment extends Fragment {
     v.findViewById(R.id.to_plan).setOnClickListener(x->{
       if(recipe!=null)pickPlanDate(vm);
     });
+    v.findViewById(R.id.ask_recipe_ai).setOnClickListener(x->{
+      if(recipe==null)return;
+      EditText question=new EditText(requireContext());
+      question.setHint("VD: Tôi có thể thay bơ bằng gì?");
+      question.setSingleLine(false);question.setMinLines(2);
+      new MaterialAlertDialogBuilder(requireContext())
+        .setTitle("Hỏi AI về "+recipe.title)
+        .setView(question)
+        .setNegativeButton("Hủy",null)
+        .setPositiveButton("Hỏi AI",(dialog,which)->{
+          String text=question.getText().toString().trim();
+          if(text.isEmpty())return;
+          final Recipe selected=recipe;
+          final android.content.Context appContext=requireContext().getApplicationContext();
+          Toast.makeText(requireContext(),"Đang hỏi AI từ backend…",Toast.LENGTH_SHORT).show();
+          vm.repository.extraction.execute(()->{
+            String answer;
+            try{
+              answer=new com.example.recime.AIservice.LocalAiClient(appContext)
+                .ask(selected,text).optString("answer","AI không có câu trả lời");
+            }catch(Exception e){answer="Không thể hỏi AI: "+e.getMessage();}
+            final String output=answer;
+            v.post(()->{
+              if(getView()!=v)return;
+              new MaterialAlertDialogBuilder(requireContext())
+                .setTitle("✦ Trợ lý nấu ăn")
+                .setMessage(output+"\n\nChú ý: tự kiểm tra an toàn thực phẩm, dị ứng và định lượng.")
+                .setPositiveButton("Đóng",null).show();
+            });
+          });
+        }).show();
+    });
     v.findViewById(R.id.export_pdf).setOnClickListener(x->{
       if(recipe==null)return;
       try{RecipeExport.share(requireActivity(),recipe);}
