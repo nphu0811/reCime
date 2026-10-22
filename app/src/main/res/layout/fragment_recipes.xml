@@ -232,6 +232,15 @@
 
     </LinearLayout>
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/manage_books"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:text="▦ Quản lý cookbooks · tạo / đổi tên / xóa"
+        android:textAllCaps="false"
+        android:textSize="12sp"
+        style="@style/Widget.Material3.Button.OutlinedButton" />
+
     <TextView
         android:id="@+id/empty"
         android:layout_width="match_parent"
