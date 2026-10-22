@@ -82,6 +82,9 @@ public class RecipeRepository {
                 .apply();
             message.postValue("Đã cập nhật thư viện offline · " + count + " công thức mới.");
           }
+          // Recompute the derived cart after upgrading a v1/v2/v3 database or restarting.
+          // Checked states survive because they are keyed by normalized ingredient + unit.
+          dao.syncPlanGroceries();
           dao.refresh();
           ready.postValue(true);
         });

@@ -140,6 +140,39 @@
             android:layout_height="wrap_content"
             android:text="+ ADD TO CART ↗" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/add_to_book"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="▦ Lưu vào cookbook" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/to_plan"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="+ Thêm vào lịch ăn" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/cooking_mode"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="▶ BẮT ĐẦU NẤU · TỪNG BƯỚC"
+            android:textColor="@color/night_ink"
+            app:backgroundTint="@color/electric_coral" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/ask_recipe_ai"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="✦ Hỏi AI về cách nấu (cần API key)" />
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/export_pdf" android:layout_width="0dp"
+                android:layout_height="48dp" android:layout_weight="1"
+                android:text="↓ Xuất PDF"/>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/print_recipe" android:layout_width="0dp"
+                android:layout_height="48dp" android:layout_weight="1"
+                android:text="In công thức"/>
+        </LinearLayout>
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

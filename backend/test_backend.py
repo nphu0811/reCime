@@ -45,6 +45,50 @@ class RecipeBackendTests(unittest.TestCase):
             self.assertEqual('Bún bò Huế ngon tại nhà',result['caption']);self.assertEqual(1,request.call_count)
             self.assertEqual('https://www.tiktok.com/oembed',request.call_args.args[0])
 
+    def test_nutrition_requires_real_USDA_key_and_full_coverage(self):
+        from backend.nutrition import estimate
+        with self.assertRaises(RuntimeError):
+            estimate('200 g gạo',2,key='')
+        class Reply:
+            status_code=200
+            def json(self):
+                nutrients=[{'nutrientName':n,'value':v} for n,v in (
+                    ('Energy',130),('Protein',3),('Carbohydrate, by difference',29),
+                    ('Total lipid (fat)',0.2))]
+                return {'foods':[{'fdcId':123,'description':'Rice test','foodNutrients':nutrients}]}
+        with patch('backend.nutrition.requests.get',return_value=Reply()) as request:
+            result=estimate('200 g gạo\n100 g gạo',3,key='fake-test-key')
+            self.assertTrue(result['complete'])
+            self.assertAlmostEqual(130,result['perServing']['calories'])
+            self.assertEqual(2,len(result['matched']))
+            self.assertIn('api_key',request.call_args.kwargs['params'])
+            missing=estimate('1 quả trứng',1,key='fake-test-key')
+            self.assertFalse(missing['complete'])
+            self.assertIsNone(missing['perServing'])
+
+    def test_assistant_needs_a_real_key_and_never_returns_fake_answer(self):
+        payload={'title':'Canh cải','ingredients':'100 g rau cải','steps':'Nấu nước rồi thêm rau.',
+                 'question':'Nấu bao nhiêu phút?'}
+        with patch.dict('os.environ',{'OPENAI_API_KEY':''}):
+            response=self.client.post('/assistant/ask',json=payload)
+            self.assertEqual(503,response.status_code)
+            self.assertIn('OPENAI_API_KEY',response.json()['detail'])
+
+    def test_assistant_uses_server_key_and_parses_responses_output(self):
+        class Response:
+            status_code=200
+            def json(self):
+                return {'output':[{'content':[{'type':'output_text','text':'Nấu tới khi rau chín; công thức chưa có thời gian.'}]}]}
+        payload={'title':'Canh cải','ingredients':'100 g rau cải','steps':'Nấu nước rồi thêm rau.',
+                 'question':'Bao lâu?'}
+        with patch.dict('os.environ',{'OPENAI_API_KEY':'fake-test-only'}):
+            with patch('backend.app.requests.post',return_value=Response()) as request:
+                response=self.client.post('/assistant/ask',json=payload)
+                self.assertEqual(200,response.status_code)
+                self.assertIn('rau chín',response.json()['answer'])
+                self.assertEqual('Bearer fake-test-only',request.call_args.kwargs['headers']['Authorization'])
+                self.assertFalse(request.call_args.kwargs['json']['store'])
+
     def test_real_onnx_image_model_roundtrip_with_reference(self):
         recipe=next(r for r in self.engine.recipes if r['title']=='Bún bò Huế' and r.get('image'))
         result=self.engine.image((CATALOG/recipe['image']).read_bytes())

@@ -1,6 +1,8 @@
 package com.example.recime.fragment;
 
 import com.example.recime.helper.Motion;
+import com.example.recime.helper.RecipeExport;
+import com.example.recime.model.Meal;
 
 import android.os.Bundle;
 import android.view.*;
@@ -116,6 +118,98 @@ public class DetailFragment extends Fragment {
                     Ui.tbsp(requireContext()),
                     Ui.cup(requireContext()));
             });
+    v.findViewById(R.id.add_to_book).setOnClickListener(x->{
+      if(recipe==null)return;
+      List<String> books=vm.repository.dao.bookNamesSnapshot();
+      if(books.isEmpty()){
+        Toast.makeText(requireContext(),"Hãy tạo cookbook trong Home",Toast.LENGTH_SHORT).show();
+        return;
+      }
+      long recipeId=recipe.id;
+      new MaterialAlertDialogBuilder(requireContext()).setTitle("Thêm vào cookbook")
+        .setItems(books.toArray(new String[0]),(dialog,which)->
+          vm.repository.run(()->{
+            vm.repository.dao.addRecipeToCookbook(recipeId,books.get(which));
+            vm.repository.message.postValue("Đã thêm công thức vào "+books.get(which));
+          })).show();
+    });
+    v.findViewById(R.id.cooking_mode).setOnClickListener(x->{
+      if(recipe!=null)((MainActivity)requireActivity()).open(CookingFragment.create(recipe.id));
+    });
+    v.findViewById(R.id.to_plan).setOnClickListener(x->{
+      if(recipe!=null)pickPlanDate(vm);
+    });
+    v.findViewById(R.id.ask_recipe_ai).setOnClickListener(x->{
+      if(recipe==null)return;
+      EditText question=new EditText(requireContext());
+      question.setHint("VD: Tôi có thể thay bơ bằng gì?");
+      question.setSingleLine(false);question.setMinLines(2);
+      new MaterialAlertDialogBuilder(requireContext())
+        .setTitle("Hỏi AI về "+recipe.title)
+        .setView(question)
+        .setNegativeButton("Hủy",null)
+        .setPositiveButton("Hỏi AI",(dialog,which)->{
+          String text=question.getText().toString().trim();
+          if(text.isEmpty())return;
+          final Recipe selected=recipe;
+          final android.content.Context appContext=requireContext().getApplicationContext();
+          Toast.makeText(requireContext(),"Đang hỏi AI từ backend…",Toast.LENGTH_SHORT).show();
+          vm.repository.extraction.execute(()->{
+            String answer;
+            try{
+              answer=new com.example.recime.AIservice.LocalAiClient(appContext)
+                .ask(selected,text).optString("answer","AI không có câu trả lời");
+            }catch(Exception e){answer="Không thể hỏi AI: "+e.getMessage();}
+            final String output=answer;
+            v.post(()->{
+              if(getView()!=v)return;
+              new MaterialAlertDialogBuilder(requireContext())
+                .setTitle("✦ Trợ lý nấu ăn")
+                .setMessage(output+"\n\nChú ý: tự kiểm tra an toàn thực phẩm, dị ứng và định lượng.")
+                .setPositiveButton("Đóng",null).show();
+            });
+          });
+        }).show();
+    });
+    v.findViewById(R.id.export_pdf).setOnClickListener(x->{
+      if(recipe==null)return;
+      try{RecipeExport.share(requireActivity(),recipe);}
+      catch(Exception error){Toast.makeText(requireContext(),"Lỗi xuất PDF: "+error.getMessage(),Toast.LENGTH_LONG).show();}
+    });
+    v.findViewById(R.id.print_recipe).setOnClickListener(x->{
+      if(recipe==null)return;
+      try{RecipeExport.print(requireActivity(),recipe);}
+      catch(Exception error){Toast.makeText(requireContext(),"Lỗi in: "+error.getMessage(),Toast.LENGTH_LONG).show();}
+    });
+  }
+
+  private void pickPlanDate(LabViewModel vm){
+    Calendar date=Calendar.getInstance();
+    new android.app.DatePickerDialog(requireContext(),(picker,year,month,day)->{
+      Calendar dayValue=Calendar.getInstance();
+      dayValue.set(year,month,day);
+      String formatted=new java.text.SimpleDateFormat("yyyy-MM-dd",Locale.ROOT)
+          .format(dayValue.getTime());
+      final String[] types={"Sáng","Trưa","Tối","Ăn nhẹ"};
+      new MaterialAlertDialogBuilder(requireContext())
+          .setTitle("Thêm "+recipe.title+" vào "+formatted)
+          .setItems(types,(dialog,which)->{
+            final long id=recipe.id;
+            final double servings=portions;
+            final String type=types[which];
+            vm.repository.run(()->{
+              Meal next=new Meal();
+              next.day=formatted;next.type=type;next.slot=formatted+"|"+type;
+              next.recipeId=id;next.servings=servings;
+              boolean exists=false;
+              for(Meal existing:vm.repository.dao.mealSnapshot(formatted,formatted))
+                if(existing.type.equals(type))exists=true;
+              if(exists)vm.repository.dao.addMeal(next);
+              else vm.repository.dao.putMeal(next);
+              vm.repository.message.postValue("Đã thêm vào lịch · nguyên liệu tự đồng bộ");
+            });
+          }).show();
+    },date.get(Calendar.YEAR),date.get(Calendar.MONTH),date.get(Calendar.DAY_OF_MONTH)).show();
   }
 
   private List<Ingredient> scaled() {

@@ -80,6 +80,17 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/ingredient_filter"
+            android:layout_width="match_parent" android:layout_height="48dp"
+            android:hint="Nguyên liệu có sẵn (cách nhau bởi dấu phẩy)"
+            android:inputType="text" android:singleLine="true" android:textSize="13sp"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="44dp"
@@ -231,6 +242,15 @@
             android:textSize="12sp" />
 
     </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/manage_books"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:text="▦ Quản lý cookbooks · tạo / đổi tên / xóa"
+        android:textAllCaps="false"
+        android:textSize="12sp"
+        style="@style/Widget.Material3.Button.OutlinedButton" />
 
     <TextView
         android:id="@+id/empty"

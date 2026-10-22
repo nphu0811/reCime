@@ -15,7 +15,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 /**
- * Room v2 -> SQLiteOpenHelper v3 regression test.
+ * Room v2 -> SQLiteOpenHelper v4 regression test.
  * The old table definitions and identity hash match app/schemas/.../2.json.
  * Uses a uniquely named TEST database, never the user's myrecipelab.db.
  */
@@ -68,7 +68,7 @@ public class LegacyRoomV2MigrationTest {
 
     LabDatabase database = new LabDatabase(context, name);
     try {
-      assertEquals(3, database.getReadableDatabase().getVersion());
+      assertEquals(4, database.getReadableDatabase().getVersion());
 
       Recipe recipe = database.dao().find(91);
       assertNotNull(recipe);

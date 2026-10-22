@@ -6,18 +6,27 @@ from fastapi import FastAPI,UploadFile,File,HTTPException
 from pydantic import BaseModel,Field
 from backend.engine import RecipeEngine
 
-app=FastAPI(title='MyRecipeLab local AI',version='2.0')
+app=FastAPI(title='reCime AI service',version='3.0')
 
 @lru_cache(maxsize=1)
 def engine():return RecipeEngine()
 
 class TextInput(BaseModel):text:str=Field(min_length=2,max_length=16000)
 class LinkInput(BaseModel):url:str=Field(min_length=8,max_length=2048)
+class NutritionInput(BaseModel):
+    ingredients:str=Field(min_length=2,max_length=12000)
+    servings:float=Field(gt=0,le=10000)
+
+class AskInput(BaseModel):
+    question:str=Field(min_length=2,max_length=1500)
+    title:str=Field(min_length=1,max_length=300)
+    ingredients:str=Field(min_length=1,max_length=12000)
+    steps:str=Field(min_length=1,max_length=12000)
 
 @app.get('/health')
 def health():
     e=engine()
-    return {'status':'ready','recipes':len(e.recipes),'visionModelDownloaded':e.vision_available(),'cost':'local, no API fee','engine':'CLIP ONNX image retrieval + recipe-only TF-IDF','privacy':'Images processed in memory; uploads not logged or saved.'}
+    return {'status':'ready','recipes':len(e.recipes),'assistantAvailable':bool(os.getenv('OPENAI_API_KEY')),'visionModelDownloaded':e.vision_available(),'cost':'local, no API fee','engine':'CLIP ONNX image retrieval + recipe-only TF-IDF','privacy':'Images processed in memory; uploads not logged or saved.'}
 
 @app.post('/analyze/text')
 def text(body:TextInput):
@@ -56,3 +65,46 @@ def tiktok(body:LinkInput):
     try:
         result=tiktok_caption(body.url);result['candidates']=engine().text(result['caption']);return result
     except (ValueError,requests.RequestException) as e:raise HTTPException(422,str(e))
+
+
+@app.post('/assistant/ask')
+def ask(body:AskInput):
+    # Optional, real remote AI. Key is server-side only; never send it to Android.
+    key=os.getenv('OPENAI_API_KEY','').strip()
+    if not key:raise HTTPException(503,'Chưa cấu hình OPENAI_API_KEY trong backend. Không sử dụng AI giả.')
+    model=os.getenv('OPENAI_MODEL','gpt-4.1-mini')
+    instructions=(
+      'Bạn là trợ lý nấu ăn reCime, chỉ dùng công thức được gửi để giải thích. '
+      'Nếu thiếu dữ liệu thì nói rõ không biết. Không bịa nhiệt độ an toàn, '
+      'dị ứng hay giá trị dinh dưỡng. Không tự tuyên bố recipe an toàn cho người dị ứng.')
+    payload={
+      'model':model,'store':False,'max_output_tokens':500,'instructions':instructions,
+      'input':('Tên món: '+body.title+'\nNguyên liệu:\n'+body.ingredients+
+               '\nCác bước:\n'+body.steps+'\nCâu hỏi: '+body.question)
+    }
+    try:
+      response=requests.post('https://api.openai.com/v1/responses',
+          headers={'Authorization':'Bearer '+key,'Content-Type':'application/json'},
+          json=payload,timeout=55)
+      if response.status_code!=200:
+        raise HTTPException(502,'Nhà cung cấp AI lỗi HTTP '+str(response.status_code))
+      data=response.json()
+      parts=[]
+      for item in data.get('output',[]):
+        for c in item.get('content',[]):
+          if c.get('type')=='output_text':parts.append(c.get('text',''))
+      answer='\n'.join(parts).strip()
+      if not answer:raise HTTPException(502,'AI không trả lời được. Bạn có thể thử lại.')
+      return {'answer':answer,'model':model,'grounding':'user-supplied-recipe',
+              'warning':'Câu trả lời AI cần được kiểm tra, nhất là dị ứng và an toàn thực phẩm.'}
+    except requests.RequestException:
+      raise HTTPException(503,'Không kết nối được tới nhà cung cấp AI.')
+
+
+@app.post('/nutrition/estimate')
+def estimate_nutrition(body:NutritionInput):
+    from backend.nutrition import estimate
+    try:return estimate(body.ingredients,body.servings)
+    except ValueError as e:raise HTTPException(422,str(e))
+    except RuntimeError as e:raise HTTPException(503,str(e))
+    except requests.RequestException:raise HTTPException(503,'Không truy cập được USDA FoodData Central.')

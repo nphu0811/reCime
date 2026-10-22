@@ -108,6 +108,13 @@
         style="@style/Widget.Material3.Button.TextButton"
         tools:text="Hôm nay / tuần hiện tại" />
 
+    <Spinner
+        android:id="@+id/grocery_sort"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:contentDescription="Sắp xếp danh sách nguyên liệu"
+        android:visibility="gone" />
+
     <TextView
         android:id="@+id/board_empty"
         android:layout_width="match_parent"

@@ -91,3 +91,8 @@ Thiết kế theo hướng editorial / Gen-Z: nền đậm, lime/coral highlight
 ```
 
 GitHub Actions: `.github/workflows/android-ci.yml` build và lưu debug APK trong mục Actions → Artifacts. Bộ test Android instrumentation yêu cầu Emulator hoặc thiết bị, không được CI compile thay thế kiểm tra hiệu ứng trên máy thật. `docs/DESIGN_V3.md` ghi rõ khác biệt và checklist review.
+
+
+## reCime Functional Upgrade (SQLite v4)
+
+Nâng cấp `v4` là migration cộng thêm bảng, không đổi tên file database: cookbook thật (tạo/đổi tên/xóa, nhiều cookbook/món), nhiều món/bữa + bữa nhẹ, tự tổng hợp nguyên liệu từ meal plan (giỏ nhập tay giữ riêng), Cooking Mode, PDF/Android Print, và assistant thực qua laptop khi cấu hình API key. **Các tính năng cloud, social video/audio, nutrition tự động, grocery checkout chưa được triển khai/kiểm chứng**; không gắn nhãn "clone chính thức". Đọc `docs/EXTERNAL_INTEGRATIONS_AND_GATES.md` để biết yêu cầu chứng thực và API key. Chưa có APK ReciMe gốc để chạy REA.

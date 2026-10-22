@@ -22,10 +22,12 @@ jobs:
           test -n "$SDKMANAGER"
           yes | "$SDKMANAGER" --licenses >/dev/null || true
           "$SDKMANAGER" --install "platforms;android-37.0" "build-tools;37.0.0"
+      - name: Check backend Python syntax
+        run: python3 -m py_compile backend/app.py backend/test_backend.py
       - name: Build, unit tests and lint
         run: |
           chmod +x gradlew
-          ./gradlew --no-daemon assembleDebug testDebugUnitTest lintDebug
+          ./gradlew --no-daemon assembleDebug assembleDebugAndroidTest testDebugUnitTest lintDebug
       - uses: actions/upload-artifact@v4
         if: success()
         with:
