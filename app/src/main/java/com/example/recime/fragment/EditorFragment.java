@@ -65,6 +65,70 @@ public class EditorFragment extends Fragment {
       }
       if (state == null) fill(v);
     }
+    v.findViewById(R.id.estimate_nutrition).setOnClickListener(x->{
+      try{
+        String ingredients=Ui.text(v,R.id.edit_ingredients);
+        double servings=Double.parseDouble(Ui.text(v,R.id.edit_servings).replace(',','.'));
+        if(ingredients.isEmpty() || !Double.isFinite(servings) || servings<=0)
+          throw new IllegalArgumentException("Nhập nguyên liệu và khẩu phần hợp lệ.");
+        android.content.Context appContext=requireContext().getApplicationContext();
+        Ui.set(v,R.id.edit_error,"Đang đối chiếu USDA FoodData Central…");
+        vm.repository.extraction.execute(()->{
+          try{
+            org.json.JSONObject result=
+              new com.example.recime.AIservice.LocalAiClient(appContext)
+                .estimateNutrition(ingredients,servings);
+            v.post(()->{
+              if(getView()!=v)return;
+              if(!result.optBoolean("complete")){
+                StringBuilder msg=new StringBuilder("Thiếu dữ liệu cho các nguyên liệu:\n");
+                org.json.JSONArray missing=result.optJSONArray("missing");
+                if(missing!=null)for(int n=0;n<missing.length();n++){
+                  org.json.JSONObject item=missing.optJSONObject(n);
+                  if(item!=null)msg.append("• ").append(item.optString("input"))
+                    .append(": ").append(item.optString("reason")).append("\n");
+                }
+                new com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
+                  .setTitle("Không thể ước tính đầy đủ").setMessage(msg.toString())
+                  .setPositiveButton("Đóng",null).show();
+                Ui.set(v,R.id.edit_error,"Thiếu dữ liệu. Không tự điền số dinh dưỡng.");
+                return;
+              }
+              org.json.JSONObject per=result.optJSONObject("perServing");
+              if(per==null)return;
+              org.json.JSONArray matched=result.optJSONArray("matched");
+              StringBuilder sources=new StringBuilder("USDA FoodData Central (ước tính): ");
+              if(matched!=null)for(int n=0;n<matched.length();n++){
+                org.json.JSONObject item=matched.optJSONObject(n);
+                if(item!=null)sources.append(item.optString("description"))
+                  .append(" [").append(item.optString("fdcId")).append("]; ");
+              }
+              String warning="Chỉ áp dụng nếu tên thực phẩm USDA khớp nguyên liệu bạn dùng. "+
+                "Giá trị là ước tính, không đảm bảo an toàn thực phẩm hay dị ứng.\n\n"+
+                sources+"\n\nPer serving: "+per.optDouble("calories")+" kcal, "+
+                per.optDouble("protein")+" g protein, "+
+                per.optDouble("carbs")+" g carb, "+
+                per.optDouble("fat")+" g fat.";
+              new com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Kiểm tra mapping USDA trước khi áp dụng")
+                .setMessage(warning).setNegativeButton("Hủy",null)
+                .setPositiveButton("Tôi đã kiểm tra, áp dụng",(d,w)->{
+                  Ui.set(v,R.id.edit_kcal,per.optDouble("calories"));
+                  Ui.set(v,R.id.edit_protein,per.optDouble("protein"));
+                  Ui.set(v,R.id.edit_carbs,per.optDouble("carbs"));
+                  Ui.set(v,R.id.edit_fat,per.optDouble("fat"));
+                  Ui.set(v,R.id.edit_nutrition_source,sources.toString());
+                  Ui.set(v,R.id.edit_error,"Đã điền số ước tính USDA sau xác nhận.");
+                }).show();
+            });
+          }catch(Exception e){
+            v.post(()->{
+              if(getView()==v)Ui.set(v,R.id.edit_error,"USDA không khả dụng: "+e.getMessage());
+            });
+          }
+        });
+      }catch(Exception e){Ui.set(v,R.id.edit_error,e.getMessage());}
+    });
     v.findViewById(R.id.save)
         .setOnClickListener(
             x -> {
