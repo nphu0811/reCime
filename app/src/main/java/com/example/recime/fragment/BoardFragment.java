@@ -67,10 +67,10 @@ public class BoardFragment extends Fragment {
         v,
         R.id.board_subtitle,
         planner
-            ? "Chọn từng bữa để thêm hoặc thay món. Nhấn giữ để bỏ món."
-            : "Nguyên liệu cùng tên và đơn vị tương thích được gộp. Chạm để sửa; nhấn giữ để xóa.");
+            ? "Thêm nhiều món cho mỗi bữa; nguyên liệu tự đồng bộ vào giỏ."
+            : "Nguyên liệu theo lịch ăn tự cập nhật; món thêm tay giữ riêng.");
     v.findViewById(R.id.week_controls).setVisibility(planner ? View.VISIBLE : View.GONE);
-    Ui.set(v, R.id.board_action, planner ? "Tạo giỏ từ tuần này" : "+ Thêm nguyên liệu");
+    Ui.set(v, R.id.board_action, planner ? "Xem giỏ đồng bộ tự động ↗" : "+ Thêm nguyên liệu");
     Ui.set(v, R.id.board_secondary, planner ? "Hôm nay / tuần hiện tại" : "Chia sẻ checklist");
     v.findViewById(R.id.prev_week)
         .setOnClickListener(
@@ -123,7 +123,10 @@ public class BoardFragment extends Fragment {
           public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             BoardRow row = adapter.getItem(position);
             if (planner) selectMeal(row);
-            else groceryEditor(row.grocery);
+            else if (row.grocery != null && !row.grocery.planned) groceryEditor(row.grocery);
+            else if (row.grocery != null) new MaterialAlertDialogBuilder(requireContext())
+                .setMessage("Nguyên liệu này tự tính từ lịch ăn. Chỉnh món trong lịch để thay đổi số lượng.")
+                .setPositiveButton("Đóng",null).show();
           }
         });
     list.setOnItemLongClickListener(
@@ -168,33 +171,35 @@ public class BoardFragment extends Fragment {
       end.add(Calendar.DAY_OF_MONTH, 6);
       Ui.set(root, R.id.week_label, day(week) + "\n→ " + day(end));
       Calendar d = (Calendar) week.clone();
-      String[] types = {"Sáng", "Trưa", "Tối"};
-      for (int n = 0; n < 7; n++, d.add(Calendar.DAY_OF_MONTH, 1))
+      String[] types = {"Sáng", "Trưa", "Tối", "Ăn nhẹ"};
+      for (int n = 0; n < 7; n++, d.add(Calendar.DAY_OF_MONTH, 1)) {
         for (String type : types) {
-          BoardRow row = new BoardRow();
-          row.day = day(d);
-          row.type = type;
-          for (Meal m : meals)
-            if (m.day.equals(row.day) && m.type.equals(type)) {
-              row.meal = m;
-              break;
-            }
-          Recipe r = row.meal == null ? null : recipe(row.meal.recipeId);
-          row.title = r == null ? "+ Chọn món" : r.title;
-          row.meta =
-              new SimpleDateFormat("EEE dd/MM", new Locale("vi")).format(d.getTime())
-                  + " · "
-                  + type;
-          rows.add(row);
+          for (Meal m : meals) {
+            if (!m.day.equals(day(d)) || !m.type.equals(type)) continue;
+            BoardRow row = new BoardRow();
+            row.day = day(d);row.type=type;row.meal=m;
+            Recipe r=recipe(m.recipeId);
+            row.title=r==null?"Món đã xóa":r.title;
+            row.meta=new SimpleDateFormat("EEE dd/MM",new Locale("vi")).format(d.getTime())
+                +" · "+type+" · Nhấn để sửa";
+            rows.add(row);
+          }
+          BoardRow add = new BoardRow();
+          add.day=day(d);add.type=type;
+          add.title="+ Thêm món";
+          add.meta=new SimpleDateFormat("EEE dd/MM",new Locale("vi")).format(d.getTime())
+              +" · "+type;
+          rows.add(add);
         }
-      Ui.set(root, R.id.board_empty, "21 ô bữa ăn · dữ liệu lưu offline");
+      }
+      Ui.set(root, R.id.board_empty, "4 bữa/ngày · nhiều món/bữa · giỏ tự đồng bộ");
     } else {
       for (Grocery g : groceries) {
         BoardRow row = new BoardRow();
         row.grocery = g;
         row.title = g.name;
         row.meta =
-            g.category
+            (g.planned ? "✦ Tự đồng bộ · " : "Tự thêm · ") + g.category
                 + " · "
                 + (g.amount == null ? "tùy lượng" : Units.format(g.amount) + " " + g.unit);
         rows.add(row);
@@ -265,11 +270,24 @@ public class BoardFragment extends Fragment {
             if (row.meal != null) vm.repository.run(() -> vm.repository.dao.deleteMeal(row.meal));
           } else {
             Meal meal = new Meal();
-            meal.day = row.day;
-            meal.type = row.type;
-            meal.slot = row.day + "|" + row.type;
-            meal.recipeId = matching.get(position - 1).id;
-            vm.repository.run(() -> vm.repository.dao.putMeal(meal));
+            meal.day=row.day; meal.type=row.type;
+            meal.slot=row.day+"|"+row.type;
+            meal.recipeId=matching.get(position-1).id;
+            boolean primaryExists=false;
+            for(Meal m:meals)
+              if(m.day.equals(meal.day) && m.type.equals(meal.type) && m.extraId==0)
+                primaryExists=true;
+            final boolean hasPrimary=primaryExists;
+            vm.repository.run(() -> {
+              if(row.meal!=null){
+                if(row.meal.extraId==0)vm.repository.dao.putMeal(meal);
+                else{
+                  vm.repository.dao.deleteMeal(row.meal);
+                  vm.repository.dao.addMeal(meal);
+                }
+              }else if(hasPrimary) vm.repository.dao.addMeal(meal);
+              else vm.repository.dao.putMeal(meal);
+            });
           }
           dialog.dismiss();
         });
@@ -277,38 +295,13 @@ public class BoardFragment extends Fragment {
   }
 
   private void planGroceries() {
-    Calendar end = (Calendar) week.clone();
-    end.add(Calendar.DAY_OF_MONTH, 6);
-    List<Ingredient> values = new ArrayList<>();
-    for (Meal m : meals)
-      if (m.day.compareTo(day(week)) >= 0 && m.day.compareTo(day(end)) <= 0) {
-        Recipe r = recipe(m.recipeId);
-        if (r != null) values.addAll(RecipeParser.ingredients(r.ingredients));
-      }
-    if (values.isEmpty()) {
-      new MaterialAlertDialogBuilder(requireContext())
-          .setMessage("Tuần này chưa có món ăn.")
-          .setPositiveButton("Đóng", null)
-          .show();
-      return;
-    }
-    new MaterialAlertDialogBuilder(requireContext())
-        .setTitle("Thêm nguyên liệu của tuần?")
-        .setMessage(
-            "Thao tác sẽ cộng vào giỏ hiện tại theo khẩu phần gốc. Bấm lại sẽ cộng thêm lần nữa.")
-        .setNegativeButton("Hủy", null)
-        .setPositiveButton(
-            "Thêm",
-            (d, w) ->
-                vm.repository.addIngredients(
-                    values,
-                    Ui.tsp(requireContext()),
-                    Ui.tbsp(requireContext()),
-                    Ui.cup(requireContext())))
-        .show();
+    // Derived groceries are automatically synchronized with every planner change.
+    ((com.google.android.material.bottomnavigation.BottomNavigationView)
+       requireActivity().findViewById(R.id.bottom)).setSelectedItemId(R.id.nav_grocery);
   }
 
   private void groceryEditor(Grocery original) {
+    if(original!=null && original.planned) return;
     LinearLayout l = new LinearLayout(requireContext());
     l.setOrientation(LinearLayout.VERTICAL);
     l.setPadding(36, 0, 36, 0);
@@ -372,7 +365,7 @@ public class BoardFragment extends Fragment {
   }
 
   private void share() {
-    StringBuilder b = new StringBuilder("MyRecipeLab · Danh sách đi chợ\n");
+    StringBuilder b = new StringBuilder("reCime · Danh sách đi chợ\n");
     for (Grocery g : groceries)
       b.append(g.checked ? "[x] " : "[ ] ")
           .append(g.amount == null ? "" : Units.format(g.amount) + " " + g.unit + " ")
@@ -394,6 +387,7 @@ public class BoardFragment extends Fragment {
                 "Bỏ món", (d, w) -> vm.repository.run(() -> vm.repository.dao.deleteMeal(r.meal)))
             .show();
     } else {
+      if(r.grocery==null || r.grocery.planned) return;
       new MaterialAlertDialogBuilder(requireContext())
           .setMessage("Xóa " + r.grocery.name + "?")
           .setNegativeButton("Hủy", null)
