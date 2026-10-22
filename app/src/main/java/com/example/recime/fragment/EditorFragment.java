@@ -148,7 +148,7 @@ public class EditorFragment extends Fragment {
                 recipe.steps = steps;
                 recipe.servings = servings;
                 recipe.cookbook = Ui.text(v, R.id.edit_book);
-                if (recipe.cookbook.isEmpty()) recipe.cookbook = "Món nhà";
+                if (recipe.id == 0 && recipe.cookbook.isEmpty()) recipe.cookbook = "Món nhà";
                 recipe.tags = Ui.text(v, R.id.edit_tags);
                 recipe.source = Ui.text(v, R.id.edit_source);
                 recipe.calories = optional(v, R.id.edit_kcal);

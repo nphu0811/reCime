@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.recime.*;
 import com.example.recime.activity.MainActivity;
 import com.example.recime.adapter.RecipeAdapter;
+import com.example.recime.helper.IngredientFilter;
 import com.example.recime.helper.Motion;
 import com.example.recime.helper.Ui;
 import com.example.recime.helper.Units;
@@ -237,19 +238,8 @@ public class RecipesFragment extends Fragment {
               || category.equals("main") && !type.matches(".*(banh|che |kem|canh|bun|pho).*");
       for (String token : q.split("[,\\s]+")) if (!hay.contains(token)) ok = false;
       if (ok && !ingredientQuery.isEmpty()) {
-        for(String ingredient:ingredientQuery.split(",")) {
-          String key=Units.key(ingredient.trim());
-          if(key.isEmpty())continue;
-          boolean matched=false;
-          for(com.example.recime.model.Ingredient i:
-              com.example.recime.helper.RecipeParser.ingredients(r.ingredients)){
-            String ingredientName=Units.key(i.name);
-            if(ingredientName.matches(".*(^|\\\\s)"+java.util.regex.Pattern.quote(key)+"(\\\\s|$).*")){
-              matched=true;break;
-            }
-          }
-          if(!matched) {ok=false;break;}
-        }
+        ok = IngredientFilter.matches(
+            ingredientQuery, com.example.recime.helper.RecipeParser.ingredients(r.ingredients));
       }
       if (ok
           && categoryOk

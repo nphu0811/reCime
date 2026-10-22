@@ -1,3 +1,5 @@
+> Cập nhật 23/10/2026: phần dưới là baseline lịch sử. APK 6.0.2 (217) đã đọc bằng REA/JADX và Emulator đã có com.recime.app từ Play. Source master e4460c6 đã bổ sung nhiều chức năng sau audit này. Xem [findings](REA_ANDROID_6_0_2_FINDINGS.md) và [ma trận hiện tại](FEATURE_PARITY_MATRIX.md); các blocker “chưa có APK” bên dưới không còn đúng.
+
 # Đối chiếu ReciMe Android thật ↔ reCime (audit 22/10/2026)
 
 > **Kết luận trạng thái:** Đã kiểm tra Google Play/Help Center chính thức và source `master` của `nphu0811/reCime`. **CHƯA phân tích APK chính thức bằng REA/JADX, CHƯA quan sát runtime ReciMe Android.** Không được ghi "đã reverse engineer APK" hoặc "clone 1:1" trên cơ sở nguồn hiện có. Đối tượng Android chính thức: `com.recime.app`; app độc lập của chúng ta: `com.example.recime`.

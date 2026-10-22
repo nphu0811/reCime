@@ -383,7 +383,7 @@ public class LabDao {
   /** True cookbook entities; old recipe.cookbook remains the primary category for legacy code. */
   private void attachCookbook(Recipe recipe,long id) {
     String name=recipe.cookbook==null?"":recipe.cookbook.trim();
-    if(name.isEmpty()) name="Món nhà";
+    if(name.isEmpty()) return;
     ContentValues book=new ContentValues();
     book.put("name",name);book.put("createdAt",System.currentTimeMillis());
     SQLiteDatabase db=helper.getWritableDatabase();
@@ -419,6 +419,53 @@ public class LabDao {
       while(c.moveToNext())ids.add(c.getLong(0));
     }
     return ids;
+  }
+
+  public List<String> cookbookNamesForRecipe(long recipeId) {
+    List<String> names = new ArrayList<>();
+    try (Cursor cursor = helper.getReadableDatabase().rawQuery(
+        "SELECT c.name FROM cookbooks c JOIN cookbook_members m ON m.cookbookId=c.id"
+            + " WHERE m.recipeId=? ORDER BY c.name COLLATE NOCASE",
+        new String[] {String.valueOf(recipeId)})) {
+      while (cursor.moveToNext()) names.add(cursor.getString(0));
+    }
+    return names;
+  }
+
+  /** Save the complete selection atomically; removing membership never deletes a recipe. */
+  public void replaceRecipeCookbooks(long recipeId, List<String> selectedNames) {
+    if (selectedNames == null) throw new IllegalArgumentException("Danh sách cookbook không hợp lệ");
+    SQLiteDatabase db = helper.getWritableDatabase();
+    db.beginTransaction();
+    try {
+      if (find(recipeId) == null) throw new IllegalArgumentException("Công thức không tồn tại");
+      java.util.LinkedHashMap<Long, String> selected = new java.util.LinkedHashMap<>();
+      // Resolve every name before changing either memberships or the legacy primary label.
+      for (String name : selectedNames) {
+        if (name == null || name.trim().isEmpty())
+          throw new IllegalArgumentException("Cookbook không tồn tại");
+        try (Cursor cursor = db.rawQuery(
+            "SELECT id,name FROM cookbooks WHERE name=? COLLATE NOCASE",
+            new String[] {name.trim()})) {
+          if (!cursor.moveToFirst()) throw new IllegalArgumentException("Cookbook không tồn tại: " + name);
+          selected.put(cursor.getLong(0), cursor.getString(1));
+        }
+      }
+      db.delete("cookbook_members", "recipeId=?", new String[] {String.valueOf(recipeId)});
+      for (Long cookbookId : selected.keySet()) {
+        ContentValues member = new ContentValues();
+        member.put("cookbookId", cookbookId);
+        member.put("recipeId", recipeId);
+        db.insertOrThrow("cookbook_members", null, member);
+      }
+      ContentValues primary = new ContentValues();
+      primary.put("cookbook", selected.isEmpty() ? "" : selected.values().iterator().next());
+      db.update("recipes", primary, "id=?", new String[] {String.valueOf(recipeId)});
+      db.setTransactionSuccessful();
+    } finally {
+      db.endTransaction();
+    }
+    refresh();
   }
 
   public List<String> bookNamesSnapshot(){

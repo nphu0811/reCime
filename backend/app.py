@@ -26,7 +26,13 @@ class AskInput(BaseModel):
 @app.get('/health')
 def health():
     e=engine()
-    return {'status':'ready','recipes':len(e.recipes),'assistantAvailable':bool(os.getenv('OPENAI_API_KEY')),'visionModelDownloaded':e.vision_available(),'cost':'local, no API fee','engine':'CLIP ONNX image retrieval + recipe-only TF-IDF','privacy':'Images processed in memory; uploads not logged or saved.'}
+    return {'status':'ready','recipes':len(e.recipes),
+            'assistantAvailable':bool(os.getenv('OPENAI_API_KEY','').strip()),
+            'nutritionAvailable':bool(os.getenv('FDC_API_KEY','').strip()),
+            'visionModelDownloaded':e.vision_available(),
+            'cost':'Local retrieval: no API fee. Optional remote OpenAI assistant may incur provider charges.',
+            'engine':'CLIP ONNX image retrieval + recipe-only TF-IDF',
+            'privacy':'Images processed in memory; uploads not logged or saved.'}
 
 @app.post('/analyze/text')
 def text(body:TextInput):

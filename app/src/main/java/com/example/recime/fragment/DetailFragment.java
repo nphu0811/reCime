@@ -80,7 +80,8 @@ public class DetailFragment extends Fragment {
                 new MaterialAlertDialogBuilder(requireContext())
                     .setTitle("Xóa công thức?")
                     .setMessage(
-                        "Các bữa có món này cũng được xóa. Danh sách đi chợ đã tạo được giữ lại.")
+                        "Các bữa có món này cũng được xóa và nguyên liệu từ lịch được cập nhật. "
+                            + "Nguyên liệu tự thêm vào giỏ được giữ lại.")
                     .setNegativeButton("Giữ lại", null)
                     .setPositiveButton(
                         "Xóa",
@@ -126,12 +127,21 @@ public class DetailFragment extends Fragment {
         return;
       }
       long recipeId=recipe.id;
-      new MaterialAlertDialogBuilder(requireContext()).setTitle("Thêm vào cookbook")
-        .setItems(books.toArray(new String[0]),(dialog,which)->
+      List<String> memberships=vm.repository.dao.cookbookNamesForRecipe(recipeId);
+      boolean[] selected=new boolean[books.size()];
+      for(int index=0;index<books.size();index++)selected[index]=memberships.contains(books.get(index));
+      new MaterialAlertDialogBuilder(requireContext()).setTitle("Quản lý cookbooks")
+        .setMultiChoiceItems(books.toArray(new String[0]),selected,
+            (dialog,which,checked)->selected[which]=checked)
+        .setNegativeButton("Hủy",null)
+        .setPositiveButton("Lưu",(dialog,which)->{
+          List<String> draft=new ArrayList<>();
+          for(int index=0;index<books.size();index++)if(selected[index])draft.add(books.get(index));
           vm.repository.run(()->{
-            vm.repository.dao.addRecipeToCookbook(recipeId,books.get(which));
-            vm.repository.message.postValue("Đã thêm công thức vào "+books.get(which));
-          })).show();
+            vm.repository.dao.replaceRecipeCookbooks(recipeId,draft);
+            vm.repository.message.postValue("Đã cập nhật cookbooks; công thức được giữ lại");
+          });
+        }).show();
     });
     v.findViewById(R.id.cooking_mode).setOnClickListener(x->{
       if(recipe!=null)((MainActivity)requireActivity()).open(CookingFragment.create(recipe.id));
@@ -201,11 +211,9 @@ public class DetailFragment extends Fragment {
               Meal next=new Meal();
               next.day=formatted;next.type=type;next.slot=formatted+"|"+type;
               next.recipeId=id;next.servings=servings;
-              boolean exists=false;
-              for(Meal existing:vm.repository.dao.mealSnapshot(formatted,formatted))
-                if(existing.type.equals(type))exists=true;
-              if(exists)vm.repository.dao.addMeal(next);
-              else vm.repository.dao.putMeal(next);
+              // The v4 table stores portions even for the first dish in a slot.
+              // Legacy meals remain readable without a schema change.
+              vm.repository.dao.addMeal(next);
               vm.repository.message.postValue("Đã thêm vào lịch · nguyên liệu tự đồng bộ");
             });
           }).show();

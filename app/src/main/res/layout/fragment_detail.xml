@@ -144,7 +144,7 @@
             android:id="@+id/add_to_book"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:text="▦ Lưu vào cookbook" />
+            android:text="▦ Quản lý cookbooks" />
         <com.google.android.material.button.MaterialButton
             android:id="@+id/to_plan"
             android:layout_width="match_parent"

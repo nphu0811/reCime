@@ -63,7 +63,11 @@ public final class AiSettingsFragment extends Fragment {
                                     + (result.optBoolean("visionModelDownloaded")
                                         ? "sẵn sàng"
                                         : "chưa tải")
-                                    + "\nChi phí API: 0đ — xử lý trên laptop của bạn");
+                                    + "\nTra cứu công thức cục bộ trên laptop: không mất phí API."
+                                    + "\nTrợ lý OpenAI từ xa: "
+                                    + (result.optBoolean("assistantAvailable")
+                                        ? "đã cấu hình; có thể tính phí theo nhà cung cấp."
+                                        : "chưa cấu hình khóa trên backend."));
                           });
                     } catch (Exception e) {
                       view.post(

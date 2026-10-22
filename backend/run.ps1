@@ -9,15 +9,7 @@ if (Test-Path -LiteralPath $envFile) {
       if ($separator -gt 0) {
         $name = $line.Substring(0, $separator).Trim()
         $value = $line.Substring($separator + 1).Trim().Trim('"')
-        if ($name -match '^[A-Z][A-Z0-9_]*
-Set-Location -LiteralPath $projectRoot
-$python = Join-Path $PSScriptRoot '.venv\Scripts\python.exe'
-if (-not (Test-Path -LiteralPath $python)) {
-    python -m venv backend/.venv
-    & $python -m pip install -r backend/requirements.txt
-}
-& $python -m uvicorn backend.app:app --host 127.0.0.1 --port 8765
-) {
+        if ($name -match '^[A-Z][A-Z0-9_]*$') {
           [Environment]::SetEnvironmentVariable($name, $value, 'Process')
         }
       }
