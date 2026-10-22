@@ -223,6 +223,8 @@ public class RecipesFragment extends Fragment {
     boolean favorite = ((CheckBox) root.findViewById(R.id.favorites)).isChecked();
     String ingredientQuery=Ui.text(root,R.id.ingredient_filter);
     shown.clear();
+    java.util.Set<Long> members=book.equals("Tất cả")?java.util.Collections.emptySet()
+        :vm.repository.dao.recipeIdsForCookbook(book);
     for (Recipe r : all) {
       String hay = Units.key(r.title + " " + r.tags + " " + r.ingredients);
       boolean ok = true;
@@ -252,7 +254,7 @@ public class RecipesFragment extends Fragment {
       if (ok
           && categoryOk
           && (!favorite || r.favorite)
-          && (book.equals("Tất cả") || book.equals(r.cookbook))) shown.add(r);
+          && (book.equals("Tất cả") || members.contains(r.id) || book.equals(r.cookbook))) shown.add(r);
     }
     Ui.set(
         root,
