@@ -2,4 +2,14 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="night_ink">#101323</color>
+    <color name="deep_ink">#161B32</color>
+    <color name="dock_surface">#252B47</color>
+    <color name="card_ink">#242941</color>
+    <color name="acid_lime">#DAFF70</color>
+    <color name="electric_coral">#FF856D</color>
+    <color name="lavender_mist">#BFC1DB</color>
+    <color name="soft_white">#F7F5FF</color>
+    <color name="outline_ink">#4F5571</color>
+    <color name="muted_ink">#AEB4D0</color>
 </resources>
