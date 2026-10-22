@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#F8F5EC"
+    android:background="@drawable/bg_screen_glow"
     tools:context=".activity.MainActivity">
 
     <include
@@ -18,7 +18,12 @@
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="68dp"
+        android:layout_marginHorizontal="12dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/bg_bottom_dock"
+        app:itemIconTint="@color/nav_selector"
+        app:itemTextColor="@color/nav_selector"
         app:menu="@menu/bottom_nav"
         app:labelVisibilityMode="labeled" />
 
