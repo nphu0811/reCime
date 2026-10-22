@@ -45,6 +45,29 @@ class RecipeBackendTests(unittest.TestCase):
             self.assertEqual('Bún bò Huế ngon tại nhà',result['caption']);self.assertEqual(1,request.call_count)
             self.assertEqual('https://www.tiktok.com/oembed',request.call_args.args[0])
 
+    def test_assistant_needs_a_real_key_and_never_returns_fake_answer(self):
+        payload={'title':'Canh cải','ingredients':'100 g rau cải','steps':'Nấu nước rồi thêm rau.',
+                 'question':'Nấu bao nhiêu phút?'}
+        with patch.dict('os.environ',{'OPENAI_API_KEY':''}):
+            response=self.client.post('/assistant/ask',json=payload)
+            self.assertEqual(503,response.status_code)
+            self.assertIn('OPENAI_API_KEY',response.json()['detail'])
+
+    def test_assistant_uses_server_key_and_parses_responses_output(self):
+        class Response:
+            status_code=200
+            def json(self):
+                return {'output':[{'content':[{'type':'output_text','text':'Nấu tới khi rau chín; công thức chưa có thời gian.'}]}]}
+        payload={'title':'Canh cải','ingredients':'100 g rau cải','steps':'Nấu nước rồi thêm rau.',
+                 'question':'Bao lâu?'}
+        with patch.dict('os.environ',{'OPENAI_API_KEY':'fake-test-only'}):
+            with patch('backend.app.requests.post',return_value=Response()) as request:
+                response=self.client.post('/assistant/ask',json=payload)
+                self.assertEqual(200,response.status_code)
+                self.assertIn('rau chín',response.json()['answer'])
+                self.assertEqual('Bearer fake-test-only',request.call_args.kwargs['headers']['Authorization'])
+                self.assertFalse(request.call_args.kwargs['json']['store'])
+
     def test_real_onnx_image_model_roundtrip_with_reference(self):
         recipe=next(r for r in self.engine.recipes if r['title']=='Bún bò Huế' and r.get('image'))
         result=self.engine.image((CATALOG/recipe['image']).read_bytes())
