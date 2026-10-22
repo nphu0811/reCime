@@ -65,6 +65,16 @@ public final class LocalAiClient {
             MediaType.get("application/json; charset=utf-8")));
   }
 
+  public JSONObject ask(com.example.recime.model.Recipe recipe,String question) throws Exception {
+    JSONObject json=new JSONObject();
+    json.put("title",recipe.title);
+    json.put("ingredients",recipe.ingredients);
+    json.put("steps",recipe.steps);
+    json.put("question",question);
+    return request("/assistant/ask",
+        RequestBody.create(json.toString(),MediaType.get("application/json; charset=utf-8")));
+  }
+
   public JSONObject image(File file) throws Exception {
     BitmapFactory.Options options = new BitmapFactory.Options();
     options.inJustDecodeBounds = true;
