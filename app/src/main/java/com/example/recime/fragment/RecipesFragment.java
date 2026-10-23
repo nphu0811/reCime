@@ -23,6 +23,7 @@ public class RecipesFragment extends Fragment {
   private List<Recipe> all = new ArrayList<>();
   private RecipeAdapter recipes;
   private BaseAdapter bookAdapter;
+  private long bookRefreshRevision;
   private boolean showBooks = true;
   private String query = "", ingredient = "";
   private boolean favorite;
@@ -96,6 +97,9 @@ public class RecipesFragment extends Fragment {
   }
   private void refreshBooks(){
     if (root == null || vm == null) return;
+    final View targetView = root;
+    final List<Recipe> recipeSnapshot = new ArrayList<>(all);
+    final long revision = ++bookRefreshRevision;
     vm.repository.io.execute(() -> {
       List<String> allBookNames = vm.repository.dao.bookNamesSnapshot();
       Map<String, Set<Long>> allMembers = vm.repository.dao.allCookbookMemberships();
@@ -104,9 +108,12 @@ public class RecipesFragment extends Fragment {
 
       for (String name : allBookNames) {
         Set<Long> ids = allMembers.getOrDefault(name, Collections.emptySet());
-        boolean personal = false;
-        for (Recipe r : all) {
-          if (LibraryScope.includes(r, false) && (ids.contains(r.id) || name.equalsIgnoreCase(r.cookbook))) {
+        // A newly created empty cookbook must remain visible and selectable.
+        // Non-empty catalog-only cookbooks do not belong to the personal library.
+        boolean personal = ids.isEmpty();
+        for (Recipe r : recipeSnapshot) {
+          if (LibraryScope.includes(r, false)
+              && (ids.contains(r.id) || name.equalsIgnoreCase(r.cookbook))) {
             personal = true;
             break;
           }
@@ -117,16 +124,15 @@ public class RecipesFragment extends Fragment {
         }
       }
 
-      if (root != null) {
-        root.post(() -> {
-          if (root == null || !isAdded()) return;
-          books.clear();
-          books.addAll(personalBooks);
-          members.clear();
-          members.putAll(personalMembers);
-          render();
-        });
-      }
+      targetView.post(() -> {
+        // Discard superseded queries and responses for an already destroyed view.
+        if (root != targetView || !isAdded() || revision != bookRefreshRevision) return;
+        books.clear();
+        books.addAll(personalBooks);
+        members.clear();
+        members.putAll(personalMembers);
+        render();
+      });
     });
   }
   private void bookActions(){
