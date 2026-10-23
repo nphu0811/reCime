@@ -119,3 +119,9 @@ Animation settings đã khôi phục đúng snapshot trước thử nghiệm: an
 - ImportDuplicateChecker thuần Java nhận diện nguồn HTTPS trùng hoặc ba trường recipe nội dung trùng; thêm ImportDuplicateCheckerTest (JVM6). ImportFragment kiểm tra ở executor SQLite, hiển thị dialog mở bản cũ / nhập bản sao / hủy; không tự insert hoặc update. Thêm ImportDuplicateUiTest (Android2).
 - Đây là bộ test mới, **không được tính PASS Android** cho tới khi chạy trên Emulator. GitHub CI kiểm tra compile, JVM, lint; xem kết quả workflow tương ứng commit mới.
 - Lệnh kiểm tra Emulator: `./gradlew.bat :app:connectedDebugAndroidTest "-Pandroid.testInstrumentationRunnerArguments.class=com.example.recime.helper.PublicWebExtractorJsonLdTest,com.example.recime.ImportDuplicateUiTest"` (PowerShell).
+
+## Website Import rotation — after 551500f
+- Added fragment-scoped ImportWebState. A pending public-web extraction survives normal configuration changes and delivers its result to the recreated Import view. Async work does not capture Activity/Fragment/View and is cancelled on final close.
+- The UI consumes each completed response once using a saved result id, so rotating after modifying the imported text does not overwrite the user's edits. URL and caption editing are disabled during fetch to keep URL/source consistent.
+- New Android test ImportWebRotationTest uses an in-memory delayed ExtractionAdapter to verify pending/progress/result through rotation, plus preservation of subsequent manual edits. This is synthetic, not a live website or system process-kill test.
+- GitHub CI covers compilation, unit tests and lint; this new Android instrumentation needs an Emulator run before declaring PASS.

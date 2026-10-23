@@ -19,6 +19,7 @@ import com.example.recime.helper.ImportDuplicateChecker;
 import com.example.recime.helper.RecipeParser;
 import com.example.recime.helper.Ui;
 import com.example.recime.viewmodel.LabViewModel;
+import com.example.recime.viewmodel.ImportWebState;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.text.TextRecognition;
@@ -33,6 +34,8 @@ public class ImportFragment extends Fragment {
   private Uri cameraUri;
   private boolean busy;
   private boolean dishPhoto;
+  private ImportWebState webState;
+  private long appliedWebFetch;
   private final ActivityResultLauncher<androidx.activity.result.PickVisualMediaRequest> picker =
       registerForActivityResult(
           new ActivityResultContracts.PickVisualMedia(),
@@ -56,14 +59,16 @@ public class ImportFragment extends Fragment {
     Motion.enter(v);
     root = v;
     busy = false;
+    webState = new ViewModelProvider(this).get(ImportWebState.class);
     if (state != null) {
+      appliedWebFetch = state.getLong("appliedWebFetch", 0L);
       image = state.getString("image", "");
       dishPhoto = state.getBoolean("dishPhoto", false);
       String uri = state.getString("camera");
       if (uri != null) cameraUri = Uri.parse(uri);
     }
-    if (state != null && state.getBoolean("interrupted"))
-      status("Màn hình đã được tạo lại. Hãy thử lại thao tác nhập ảnh/URL.");
+    if (state != null && state.getBoolean("interrupted") && !webState.isLoading())
+      status("Thao tác OCR/AI trước đó bị gián đoạn; văn bản nháp vẫn được giữ.");
     v.findViewById(R.id.manual).setOnClickListener(x -> open(null));
     v.findViewById(R.id.ai_settings)
         .setOnClickListener(x -> ((MainActivity) requireActivity()).open(new AiSettingsFragment()));
@@ -144,6 +149,31 @@ public class ImportFragment extends Fragment {
     }
   }
 
+  @Override
+  public void onViewStateRestored(Bundle state) {
+    super.onViewStateRestored(state);
+    // Observe after Android restores EditText state, so a previously applied
+    // network result can never overwrite text the user subsequently edited.
+    webState.result.observe(getViewLifecycleOwner(), event -> {
+      if (root == null || event == null) return;
+      if (event.loading) {
+        loading(true);
+        status("Đang đọc trang công khai…");
+        return;
+      }
+      loading(false);
+      if (event.id <= appliedWebFetch) return;
+      appliedWebFetch = event.id;
+      if (event.error != null) {
+        status("Không nhập được: " + event.error + " Có thể sửa URL và thử lại.");
+      } else {
+        image = "";
+        Ui.set(root, R.id.raw, event.text);
+        status("Đã đọc Recipe JSON-LD. Kiểm tra văn bản rồi chọn Phân tích.");
+      }
+    });
+  }
+
   private void open(String raw) {
     if (root == null || busy) return;
     final View target = root;
@@ -205,50 +235,28 @@ public class ImportFragment extends Fragment {
     root.findViewById(R.id.progress).setVisibility(on ? View.VISIBLE : View.GONE);
     for (int id :
         new int[] {
-          R.id.fetch, R.id.pick, R.id.camera, R.id.review, R.id.manual, R.id.ai_pick, R.id.ai_text
+          R.id.fetch, R.id.pick, R.id.camera, R.id.review, R.id.manual, R.id.ai_pick, R.id.ai_text,
+          R.id.url, R.id.raw
         }) root.findViewById(id).setEnabled(!on);
   }
 
   private void fetch() {
-    if (busy) return;
-    String url = Ui.text(root, R.id.url);
+    if (busy || root == null) return;
+    String url = Ui.text(root, R.id.url).trim();
     try {
       java.net.URI parsed = new java.net.URI(url);
       String host = parsed.getHost();
-      if (host != null && (host.equals("tiktok.com") || host.endsWith(".tiktok.com"))) {
+      if (host != null && (host.equalsIgnoreCase("tiktok.com")
+          || host.toLowerCase(java.util.Locale.ROOT).endsWith(".tiktok.com"))) {
         aiRequest("tiktok", url);
         return;
       }
     } catch (java.net.URISyntaxException ignored) {
+      // The public extractor reports malformed or unsupported URLs.
     }
-    loading(true);
-    status("Đang đọc trang công khai…");
-    final View target = root;
-    new ViewModelProvider(requireActivity())
-        .get(LabViewModel.class)
-        .repository
-        .extraction
-        .execute(
-            () -> {
-              try {
-                String text = new PublicWebExtractor().extract(url);
-                target.post(
-                    () -> {
-                      if (root != target) return;
-                      image = "";
-                      Ui.set(root, R.id.raw, text);
-                      loading(false);
-                      status("Đã đọc Recipe JSON-LD. Kiểm tra văn bản rồi chọn Phân tích.");
-                    });
-              } catch (Exception e) {
-                target.post(
-                    () -> {
-                      if (root != target) return;
-                      loading(false);
-                      status("Không nhập được: " + e.getMessage() + " Có thể sửa URL và thử lại.");
-                    });
-              }
-            });
+    com.example.recime.sql.RecipeRepository repository =
+        new ViewModelProvider(requireActivity()).get(LabViewModel.class).repository;
+    webState.fetch(url, repository.extraction, new PublicWebExtractor());
   }
 
   private void ocr(Uri uri) {
@@ -470,7 +478,8 @@ public class ImportFragment extends Fragment {
   public void onSaveInstanceState(Bundle b) {
     super.onSaveInstanceState(b);
     b.putString("image", image);
-    b.putBoolean("interrupted", busy);
+    b.putBoolean("interrupted", busy && !webState.isLoading());
+    b.putLong("appliedWebFetch", appliedWebFetch);
     b.putBoolean("dishPhoto", dishPhoto);
     if (cameraUri != null) b.putString("camera", cameraUri.toString());
   }
