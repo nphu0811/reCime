@@ -75,6 +75,26 @@ public class LibraryUiTest {
       onView(withId(R.id.empty)).check(matches(withText("Chưa có công thức phù hợp.")));
     }
   }
+  @Test public void newlyCreatedEmptyCookbookStaysVisibleAfterAsyncRefreshAndRotation() throws Exception {
+    String emptyBook = prefix + " Empty";
+    try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+      onView(withId(R.id.new_book)).perform(click());
+      onView(withId(R.id.cookbook_name)).perform(replaceText(emptyBook), closeSoftKeyboard());
+      onView(withText("Lưu")).perform(click());
+      idle();
+      onData(equalTo(emptyBook)).inAdapterView(withId(R.id.list)).perform(click());
+      onView(withId(R.id.heading)).check(matches(withText(emptyBook)));
+      onView(withId(R.id.cookbook_options)).check(matches(isEnabled()));
+      scenario.recreate();
+      idle();
+      onView(withId(R.id.heading)).check(matches(withText(emptyBook)));
+      onView(withId(R.id.cookbook_options)).check(matches(isEnabled()));
+      pressBack();
+      idle();
+      onData(equalTo(emptyBook)).inAdapterView(withId(R.id.list)).check(matches(isDisplayed()));
+    }
+  }
+
   @Test public void cookbookCreateValidateSelectRotateRenameDeleteKeepsRecipe() throws Exception {
     String created=prefix+" New",renamed=prefix+" Rename";
     try(ActivityScenario<MainActivity> s=ActivityScenario.launch(MainActivity.class)){
