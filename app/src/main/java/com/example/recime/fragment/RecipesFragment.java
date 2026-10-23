@@ -24,6 +24,8 @@ public class RecipesFragment extends Fragment {
   private RecipeAdapter recipes;
   private BaseAdapter bookAdapter;
   private long bookRefreshRevision;
+  // Until the background membership query completes, absence is not deletion.
+  private boolean bookListLoaded;
   private boolean showBooks = true;
   private String query = "", ingredient = "";
   private boolean favorite;
@@ -42,7 +44,8 @@ public class RecipesFragment extends Fragment {
         .inflate(R.layout.fragment_recipes,parent,false);
   }
   @Override public void onViewCreated(View v,Bundle saved) {
-    root=v; vm=new ViewModelProvider(requireActivity()).get(LabViewModel.class);
+    root=v; bookListLoaded=false;
+    vm=new ViewModelProvider(requireActivity()).get(LabViewModel.class);
     if(saved!=null) { showBooks=saved.getBoolean("showBooks",true); query=saved.getString("query","");
       ingredient=saved.getString("ingredient",""); favorite=saved.getBoolean("favorite"); }
     Ui.set(v,R.id.heading,discover()?"Discover":book().isEmpty()?"Recipes":book());
@@ -131,6 +134,7 @@ public class RecipesFragment extends Fragment {
         books.addAll(personalBooks);
         members.clear();
         members.putAll(personalMembers);
+        bookListLoaded = true;
         render();
       });
     });
@@ -162,9 +166,14 @@ public class RecipesFragment extends Fragment {
     int count=target.getCount();Ui.set(root,R.id.empty,!Boolean.TRUE.equals(vm.repository.ready.getValue())?"Đang tải…":
         count==0?(isBooks?"Chưa có cookbook. Nhấn + để tạo.":"Chưa có công thức phù hợp."):
         count+(isBooks?" cookbooks":" công thức"));
-    if(!book().isEmpty()&&!books.contains(book())){
-      root.findViewById(R.id.cookbook_options).setEnabled(false);
-      Ui.set(root,R.id.empty,"Cookbook đã đổi tên hoặc bị xóa. Nhấn Back để về thư viện.");
+    if (!book().isEmpty()) {
+      // Re-enable actions when a valid cookbook is loaded. A previous render may
+      // have disabled this button while the asynchronous query was still pending.
+      boolean missing = bookListLoaded && !books.contains(book());
+      root.findViewById(R.id.cookbook_options).setEnabled(!missing);
+      if (missing)
+        Ui.set(root, R.id.empty,
+            "Cookbook đã đổi tên hoặc bị xóa. Nhấn Back để về thư viện.");
     }
   }
   @Override public void onSaveInstanceState(Bundle out){
