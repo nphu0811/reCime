@@ -1,4 +1,5 @@
 package com.example.recime;
+import static com.example.recime.UiGestures.click;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onIdle;
@@ -74,7 +75,18 @@ public class GroceryUiTest {
     onView(withId(android.R.id.button1)).perform(click());
   }
 
+  private java.util.List<Grocery> allGroceryRows(){
+    java.util.List<Grocery> rows=new java.util.ArrayList<>(repo.dao.grocerySnapshot());
+    rows.addAll(repo.dao.plannedGrocerySnapshot());return rows;
+  }
+  private java.util.List<String> groceryValues(java.util.List<Grocery> rows){
+    java.util.List<String> values=new java.util.ArrayList<>();
+    for(Grocery g:rows)values.add(g.id+"|"+g.planned+"|"+g.name+"|"+g.amount+"|"+g.unit+"|"+g.category+"|"+g.checked);
+    java.util.Collections.sort(values);return values;
+  }
   @Test public void manualCrudDraftAndCheckedStateSurviveRotation() throws Exception {
+    java.util.List<Grocery> baseline=allGroceryRows();
+    java.util.List<String> baselineValues=groceryValues(baseline);
     try(ActivityScenario<MainActivity> scenario=open()){
       onView(withId(R.id.board_action)).perform(click());
       onView(withId(R.id.grocery_name)).perform(replaceText(prefix+" manual"));
@@ -93,7 +105,12 @@ public class GroceryUiTest {
       assertEquals(750,manual(prefix+" edited").amount,0.001);assertTrue(manual(prefix+" edited").checked);
       onData(row(prefix+" edited")).inAdapterView(withId(R.id.board_list)).perform(longClick());
       onView(withId(android.R.id.button1)).perform(click());drain();assertNull(manual(prefix+" edited"));
-      onView(withId(R.id.board_empty)).check(matches(withText(R.string.grocery_empty)));
+      assertEquals("CRUD must preserve every pre-existing manual/planned row",baselineValues,groceryValues(allGroceryRows()));
+      if(baseline.isEmpty())onView(withId(R.id.board_empty)).check(matches(withText(R.string.grocery_empty)));
+      else{
+        int bought=0;for(Grocery g:baseline)if(g.checked)bought++;
+        onView(withId(R.id.board_empty)).check(matches(withText(baseline.size()+" nguyên liệu · "+bought+" đã mua")));
+      }
     }
   }
   @Test public void recipeBatchScalesSelectedIngredientsAndSurvivesRotation() throws Exception {

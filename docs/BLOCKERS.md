@@ -20,3 +20,11 @@ Meal Planner (tiếp3a3179f): đã kiểm thử nhóm tuần/4 bữa/move/drag/w
 
 
 Groceries (tiếpc0ffc04): nhóm local UI/CRUD/batch selection/servings/source separation đã qua build/unit/lint:31 JVM PASS;40instrumentation cases qua39PASS vòng rộng và1PASS retry. Continuous auto-derived của app mình được giữ nguyên, không gọi là hành vi official. Batch là bản sao independent/manual; chưa có persistent per-recipe attribution hoặc timestamp grouping trong v5. Official exact aggregation/aisle/source reconciliation/populated UI vẫn UNKNOWN. Merchant checkout chưa triển khai; cần provider/API/quyền tích hợp và backend riêng nếu làm sau, hiện không có nút checkout giả. Không thiếu key cho nhóm local này.
+
+## Home / Cookbooks / Discover — sau b6a2204
+- Dynamic Discover/ranking/creator search/account quota và collaboration/access cần backend/provider độc lập có quyền truy cập; không có contract/key trong APK để suy ra. Không hiển thị dữ liệu động/quota giả.
+- Catalog local hiện có được giữ riêng theo catalogKey và có attribution; favorite/edit catalog không tự tạo bản sao personal. Luồng lưu catalog thành bản sao cá nhân có giải quyết provenance chưa thuộc nhóm này.
+- Cookbook icon/access và full official populated UI, search ranking, animation/haptics chưa xác minh: UNKNOWN. Dùng evidence runtime cũ; không đụng draft Editor official.
+- Không thay schema SQLite v5; không cần API key cho Home, cookbook CRUD, search/filter và local Discover.
+\nCookbook mặc định Món nhà tiếp tục được DAO bảo vệ khỏi xóa như baseline; cookbook người dùng tạo có CRUD. OcrUiTest đã PASS Share ảnh tự tạo tiếng Anh → review → SQLite; OCR ảnh thực tế đa dạng, video/provider và live AI vẫn cần kiểm thử riêng.\n
+Nhóm Home/cookbook/local Discover đã qua các kiểm tra cần thiết; không cần key/tài khoản bổ sung. Test đã phân biệt tap/long-press bằng input sequence thật và khôi phục animation settings Emulator. Lượt broad còn1 lỗi test root Planner, nhóm Workflow sau sửa PASS3/3; không nhận là một lượt49/49 xanh.

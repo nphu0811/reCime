@@ -537,6 +537,26 @@ public class LabDao {
     return names;
   }
 
+  /** Replace only this cookbook's personal memberships; preserve all other collections. */
+  public void selectCookbookRecipes(String name, java.util.Set<Long> selected) {
+    if (selected == null) throw new IllegalArgumentException("Danh sách không hợp lệ");
+    helper.runInTransaction(() -> {
+      if (!bookNamesSnapshot().contains(name)) throw new IllegalArgumentException("Cookbook không tồn tại");
+      for (Long id : selected) {
+        Recipe r = find(id);
+        if (r == null || r.catalogKey != null) throw new IllegalArgumentException("Chỉ chọn công thức cá nhân");
+      }
+      for (Recipe r : recipeSnapshot()) {
+        if (r.catalogKey != null) continue;
+        List<String> names = cookbookNamesForRecipe(r.id);
+        boolean before = names.contains(name), after = selected.contains(r.id);
+        if (before == after) continue;
+        if (after) names.add(name); else names.remove(name);
+        replaceRecipeCookbooks(r.id, names);
+      }
+    });
+  }
+
   /** Save the complete selection atomically; removing membership never deletes a recipe. */
   public void replaceRecipeCookbooks(long recipeId, List<String> selectedNames) {
     if (selectedNames == null) throw new IllegalArgumentException("Danh sách cookbook không hợp lệ");

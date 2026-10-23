@@ -1,4 +1,5 @@
 package com.example.recime;
+import static com.example.recime.UiGestures.click;
 
 import static androidx.test.espresso.Espresso.*;
 import static androidx.test.espresso.action.ViewActions.*;
@@ -35,11 +36,7 @@ public class PlannerUiTest {
     Recipe fixture = fixture("Planner checklist");
     repo.io.submit(() -> fixture.id = repo.dao.insert(fixture)).get(20, TimeUnit.SECONDS);
     try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
-      onView(withId(R.id.nav_plan)).perform(new androidx.test.espresso.ViewAction(){
-        public org.hamcrest.Matcher<android.view.View> getConstraints(){return isDisplayed();}
-        public String getDescription(){return "wait for initial dock animation before touching Planner";}
-        public void perform(androidx.test.espresso.UiController controller,android.view.View view){controller.loopMainThreadForAtLeast(700);}
-      },click());
+      onView(withId(R.id.nav_plan)).perform(click());
       Calendar monday = Calendar.getInstance();
       monday.add(Calendar.DAY_OF_MONTH, -((monday.get(Calendar.DAY_OF_WEEK) + 5) % 7));
       String day = new SimpleDateFormat("yyyy-MM-dd", Locale.ROOT).format(monday.getTime());

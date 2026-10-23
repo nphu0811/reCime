@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<resources>
+    <item name="all_recipes" type="id"/>
+    <item name="cookbook_name" type="id"/>
+    <item name="cookbook_options" type="id"/>
+    <item name="cookbook_members" type="id"/>
+</resources>

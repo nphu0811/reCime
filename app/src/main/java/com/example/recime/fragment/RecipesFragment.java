@@ -1,268 +1,145 @@
 package com.example.recime.fragment;
 
 import android.os.Bundle;
-import android.text.*;
 import android.view.*;
 import android.widget.*;
+import android.text.*;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import com.example.recime.*;
+import com.example.recime.R;
 import com.example.recime.activity.MainActivity;
 import com.example.recime.adapter.RecipeAdapter;
-import com.example.recime.helper.IngredientFilter;
-import com.example.recime.helper.Motion;
-import com.example.recime.helper.Ui;
-import com.example.recime.helper.Units;
+import com.example.recime.helper.*;
 import com.example.recime.model.Recipe;
 import com.example.recime.viewmodel.LabViewModel;
 import java.util.*;
 
 public class RecipesFragment extends Fragment {
-  private List<Recipe> all = new ArrayList<>();
-  private final List<Recipe> shown = new ArrayList<>();
   private View root;
-  private RecipeAdapter adapter;
-  private String book = "Tất cả";
   private LabViewModel vm;
-  private String category = "all";
-  private List<String> namedBooks = new ArrayList<>();
-
-  public RecipesFragment() {
-    super(R.layout.fragment_recipes);
-  }
-
+  private final List<Recipe> shown = new ArrayList<>();
+  private final List<String> books = new ArrayList<>();
+  private final Map<String,Set<Long>> members = new HashMap<>();
+  private List<Recipe> all = new ArrayList<>();
+  private RecipeAdapter recipes;
+  private BaseAdapter bookAdapter;
+  private boolean showBooks = true;
+  private String query = "", ingredient = "";
+  private boolean favorite;
+  public RecipesFragment() { super(); }
   public static RecipesFragment create(boolean discover) {
-    RecipesFragment f = new RecipesFragment();
-    Bundle b = new Bundle();
-    b.putBoolean("discover", discover);
-    f.setArguments(b);
-    return f;
+    RecipesFragment f = new RecipesFragment(); Bundle b = new Bundle();
+    b.putBoolean("discover",discover); f.setArguments(b); return f;
   }
-
-  @Override
-  public void onViewCreated(View v, Bundle state) {
-    root = v;
-    Motion.enter(v);
-    Motion.pop(v.findViewById(R.id.hero_card));
-    Motion.card(v.findViewById(R.id.hero_card));
-    Motion.card(v.findViewById(R.id.ai_camera));
-    Motion.card(v.findViewById(R.id.add));
-    vm = new ViewModelProvider(requireActivity()).get(LabViewModel.class);
-    if (getArguments() != null && getArguments().getBoolean("discover")) {
-      Ui.set(v, R.id.heading, "Fresh ideas.\nFresh bites.");
-      Ui.set(v, R.id.eyebrow, "reCime / EXPLORE SOMETHING NEW ✦");
-    }
-    v.findViewById(R.id.manage_books).setOnClickListener(x -> manageBooks());
-    v.findViewById(R.id.ai_camera)
-        .setOnClickListener(
-            x ->
-                ((com.google.android.material.bottomnavigation.BottomNavigationView)
-                        requireActivity().findViewById(R.id.bottom))
-                    .setSelectedItemId(R.id.nav_import));
-    ((com.google.android.material.chip.ChipGroup) v.findViewById(R.id.category_chips))
-        .setOnCheckedStateChangeListener(
-            (group, ids) -> {
-              int selected = ids.isEmpty() ? R.id.chip_all : ids.get(0);
-              category =
-                  selected == R.id.chip_soup
-                      ? "soup"
-                      : selected == R.id.chip_main
-                          ? "main"
-                          : selected == R.id.chip_vegan
-                              ? "vegan"
-                              : selected == R.id.chip_sweet ? "sweet" : "all";
-              filter();
-            });
-    GridView list = v.findViewById(R.id.list);
-    adapter = new RecipeAdapter(requireContext(), R.layout.item_recipe, shown);
-    list.setAdapter(adapter);
-    list.setOnItemClickListener(
-        new AdapterView.OnItemClickListener() {
-          @Override
-          public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Recipe recipe = adapter.getItem(position);
-            ((MainActivity) requireActivity()).open(DetailFragment.create(recipe.id));
-          }
-        });
-    v.findViewById(R.id.add)
-        .setOnClickListener(
-            x -> ((MainActivity) requireActivity()).open(EditorFragment.create(0, null, "", "")));
-    ((EditText) v.findViewById(R.id.search))
-        .addTextChangedListener(
-            new TextWatcher() {
-              public void beforeTextChanged(CharSequence s, int a, int c, int d) {}
-
-              public void onTextChanged(CharSequence s, int a, int b, int c) {
-                filter();
-              }
-
-              public void afterTextChanged(Editable e) {}
-            });
-    ((EditText) v.findViewById(R.id.ingredient_filter)).addTextChangedListener(
-      new TextWatcher(){
-        public void beforeTextChanged(CharSequence t,int a,int c,int d){}
-        public void onTextChanged(CharSequence t,int a,int b,int c){filter();}
-        public void afterTextChanged(Editable e){}
-      });
-    ((CheckBox) v.findViewById(R.id.favorites)).setOnCheckedChangeListener((b, c) -> filter());
-    ((Spinner) v.findViewById(R.id.books))
-        .setOnItemSelectedListener(
-            new AdapterView.OnItemSelectedListener() {
-              public void onNothingSelected(AdapterView<?> p) {}
-
-              public void onItemSelected(AdapterView<?> p, View x, int pos, long id) {
-                book = p.getItemAtPosition(pos).toString();
-                filter();
-              }
-            });
-    vm.recipes.observe(
-        getViewLifecycleOwner(),
-        items -> {
-          all = items;
-          Recipe featured = null;
-          for (Recipe r : all)
-            if (!r.image.isEmpty()) {
-              featured = r;
-              if (r.title.equalsIgnoreCase("Bún bò Huế")) break;
-            }
-          if (featured != null) {
-            final Recipe selected = featured;
-            Ui.image(v.findViewById(R.id.hero_photo), selected.image);
-            Ui.set(v, R.id.hero_title, selected.title);
-            Ui.set(
-                v,
-                R.id.hero_meta,
-                selected.catalogKey == null
-                    ? "Món của bạn · Xem công thức →"
-                    : "Wikibooks · Công thức mở →");
-            v.findViewById(R.id.hero_card)
-                .setOnClickListener(
-                    x ->
-                        ((MainActivity) requireActivity())
-                            .open(DetailFragment.create(selected.id)));
-          }
-          updateBooks();
-          filter();
-        });
-    vm.cookbooks.observe(getViewLifecycleOwner(), names -> {
-      namedBooks = names == null ? new ArrayList<>() : names;
-      updateBooks();
-    });
-    vm.repository.ready.observe(getViewLifecycleOwner(), ready -> filter());
+  public static RecipesFragment cookbook(String name) {
+    RecipesFragment f=create(false); f.requireArguments().putString("book",name); return f;
   }
-
-  private void updateBooks() {
-    if(root == null)return;
-    LinkedHashSet<String> values=new LinkedHashSet<>();
-    values.add("Tất cả");
-    values.addAll(namedBooks);
-    for(Recipe r:all) if(r.cookbook!=null && !r.cookbook.isEmpty()) values.add(r.cookbook);
-    List<String> list=new ArrayList<>(values);
-    Spinner spinner=root.findViewById(R.id.books);
-    String old=book;
-    spinner.setAdapter(new ArrayAdapter<>(requireContext(),
-        android.R.layout.simple_spinner_dropdown_item,list));
-    spinner.setSelection(Math.max(0,list.indexOf(old)));
+  private boolean discover() { return requireArguments().getBoolean("discover"); }
+  private String book() { return requireArguments().getString("book", ""); }
+  @Override public View onCreateView(LayoutInflater inflater,ViewGroup parent,Bundle saved) {
+    return inflater.cloneInContext(new ContextThemeWrapper(requireContext(),R.style.Theme_RecipeEditor))
+        .inflate(R.layout.fragment_recipes,parent,false);
   }
-
-  private void manageBooks() {
-    List<String> names=new ArrayList<>(namedBooks);
-    List<String> rows=new ArrayList<>();
-    rows.add("＋ Tạo cookbook mới");
-    rows.addAll(names);
-    new com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
-      .setTitle("Cookbooks của bạn")
-      .setItems(rows.toArray(new String[0]), (d,which)-> {
-        if(which==0)bookEditor(null);
-        else bookActions(rows.get(which));
-      }).setNegativeButton("Đóng",null).show();
-  }
-
-  private void bookActions(String name){
-    new com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
-      .setTitle(name)
-      .setItems(new String[]{"Xem công thức","Đổi tên","Xóa cookbook (giữ công thức)"},
-          (d,which)-> {
-            if(which==0){book=name;updateBooks();filter();}
-            else if(which==1)bookEditor(name);
-            else if(which==2){
-              new com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Xóa cookbook "+name+"?")
-                .setMessage("Công thức được chuyển về bộ sưu tập Món nhà, không bị xóa.")
-                .setNegativeButton("Hủy",null)
-                .setPositiveButton("Xóa",(dialog,button)->vm.repository.run(
-                   ()->vm.repository.dao.deleteCookbook(name))).show();
-            }
-          }).show();
-  }
-
-  private void bookEditor(String old){
-    EditText text=new EditText(requireContext());
-    text.setSingleLine(true);
-    text.setHint("Tên cookbook");
-    if(old!=null)text.setText(old);
-    int padding=(int)(24*getResources().getDisplayMetrics().density);
-    text.setPadding(padding,padding,padding,padding);
-    new com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
-      .setTitle(old==null?"Tạo cookbook":"Đổi tên cookbook")
-      .setView(text)
-      .setNegativeButton("Hủy",null)
-      .setPositiveButton("Lưu",(dialog,button)->{
-        String name=text.getText().toString().trim();
-        if(name.isEmpty())return;
-        vm.repository.run(()->{
-          if(old==null)vm.repository.dao.createCookbook(name);
-          else vm.repository.dao.renameCookbook(old,name);
-        });
-        book=name;
-      }).show();
-  }
-
-  private void filter() {
-    if (root == null || adapter == null) return;
-    String q = Units.key(Ui.text(root, R.id.search));
-    boolean favorite = ((CheckBox) root.findViewById(R.id.favorites)).isChecked();
-    String ingredientQuery=Ui.text(root,R.id.ingredient_filter);
-    // Keep search results readable: the promotional hero otherwise clips the recipe cards.
-    root.findViewById(R.id.hero_card).setVisibility(
-        q.isEmpty() && ingredientQuery.trim().isEmpty() ? View.VISIBLE : View.GONE);
-    shown.clear();
-    java.util.Set<Long> members=book.equals("Tất cả")?java.util.Collections.emptySet()
-        :vm.repository.dao.recipeIdsForCookbook(book);
-    for (Recipe r : all) {
-      String hay = Units.key(r.title + " " + r.tags + " " + r.ingredients);
-      boolean ok = true;
-      String type = Units.key(r.title + " " + r.cookbook);
-      boolean categoryOk =
-          category.equals("all")
-              || category.equals("soup") && type.matches(".*(bun|pho|canh|lau|hu tieu|mi quang).*")
-              || category.equals("vegan") && type.contains("chay")
-              || category.equals("sweet") && type.matches(".*(banh|che |xoi|kem).*")
-              || category.equals("main") && !type.matches(".*(banh|che |kem|canh|bun|pho).*");
-      for (String token : q.split("[,\\s]+")) if (!hay.contains(token)) ok = false;
-      if (ok && !ingredientQuery.isEmpty()) {
-        ok = IngredientFilter.matches(
-            ingredientQuery, com.example.recime.helper.RecipeParser.ingredients(r.ingredients));
+  @Override public void onViewCreated(View v,Bundle saved) {
+    root=v; vm=new ViewModelProvider(requireActivity()).get(LabViewModel.class);
+    if(saved!=null) { showBooks=saved.getBoolean("showBooks",true); query=saved.getString("query","");
+      ingredient=saved.getString("ingredient",""); favorite=saved.getBoolean("favorite"); }
+    Ui.set(v,R.id.heading,discover()?"Discover":book().isEmpty()?"Recipes":book());
+    v.findViewById(R.id.catalog_notice).setVisibility(discover()?View.VISIBLE:View.GONE);
+    v.findViewById(R.id.library_sections).setVisibility(discover()||!book().isEmpty()?View.GONE:View.VISIBLE);
+    v.findViewById(R.id.cookbook_options).setVisibility(book().isEmpty()?View.GONE:View.VISIBLE);
+    v.findViewById(R.id.cookbook_options).setOnClickListener(x->bookActions());
+    v.findViewById(R.id.new_book).setOnClickListener(x->CookbookDialog.create("create","").show(getParentFragmentManager(),"book"));
+    v.findViewById(R.id.manage_books).setOnClickListener(x->{showBooks=true;((EditText)v.findViewById(R.id.search)).setText("");render();});
+    v.findViewById(R.id.all_recipes).setOnClickListener(x->{showBooks=false;render();});
+    v.findViewById(R.id.add).setOnClickListener(x->new com.google.android.material.dialog.MaterialAlertDialogBuilder(v.getContext())
+        .setTitle("Thêm công thức").setItems(new String[]{"Viết công thức","Nhập link, ảnh, văn bản / AI"},(d,index)->{
+          MainActivity a=(MainActivity)requireActivity();
+          if(index==0)a.open(EditorFragment.create(0,null,"","")); else a.openImport();
+        }).show());
+    recipes=new RecipeAdapter(v.getContext(),R.layout.item_library_recipe,shown);
+    bookAdapter=new BaseAdapter() {
+      public int getCount(){return books.size();} public String getItem(int p){return books.get(p);}
+      public long getItemId(int p){return p;}
+      public View getView(int p,View recycled,ViewGroup parent){
+        View card=recycled==null?LayoutInflater.from(v.getContext()).inflate(R.layout.item_cookbook,parent,false):recycled;
+        String name=getItem(p); ((TextView)card.findViewById(R.id.title)).setText(name);
+        int count=0; for(Recipe r:all)if(LibraryScope.includes(r,false)&&members.getOrDefault(name,Collections.emptySet()).contains(r.id))count++;
+        ((TextView)card.findViewById(R.id.meta)).setText(count+" công thức"); return card;
       }
-      if (ok
-          && categoryOk
-          && (!favorite || r.favorite)
-          && (book.equals("Tất cả") || members.contains(r.id) || book.equals(r.cookbook))) shown.add(r);
+    };
+    GridView grid=v.findViewById(R.id.list);
+    grid.setOnItemClickListener((p,cell,pos,id)->{
+      MainActivity a=(MainActivity)requireActivity();
+      if(grid.getAdapter()==bookAdapter)a.open(cookbook(books.get(pos)));
+      else a.open(DetailFragment.create(shown.get(pos).id));
+    });
+    ((EditText)v.findViewById(R.id.search)).setText(query);
+    ((EditText)v.findViewById(R.id.ingredient_filter)).setText(ingredient);
+    ((CheckBox)v.findViewById(R.id.favorites)).setChecked(favorite);
+    TextWatcher watcher=new TextWatcher(){public void beforeTextChanged(CharSequence s,int a,int c,int d){}
+      public void afterTextChanged(Editable e){} public void onTextChanged(CharSequence s,int a,int b,int c){render();}};
+    ((EditText)v.findViewById(R.id.search)).addTextChangedListener(watcher);
+    ((EditText)v.findViewById(R.id.ingredient_filter)).addTextChangedListener(watcher);
+    ((CheckBox)v.findViewById(R.id.favorites)).setOnCheckedChangeListener((b,c)->render());
+    vm.recipes.observe(getViewLifecycleOwner(),items->{all=items;refreshBooks();});
+    vm.cookbooks.observe(getViewLifecycleOwner(),names->refreshBooks());
+    vm.repository.ready.observe(getViewLifecycleOwner(),ready->render());
+    getParentFragmentManager().setFragmentResultListener("cookbook_changed",getViewLifecycleOwner(),(key,result)->{
+      if(!book().equals(result.getString("old")))return;
+      if(result.getString("action").equals("rename")){
+        requireArguments().putString("book",result.getString("name"));Ui.set(root,R.id.heading,book());
+        root.findViewById(R.id.cookbook_options).setEnabled(true);refreshBooks();
+      }else if(result.getString("action").equals("delete"))getParentFragmentManager().popBackStack();
+    });
+    render();
+  }
+  private void refreshBooks(){
+    books.clear(); members.clear();
+    for(String name:vm.repository.dao.bookNamesSnapshot()){
+      Set<Long> ids=vm.repository.dao.recipeIdsForCookbook(name);
+      boolean personal=ids.isEmpty();
+      for(Recipe r:all)if(LibraryScope.includes(r,false)&&ids.contains(r.id))personal=true;
+      if(personal){books.add(name);members.put(name,ids);}
     }
-    Ui.set(
-        root,
-        R.id.empty,
-        shown.isEmpty()
-            ? (Boolean.TRUE.equals(vm.repository.ready.getValue())
-                ? "Chưa có công thức phù hợp. Thêm món đầu tiên của bạn."
-                : "Đang tải…")
-            : shown.size() + " công thức · sẵn sàng khi offline");
-    adapter.notifyDataSetChanged();
+    render();
   }
-
-  @Override
-  public void onDestroyView() {
-    root = null;
-    super.onDestroyView();
+  private void bookActions(){
+    new com.google.android.material.dialog.MaterialAlertDialogBuilder(root.getContext()).setTitle(book())
+        .setItems(new String[]{"Chọn công thức","Đổi tên","Xóa cookbook (giữ công thức)"},(d,index)->
+            CookbookDialog.create(index==0?"members":index==1?"rename":"delete",book())
+                .show(getParentFragmentManager(),"book")).show();
   }
+  private void render(){
+    if(root==null||recipes==null)return;
+    query=Ui.text(root,R.id.search);ingredient=Ui.text(root,R.id.ingredient_filter);
+    favorite=((CheckBox)root.findViewById(R.id.favorites)).isChecked();
+    boolean isBooks=!discover()&&book().isEmpty()&&showBooks&&query.trim().isEmpty();
+    root.findViewById(R.id.recipe_filters).setVisibility(isBooks?View.GONE:View.VISIBLE);
+    root.findViewById(R.id.manage_books).setSelected(isBooks);
+    root.findViewById(R.id.all_recipes).setSelected(!isBooks);
+    shown.clear(); String q=Units.key(query);
+    Set<Long> selected=book().isEmpty()?Collections.emptySet():vm.repository.dao.recipeIdsForCookbook(book());
+    for(Recipe r:all){
+      if(!LibraryScope.includes(r,discover())||(!book().isEmpty()&&!selected.contains(r.id)))continue;
+      String hay=Units.key(r.title+" "+r.tags+" "+r.ingredients);boolean ok=true;
+      for(String token:q.split("[,\\s]+"))if(!hay.contains(token))ok=false;
+      if(ok&&(!favorite||r.favorite)&&IngredientFilter.matches(ingredient,RecipeParser.ingredients(r.ingredients)))shown.add(r);
+    }
+    GridView grid=root.findViewById(R.id.list); BaseAdapter target=isBooks?bookAdapter:recipes;
+    if(grid.getAdapter()!=target)grid.setAdapter(target);target.notifyDataSetChanged();
+    int count=target.getCount();Ui.set(root,R.id.empty,!Boolean.TRUE.equals(vm.repository.ready.getValue())?"Đang tải…":
+        count==0?(isBooks?"Chưa có cookbook. Nhấn + để tạo.":"Chưa có công thức phù hợp."):
+        count+(isBooks?" cookbooks":" công thức"));
+    if(!book().isEmpty()&&!vm.repository.dao.bookNamesSnapshot().contains(book())){
+      root.findViewById(R.id.cookbook_options).setEnabled(false);
+      Ui.set(root,R.id.empty,"Cookbook đã đổi tên hoặc bị xóa. Nhấn Back để về thư viện.");
+    }
+  }
+  @Override public void onSaveInstanceState(Bundle out){
+    if(root!=null){out.putString("query",Ui.text(root,R.id.search));out.putString("ingredient",Ui.text(root,R.id.ingredient_filter));
+      out.putBoolean("favorite",((CheckBox)root.findViewById(R.id.favorites)).isChecked());}
+    out.putBoolean("showBooks",showBooks);super.onSaveInstanceState(out);
+  }
+  @Override public void onDestroyView(){root=null;super.onDestroyView();}
 }

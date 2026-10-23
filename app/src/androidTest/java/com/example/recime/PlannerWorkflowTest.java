@@ -1,4 +1,5 @@
 package com.example.recime;
+import static com.example.recime.UiGestures.click;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onIdle;
@@ -54,18 +55,14 @@ public class PlannerWorkflowTest {
   private void drain() throws Exception {repo.io.submit(()->{}).get(30,TimeUnit.SECONDS);onIdle();}
   private ActivityScenario<MainActivity> open(){
     ActivityScenario<MainActivity> s=ActivityScenario.launch(MainActivity.class);
-    onView(withId(R.id.nav_plan)).perform(new ViewAction(){
-      public Matcher<View> getConstraints(){return isDisplayed();}
-      public String getDescription(){return "let initial dock entrance settle before touching the tab";}
-      public void perform(UiController controller,View view){controller.loopMainThreadForAtLeast(700);}
-    },click());
+    onView(withId(R.id.nav_plan)).perform(click());
     onView(withId(R.id.board_list)).check(matches(isDisplayed()));return s;
   }
   private Matcher<BoardRow> sourceRow(){return new TypeSafeMatcher<BoardRow>(){
     @Override protected boolean matchesSafely(BoardRow row){return row.meal!=null&&row.meal.extraId==source.extraId;}
     @Override public void describeTo(Description d){d.appendText("exact planned occurrence "+source.extraId);}
   };}
-  private void option(String label){onData(sourceRow()).inAdapterView(withId(R.id.board_list)).perform(click());onView(withText(label)).perform(click());}
+  private void option(String label){onData(sourceRow()).inAdapterView(withId(R.id.board_list)).perform(click());onView(withText(label)).inRoot(androidx.test.espresso.matcher.RootMatchers.isDialog()).perform(click());}
   private Meal saved(){return repo.dao.mealSnapshot(null,null).stream().filter(m->m.extraId==source.extraId).findFirst().get();}
   private double grocery(){return repo.dao.plannedGrocerySnapshot().stream().filter(g->g.name.equals(recipe.title)).findFirst().get().amount;}
   private String label(ActivityScenario<MainActivity> s){String[] text={""};s.onActivity(a->text[0]=((TextView)a.findViewById(R.id.week_label)).getText().toString());return text[0];}
@@ -99,7 +96,7 @@ public class PlannerWorkflowTest {
     try(ActivityScenario<MainActivity> s=open()){
       option("Khẩu phần");onView(withId(R.id.plan_item_servings)).perform(replaceText("3"),closeSoftKeyboard());
       s.recreate();onView(withId(R.id.plan_item_servings)).check(matches(withText("3")));
-      onView(withId(android.R.id.button1)).perform(click());drain();
+      onView(withId(android.R.id.button1)).inRoot(androidx.test.espresso.matcher.RootMatchers.isDialog()).perform(click());drain();
       assertEquals(3,saved().servings,0.001);assertEquals(500,grocery(),0.001);
       option("Chuyển món");Calendar target=(Calendar)start.clone();target.add(Calendar.DAY_OF_MONTH,8);
       onView(withId(R.id.plan_move_date)).perform(new ViewAction(){
@@ -113,11 +110,11 @@ public class PlannerWorkflowTest {
         protected boolean matchesSafely(View v){DatePicker p=(DatePicker)v;return p.getYear()==target.get(Calendar.YEAR)&&p.getMonth()==target.get(Calendar.MONTH)&&p.getDayOfMonth()==target.get(Calendar.DAY_OF_MONTH);}
         public void describeTo(Description d){d.appendText("restored move destination");}
       }));
-      onView(withId(android.R.id.button1)).perform(click());drain();
+      onView(withId(android.R.id.button1)).inRoot(androidx.test.espresso.matcher.RootMatchers.isDialog()).perform(click());drain();
       assertEquals(PlannerWeek.day(target),saved().day);assertEquals("Ăn nhẹ",saved().type);
       assertEquals(3,saved().servings,0.001);assertEquals(500,grocery(),0.001);
       onView(withId(R.id.next_week)).perform(click());
-      option("Bỏ món");onView(withId(android.R.id.button1)).perform(click());drain();
+      option("Bỏ món");onView(withId(android.R.id.button1)).inRoot(androidx.test.espresso.matcher.RootMatchers.isDialog()).perform(click());drain();
       assertEquals(1,repo.dao.mealSnapshot(null,null).stream().filter(m->m.recipeId==recipe.id).count());
       assertEquals(200,grocery(),0.001);assertNotNull(repo.dao.find(recipe.id));
     }

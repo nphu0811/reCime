@@ -1,1 +1,7 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android"><item android:id="@+id/nav_recipes" android:title="HOME" android:icon="@drawable/ic_recipes"/><item android:id="@+id/nav_import" android:title="AI LAB" android:icon="@drawable/ic_import"/><item android:id="@+id/nav_plan" android:title="PLAN" android:icon="@drawable/ic_plan"/><item android:id="@+id/nav_grocery" android:title="CART" android:icon="@drawable/ic_grocery"/><item android:id="@+id/nav_discover" android:title="EXPLORE" android:icon="@drawable/ic_discover"/></menu>
+<?xml version="1.0" ?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/nav_recipes" android:title="Recipes" android:icon="@drawable/ic_recipes"/>
+    <item android:id="@+id/nav_plan" android:title="Meal Plan" android:icon="@drawable/ic_plan"/>
+    <item android:id="@+id/nav_grocery" android:title="Groceries" android:icon="@drawable/ic_grocery"/>
+    <item android:id="@+id/nav_discover" android:title="Discover" android:icon="@drawable/ic_discover"/>
+</menu>

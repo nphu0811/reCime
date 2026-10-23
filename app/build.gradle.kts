@@ -19,6 +19,12 @@ android {
 
     }
 
+    testOptions {
+        // Functional UI assertions run without transitions competing with injected gestures.
+        // The runner restores device animation settings after instrumentation.
+        animationsDisabled = true
+    }
+
     buildTypes {
         release {
             optimization {

@@ -1,4 +1,5 @@
 package com.example.recime;
+import static com.example.recime.UiGestures.click;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.onIdle;

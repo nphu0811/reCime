@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.*;
 import androidx.fragment.app.Fragment;
 import com.example.recime.R;
-import com.example.recime.helper.Motion;
 import com.example.recime.fragment.BoardFragment;
 import com.example.recime.fragment.ImportFragment;
 import com.example.recime.fragment.RecipesFragment;
@@ -14,10 +13,24 @@ import com.example.recime.viewmodel.LabViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
+  private static final int[] TABS = {R.id.nav_recipes, R.id.nav_plan, R.id.nav_grocery, R.id.nav_discover};
+  private int selectedTab = R.id.nav_recipes;
+  private final java.util.Map<Integer, Fragment.SavedState> tabStates = new java.util.HashMap<>();
+  @Override protected void onSaveInstanceState(Bundle out) {
+    out.putInt("selectedTab", selectedTab);
+    for (Integer id : tabStates.keySet()) out.putParcelable("tab:" + id, tabStates.get(id));
+    super.onSaveInstanceState(out);
+  }
+  public void openImport() { open(new ImportFragment()); }
+
   @Override
   public void onCreate(Bundle state) {
     super.onCreate(state);
     setContentView(R.layout.activity_main);
+    androidx.core.view.WindowInsetsControllerCompat bars = androidx.core.view.WindowCompat
+        .getInsetsController(getWindow(), getWindow().getDecorView());
+    bars.setAppearanceLightStatusBars(true);
+    bars.setAppearanceLightNavigationBars(true);
     ViewCompat.setOnApplyWindowInsetsListener(
         findViewById(R.id.main),
         (v, insets) -> {
@@ -27,27 +40,35 @@ public class MainActivity extends AppCompatActivity {
           return WindowInsetsCompat.CONSUMED;
         });
     BottomNavigationView bottom = findViewById(R.id.bottom);
-    bottom.setOnItemSelectedListener(
-        item -> {
-          getSupportFragmentManager()
-              .popBackStackImmediate(
-                  null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE);
-          Fragment f;
-          if (item.getItemId() == R.id.nav_import) f = new ImportFragment();
-          else if (item.getItemId() == R.id.nav_plan) f = BoardFragment.create(true);
-          else if (item.getItemId() == R.id.nav_grocery) f = BoardFragment.create(false);
-          else f = RecipesFragment.create(item.getItemId() == R.id.nav_discover);
-          getSupportFragmentManager()
-              .beginTransaction()
-              .setCustomAnimations(R.anim.recime_slide_down, R.anim.recime_fade_out)
-              .replace(R.id.host, f)
-              .commit();
-          if (Motion.enabled(bottom)) Motion.pop(bottom);
-          return true;
-        });
+    bottom.setItemActiveIndicatorColor(android.content.res.ColorStateList.valueOf(0xFFEAF1FA));
+    if (state != null) {
+      selectedTab = state.getInt("selectedTab", R.id.nav_recipes);
+      for (int id : TABS) {
+        androidx.fragment.app.Fragment.SavedState saved = state.getParcelable("tab:" + id);
+        if (saved != null) tabStates.put(id, saved);
+      }
+    }
+    bottom.setOnItemSelectedListener(item -> {
+      int target = item.getItemId();
+      getSupportFragmentManager().popBackStackImmediate(null,
+          androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE);
+      Fragment old = getSupportFragmentManager().findFragmentById(R.id.host);
+      if (old != null && old.isAdded()) tabStates.put(selectedTab,
+          getSupportFragmentManager().saveFragmentInstanceState(old));
+      Fragment next = target == R.id.nav_plan ? BoardFragment.create(true)
+          : target == R.id.nav_grocery ? BoardFragment.create(false)
+          : RecipesFragment.create(target == R.id.nav_discover);
+      if (tabStates.containsKey(target)) next.setInitialSavedState(tabStates.get(target));
+      selectedTab = target;
+      getSupportFragmentManager().beginTransaction().replace(R.id.host, next).commitNow();
+      return true;
+    });
+    bottom.setOnItemReselectedListener(item -> getSupportFragmentManager()
+        .popBackStackImmediate(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE));
     if (state == null) {
+      getSupportFragmentManager().beginTransaction()
+          .replace(R.id.host, RecipesFragment.create(false)).commitNow();
       if (Intent.ACTION_SEND.equals(getIntent().getAction())) handleShare(getIntent());
-      else bottom.setSelectedItemId(R.id.nav_recipes);
     }
     new androidx.lifecycle.ViewModelProvider(this)
         .get(LabViewModel.class)
@@ -76,14 +97,15 @@ public class MainActivity extends AppCompatActivity {
 
   private void handleShare(Intent i) {
     if (!Intent.ACTION_SEND.equals(i.getAction())) return;
-    ((BottomNavigationView) findViewById(R.id.bottom)).setSelectedItemId(R.id.nav_import);
+    if (getSupportFragmentManager().findFragmentById(R.id.host) == null)
+      ((BottomNavigationView) findViewById(R.id.bottom)).setSelectedItemId(R.id.nav_recipes);
     Bundle b = new Bundle();
     b.putString("text", i.getStringExtra(Intent.EXTRA_TEXT));
     android.net.Uri uri = i.getParcelableExtra(Intent.EXTRA_STREAM);
     if (uri != null) b.putString("uri", uri.toString());
     ImportFragment f = new ImportFragment();
     f.setArguments(b);
-    getSupportFragmentManager().beginTransaction().replace(R.id.host, f).commit();
+    open(f);
     // Saved instance state restores the fragment; keep the original intent identity.
   }
 

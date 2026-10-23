@@ -1,4 +1,5 @@
 package com.example.recime;
+import static com.example.recime.UiGestures.click;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.*;
@@ -79,8 +80,9 @@ public class LabUiTest {
       onView(withId(R.id.next_week)).perform(click());
       onView(withId(R.id.prev_week)).perform(click());
       onView(withId(R.id.nav_discover)).perform(click());
-      onView(withId(R.id.heading)).check(matches(withText("Fresh ideas.\nFresh bites.")));
-      onView(withId(R.id.nav_import)).perform(click());
+      onView(withId(R.id.heading)).check(matches(withText("Discover")));
+      onView(withId(R.id.add)).perform(click());
+      onView(withText("Nhập link, ảnh, văn bản / AI")).perform(click());
       onView(withId(R.id.url)).perform(scrollTo(), replaceText("invalid-url"), closeSoftKeyboard());
       onView(withId(R.id.fetch)).perform(scrollTo(), click());
       RecipeRepository.get(ApplicationProvider.getApplicationContext())
