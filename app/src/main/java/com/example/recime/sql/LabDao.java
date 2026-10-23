@@ -114,6 +114,16 @@ public class LabDao {
     refresh();
   }
 
+  /** A favorite toggle must not overwrite unrelated recipe/editor fields. */
+  public void setFavorite(long recipeId, boolean favorite) {
+    ContentValues values = new ContentValues();
+    values.put("favorite", favorite ? 1 : 0);
+    if (helper.getWritableDatabase().update("recipes", values, "id=?",
+        new String[] {String.valueOf(recipeId)}) != 1)
+      throw new IllegalStateException("Công thức không còn tồn tại");
+    refresh();
+  }
+
   public void delete(Recipe recipe) {
     helper
         .getWritableDatabase()

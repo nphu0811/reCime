@@ -11,3 +11,6 @@ Cập nhật23/10/2026, WIP PR#5. Không còn blocker APK/JADX hoặc đăng nh�
 - Không merge master khi nhóm test liên quan chưa PASS. Không công bố parity1:1; xem ma trận từng chức năng.
 
 Nhóm ảnh bổ sung migration v5 additive; không đổi dữ liệu/bảng v4 cũ. System-picker cloud providers, process kill giữa copy/commit và full backup/restore vẫn chưa kiểm chứng. Không thiếu API key cho chức năng ảnh local.
+
+
+Recipe Detail (tiếp từ9e94d5b): official bị chặn ở Editor lỗi và draft chưa lưu; không bỏ draft để ép navigation. Detail runtime/gallery/animation official vẫn UNKNOWN. Nhóm Detail độc lập PASS build/unit/lint,22 JVM và31 instrumentation tests; không thay schema/Editor đã hoàn thành. AI live cần backend/key riêng; fixture HTTP chỉ xác minh xử lý503 và rotation. Print preview không chứng minh in vật lý.

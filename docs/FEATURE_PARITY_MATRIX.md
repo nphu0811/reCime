@@ -49,3 +49,13 @@ Search UI: instrumentation cho thấy hero182dp chiếm vùng đọc card khi t�
 Photo Picker Android chọn tối đa5ảnh theo yêu cầu người dùng; add/preview/remove/replace, bản sao private8MB/ảnh, draft rotation và ordered JSON trong SQLite. Không suy cap5 của official từ chữ “5 left” (có thể là quota import). SQLite v5 thêm duy nhất imagesJson, giữ image làm cover tương thích và không DROP dữ liệu v4. Tests cũ dùng DATABASE_VERSION; có fixture v4→v5 riêng.
 
 Build/unit/lint PASS; 19/19 JVM và 21/21 instrumentation PASS (0 failures/errors); xem TEST_RESULTS.md. Chưa chuyển sang Recipe Detail.
+
+
+## Recipe Detail — tiếp từ9e94d5b
+
+| Chức năng | Hành vi ReciMe gốc | Hành vi ứng dụng hiện tại | Bằng chứng xác minh | Phần còn thiếu | Sai khác UI/UX | Hướng triển khai | Trạng thái kiểm thử |
+|---|---|---|---|---|---|---|---|
+| Gallery Detail | UNKNOWN runtime | Tối đa5 ảnh, cover legacy, trước/sau, empty; giữ selection khi Edit/rotation | Recipe.photoPaths, RecipeGallery, DetailFragment | Chưa chứng minh gesture/gallery official | Layout Detail cũ + gallery độc lập | Không đoán UI official | PASS trong bộ31 instrumentation; official UNKNOWN |
+| Edit/Favorite/Delete | Detail official chưa truy cập được | Refresh recipe sau Edit; favorite chỉ UPDATE cột riêng; delete chỉ rời màn khi DB thành công, lỗi có thể retry; dọn ảnh owned không còn tham chiếu | DetailFragment, LabDao.setFavorite, DetailActionState | Process death khi mutation chưa kiểm chứng | Chưa đo official | Không đổi schema v5 | PASS trong bộ31 instrumentation; official UNKNOWN |
+| Cookbook/Plan/Groceries/Cooking | Evidence APK cũ, runtime Detail UNKNOWN | Giữ actions thật; plan capture id/portions trước dialog; ingredients theo portions | Source + tests liên quan | Cooking/PiP parity official chưa xác nhận | Không thay toàn layout theo suy đoán | Giữ hành vi độc lập đã có | PASS trong bộ31 instrumentation; official UNKNOWN |
+| PDF/Print/AI | Static findings cũ; runtime Detail UNKNOWN | PDF local + FileProvider grant; system print; AI gọi backend riêng, validate câu hỏi, giữ kết quả qua rotation, hiển thị lỗi thật | RecipeExport, LocalAiClient, DetailFragment | AI provider/key live và in giấy chưa kiểm chứng | Chưa đo official | Không dùng private API/key official | PASS trong bộ31 instrumentation; official UNKNOWN |

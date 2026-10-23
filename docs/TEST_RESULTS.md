@@ -1,4 +1,4 @@
-# Kết quả kiểm thử — Recipe Editor
+# Kết quả kiểm thử — Recipe Editor và Detail
 
 Nhóm lifecycle bên dưới là lịch sử commit92d2e77; nhóm ảnh mới dùng SQLitev5, xem phần cuối.
 
@@ -34,3 +34,21 @@ Phạm vi Editor: draft giữ qua library refresh/recreation; validation không 
 Lệnh nhóm ảnh: dùng lệnh lifecycle phía trên và bổ sung `EditorPhotosTest`, `sql.PhotoV5MigrationTest`, `OcrUiTest`, `CatalogDatabaseTest` vào class filter. Log cục bộ: `.tools/editor-photos-release-check.log`.
 
 Kiểm tra QA sau bộ cuối: cài APK debug và chạy trực tiếp `EditorPhotosTest` bằng AndroidJUnitRunner: 2/2 PASS (44.532s). Đã mở screenshot sau recreation, xác nhận toolbar/cream-white theme, 4 ảnh và sections hiển thị ổn định; ảnh fixture tự tạo, không commit.
+
+
+## Recipe Detail — baseline9e94d5b
+
+Không sửa Editor hoặc schema SQLite v5. Thêm RecipeGalleryTest3 JVM cases: thứ tự/tối đa5, khôi phục selection theo path khi Edit, clamp khi xóa ảnh và legacy cover. DetailUiTest kiểm tra gallery với pixel ảnh fixture tự tạo, rotation, Edit thật→Detail, empty/deleted state, favorite không mutate observed recipe/không ghi đè concurrent edit, cookbook, hủy/xác nhận Delete, lỗi SQL và retry sau rotation, scaled groceries và Cooking Mode. PlannerUiTest giữ kiểm tra portions→Meal Plan.
+
+DetailIntegrationTest: PDF được tạo thật/đọc bằng PdfRenderer và ContentResolver, kiểm tra read grant (chỉ stub chooser để không gửi ra app khác); Print mở UI `com.android.printspooler` thật rồi Back, không in giấy; AI dùng HTTP503 fixture localhost, kiểm tra câu hỏi trống và lỗi backend qua rotation. Không dùng key/live provider hoặc API official. Fixtures/rows/files/config endpoint được cleanup/restore.
+
+Vòng đầu compilation test FAIL vì import Espresso/ViewActions wildcard trùng closeSoftKeyboard; đã dùng import cụ thể. Vòng thiết bị đầu:10/11 PASS; Cookbook test không tìm được hàng ngoài màn hình của ListView. Đã sửa bằng Espresso.onData, giữ kiểm tra DB/membership/delete. Không thay code sản phẩm để bỏ qua assertion.
+
+Vòng cuối: **BUILD SUCCESSFUL8m40s**. assembleDebug + testDebugUnitTest + lintDebug + connectedDebugAndroidTest PASS. XML xác nhận **22/22 JVM, 31/31 instrumentation PASS**,0 failures/errors/skipped; gồm Editor/migrations/cookbooks/planner/database/OCR/catalog và10 Detail cases. Lint0errors/162warnings (bằng baseline9e94d5b). Logs cục bộ gitignored: `.tools/detail-build.log`, `.tools/detail-second-tests.log`, `.tools/detail-final-tests.log`. Đã đọc XML reports sau khi Gradle hoàn tất.
+
+QA: screenshot sau recreation được lưu tạm ở app cache `qa/detail-gallery.png`, kéo về `.tools/detail-gallery-preview.png` và mở kiểm tra. Thấy đúng ảnh fixture thứ5, chỉ số5/5, previous enabled/next disabled, title/actions không bị che; ảnh màu tự tạo và không commit git.
+
+Lệnh vòng cuối:
+```powershell
+.\gradlew.bat assembleDebug testDebugUnitTest lintDebug connectedDebugAndroidTest '-Pandroid.testInstrumentationRunnerArguments.class=com.example.recime.DetailUiTest,com.example.recime.DetailIntegrationTest,com.example.recime.EditorLifecycleTest,com.example.recime.EditorPhotosTest,com.example.recime.sql.PhotoV5MigrationTest,com.example.recime.CookbookMembershipTest,com.example.recime.LabV4FeaturesTest,com.example.recime.LabDatabaseTest,com.example.recime.sql.LegacyRoomV2MigrationTest,com.example.recime.PlannerUiTest,com.example.recime.LabUiTest,com.example.recime.OcrUiTest,com.example.recime.CatalogDatabaseTest'
+```

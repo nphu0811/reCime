@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="detail_loading">Đang tải công thức…</string>
+    <string name="detail_no_photo">Chưa có ảnh</string>
+    <string name="detail_previous_symbol">‹</string>
+    <string name="detail_previous_photo">Ảnh trước</string>
+    <string name="detail_next_symbol">›</string>
+    <string name="detail_next_photo">Ảnh tiếp theo</string>
+</resources>

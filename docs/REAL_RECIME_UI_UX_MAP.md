@@ -19,3 +19,10 @@ Bố cục quan sát: nền cream/white, chữ đen, accent xanh; collection car
 ## Editor độc lập sau92d2e77
 
 Chỉ Editor dùng theme trắng/kem; toolbar Cancel–Save luôn ở trên. Dock ẩn trong Editor và khôi phục khi thoát. Sections theo ảnh đã quan sát; nội dung Info/Nutrition/Tags triển khai bằng panel mở rộng riêng, hành vi màn con official UNKNOWN. Images có thumbnail, preview, Thay/Xóa; giới hạn5 là yêu cầu triển khai, không phải suy diễn quota của official. Không sử dụng logo, ảnh, font hay icon từ APK.
+
+
+## Recipe Detail — tiếp từ9e94d5b
+
+Runtime official: đã mở `com.recime.app/com.recime.ReciMeActivity`, thấy Editor “Something went wrong / Try again / Cancel”. Cancel mở “Would you like to save your changes? / No / Save edits”; chỉ đóng dialog bằng Back, giữ draft. Không mở được Recipe Detail trong lần quan sát này, không lưu/xóa draft tài khoản. Evidence cục bộ ngoài git: `research-20261023/detail-attempt-editor-error.png`; XML tạm trong `.tools/official-detail-current.xml`. Layout, gallery, gesture và transition của **Detail official: UNKNOWN**. Không phân tích lại APK.
+
+Implementation độc lập: giữ layout Detail hiện có, thêm ảnh lớn, trước/sau, chỉ số1–5 và empty “Chưa có ảnh”. Cover legacy lấy qua `Recipe.photoPaths()`. Giữ ảnh theo đường dẫn khi danh sách đổi, clamp khi ảnh bị xóa; selection/portions qua recreation. Đây là cách triển khai theo yêu cầu, chưa được gọi là UI parity official. Không dùng ảnh/tài nguyên APK.

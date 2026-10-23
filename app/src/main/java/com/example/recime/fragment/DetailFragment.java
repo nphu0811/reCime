@@ -24,6 +24,12 @@ public class DetailFragment extends Fragment {
   private Recipe recipe;
   private double portions = -1;
   private View root;
+  private double baseServings = -1;
+  private final com.example.recime.helper.RecipeGallery gallery = new com.example.recime.helper.RecipeGallery();
+  private com.example.recime.viewmodel.DetailActionState actions;
+  private final int[] actionIds = {R.id.edit, R.id.delete, R.id.favorite, R.id.to_grocery,
+      R.id.add_to_book, R.id.to_plan, R.id.cooking_mode, R.id.export_pdf, R.id.print_recipe,
+      R.id.ask_recipe_ai, R.id.minus, R.id.plus, R.id.unit_settings, R.id.metric};
 
   public DetailFragment() {
     super(R.layout.fragment_detail);
@@ -42,7 +48,28 @@ public class DetailFragment extends Fragment {
     Motion.enter(v);
     root = v;
     LabViewModel vm = new ViewModelProvider(requireActivity()).get(LabViewModel.class);
-    if (state != null) portions = state.getDouble("portions", -1);
+    actions = new ViewModelProvider(this).get(com.example.recime.viewmodel.DetailActionState.class);
+    if (state != null) {
+      portions = state.getDouble("portions", -1);
+      baseServings = state.getDouble("base_servings", -1);
+      gallery.restore(state.getInt("photo_index", 0), state.getString("photo_path", ""));
+    }
+    actions.outcome.observe(getViewLifecycleOwner(), result -> {
+      if (result == null) return;
+      actions.outcome.setValue(null);
+      if (result.equals("deleted")) {
+        getParentFragmentManager().popBackStack();
+      } else {
+        render();
+        if (!result.equals("favorite")) {
+          Ui.set(v, R.id.detail_status, result);
+          v.findViewById(R.id.detail_status).setVisibility(View.VISIBLE);
+        }
+      }
+    });
+    v.findViewById(R.id.detail_photo_previous).setOnClickListener(x -> { gallery.move(-1); renderGallery(); });
+    v.findViewById(R.id.detail_photo_next).setOnClickListener(x -> { gallery.move(1); renderGallery(); });
+    vm.repository.ready.observe(getViewLifecycleOwner(), ready -> { if (recipe == null) render(); });
     v.findViewById(R.id.back).setOnClickListener(x -> getParentFragmentManager().popBackStack());
     vm.recipes.observe(
         getViewLifecycleOwner(),
@@ -54,9 +81,11 @@ public class DetailFragment extends Fragment {
               break;
             }
           if (recipe != null) {
-            if (portions < 0) portions = recipe.servings;
-            render();
+            if (portions < 0 || portions == baseServings) portions = recipe.servings;
+            baseServings = recipe.servings;
+            gallery.update(recipe);
           }
+          render();
         });
     v.findViewById(R.id.edit)
         .setOnClickListener(
@@ -69,8 +98,9 @@ public class DetailFragment extends Fragment {
         .setOnClickListener(
             x -> {
               if (recipe != null) {
-                recipe.favorite = !recipe.favorite;
-                vm.repository.save(recipe);
+                final long id = recipe.id;
+                final boolean favorite = !recipe.favorite;
+                mutate(vm, () -> vm.repository.dao.setFavorite(id, favorite), "favorite");
               }
             });
     v.findViewById(R.id.delete)
@@ -86,8 +116,16 @@ public class DetailFragment extends Fragment {
                     .setPositiveButton(
                         "Xóa",
                         (d, w) -> {
-                          vm.repository.delete(recipe);
-                          getParentFragmentManager().popBackStack();
+                          if (recipe == null || actions.busy) return;
+                          final Recipe selected = new Recipe(recipe);
+                          final android.content.Context app = requireContext().getApplicationContext();
+                          mutate(vm, () -> {
+                            vm.repository.db.deleteRecipe(selected);
+                            try {
+                              com.example.recime.helper.RecipePhotoStore.pruneRemoved(app,
+                                  selected.photoPaths(), vm.repository.dao.recipeSnapshot());
+                            } catch (Exception ignored) { /* DB deletion has already committed. */ }
+                          }, "deleted");
                         })
                     .show();
             });
@@ -149,37 +187,41 @@ public class DetailFragment extends Fragment {
     v.findViewById(R.id.to_plan).setOnClickListener(x->{
       if(recipe!=null)pickPlanDate(vm);
     });
-    v.findViewById(R.id.ask_recipe_ai).setOnClickListener(x->{
-      if(recipe==null)return;
-      EditText question=new EditText(requireContext());
+    actions.aiOutcome.observe(getViewLifecycleOwner(), output -> {
+      if (output == null) return;
+      actions.aiOutcome.setValue(null);
+      render();
+      new MaterialAlertDialogBuilder(requireContext()).setTitle("Trợ lý nấu ăn")
+          .setMessage(output).setPositiveButton("Đóng", null).show();
+    });
+    v.findViewById(R.id.ask_recipe_ai).setOnClickListener(x -> {
+      if (recipe == null || actions.aiBusy) return;
+      final Recipe selected = new Recipe(recipe);
+      EditText question = new EditText(requireContext());
       question.setHint("VD: Tôi có thể thay bơ bằng gì?");
-      question.setSingleLine(false);question.setMinLines(2);
-      new MaterialAlertDialogBuilder(requireContext())
-        .setTitle("Hỏi AI về "+recipe.title)
-        .setView(question)
-        .setNegativeButton("Hủy",null)
-        .setPositiveButton("Hỏi AI",(dialog,which)->{
-          String text=question.getText().toString().trim();
-          if(text.isEmpty())return;
-          final Recipe selected=recipe;
-          final android.content.Context appContext=requireContext().getApplicationContext();
-          Toast.makeText(requireContext(),"Đang hỏi AI từ backend…",Toast.LENGTH_SHORT).show();
-          vm.repository.extraction.execute(()->{
-            String answer;
-            try{
-              answer=new com.example.recime.AIservice.LocalAiClient(appContext)
-                .ask(selected,text).optString("answer","AI không có câu trả lời");
-            }catch(Exception e){answer="Không thể hỏi AI: "+e.getMessage();}
-            final String output=answer;
-            v.post(()->{
-              if(getView()!=v)return;
-              new MaterialAlertDialogBuilder(requireContext())
-                .setTitle("✦ Trợ lý nấu ăn")
-                .setMessage(output+"\n\nChú ý: tự kiểm tra an toàn thực phẩm, dị ứng và định lượng.")
-                .setPositiveButton("Đóng",null).show();
-            });
-          });
-        }).show();
+      question.setSingleLine(false); question.setMinLines(2);
+      androidx.appcompat.app.AlertDialog dialog = new MaterialAlertDialogBuilder(requireContext())
+          .setTitle("Hỏi AI về " + selected.title).setView(question)
+          .setNegativeButton("Hủy", null).setPositiveButton("Hỏi AI", null).create();
+      dialog.setOnShowListener(d -> dialog.getButton(-1).setOnClickListener(button -> {
+        String text = question.getText().toString().trim();
+        if (text.isEmpty()) { question.setError("Nhập câu hỏi"); return; }
+        final android.content.Context app = requireContext().getApplicationContext();
+        final com.example.recime.viewmodel.DetailActionState target = actions;
+        target.aiBusy = true; render(); dialog.dismiss();
+        Toast.makeText(requireContext(), "Đang hỏi AI từ backend…", Toast.LENGTH_SHORT).show();
+        vm.repository.extraction.execute(() -> {
+          String answer;
+          try {
+            answer = new com.example.recime.AIservice.LocalAiClient(app)
+                .ask(selected, text).optString("answer", "");
+            if (answer.trim().isEmpty()) answer = "AI không có câu trả lời";
+          } catch (Exception error) { answer = "Không thể hỏi AI: " + error.getMessage(); }
+          target.aiBusy = false;
+          target.aiOutcome.postValue(answer);
+        });
+      }));
+      dialog.show();
     });
     v.findViewById(R.id.export_pdf).setOnClickListener(x->{
       if(recipe==null)return;
@@ -194,6 +236,9 @@ public class DetailFragment extends Fragment {
   }
 
   private void pickPlanDate(LabViewModel vm){
+    final long recipeId = recipe.id;
+    final String title = recipe.title;
+    final double selectedPortions = portions;
     Calendar date=Calendar.getInstance();
     new android.app.DatePickerDialog(requireContext(),(picker,year,month,day)->{
       Calendar dayValue=Calendar.getInstance();
@@ -202,10 +247,10 @@ public class DetailFragment extends Fragment {
           .format(dayValue.getTime());
       final String[] types={"Sáng","Trưa","Tối","Ăn nhẹ"};
       new MaterialAlertDialogBuilder(requireContext())
-          .setTitle("Thêm "+recipe.title+" vào "+formatted)
+          .setTitle("Thêm "+title+" vào "+formatted)
           .setItems(types,(dialog,which)->{
-            final long id=recipe.id;
-            final double servings=portions;
+            final long id=recipeId;
+            final double servings=selectedPortions;
             final String type=types[which];
             vm.repository.run(()->{
               Meal next=new Meal();
@@ -228,10 +273,21 @@ public class DetailFragment extends Fragment {
   }
 
   private void render() {
-    if (root == null || recipe == null) return;
+    if (root == null) return;
+    for (int id : actionIds) root.findViewById(id).setEnabled(recipe != null && !actions.busy);
+    root.findViewById(R.id.detail_content).setVisibility(recipe == null ? View.GONE : View.VISIBLE);
+    root.findViewById(R.id.detail_status).setVisibility(recipe == null || actions.busy ? View.VISIBLE : View.GONE);
+    if (recipe == null) {
+      boolean ready = Boolean.TRUE.equals(new ViewModelProvider(requireActivity())
+          .get(LabViewModel.class).repository.ready.getValue());
+      Ui.set(root, R.id.detail_status, ready ? "Công thức không còn tồn tại" : "Đang tải công thức…");
+      return;
+    }
+    root.findViewById(R.id.ask_recipe_ai).setEnabled(!actions.busy && !actions.aiBusy);
+    if (actions.busy) Ui.set(root, R.id.detail_status, "Đang lưu thay đổi…");
     Ui.set(root, R.id.detail_title, recipe.title);
     Ui.set(root, R.id.detail_meta, recipe.cookbook + " · " + recipe.tags);
-    Ui.image(root.findViewById(R.id.photo), recipe.image);
+    renderGallery();
     Ui.set(root, R.id.favorite, recipe.favorite ? "♥ Đã thích" : "♡ Thích");
     Ui.set(
         root,
@@ -296,6 +352,39 @@ public class DetailFragment extends Fragment {
                 : "\n\nẢnh và giấy phép:\n" + recipe.imageAttribution));
   }
 
+  private void renderGallery() {
+    if (root == null) return;
+    boolean hasPhoto = gallery.count() > 0;
+    root.findViewById(R.id.photo).setVisibility(hasPhoto ? View.VISIBLE : View.GONE);
+    root.findViewById(R.id.detail_photo_empty).setVisibility(hasPhoto ? View.GONE : View.VISIBLE);
+    root.findViewById(R.id.detail_gallery_controls).setVisibility(hasPhoto ? View.VISIBLE : View.GONE);
+    ImageView photo = root.findViewById(R.id.photo);
+    Ui.image(photo, gallery.path());
+    photo.setContentDescription("Ảnh " + (gallery.index() + 1) + " / " + gallery.count());
+    Ui.set(root, R.id.detail_photo_count, (gallery.index() + 1) + " / " + gallery.count());
+    root.findViewById(R.id.detail_photo_previous).setEnabled(gallery.index() > 0);
+    root.findViewById(R.id.detail_photo_next).setEnabled(gallery.index() + 1 < gallery.count());
+  }
+
+  private void mutate(LabViewModel vm, Runnable operation, String success) {
+    if (actions.busy) return;
+    actions.busy = true;
+    render();
+    final com.example.recime.viewmodel.DetailActionState target = actions;
+    vm.repository.io.execute(() -> {
+      String result = success;
+      try { operation.run(); }
+      catch (Exception error) { result = "Không thể lưu thay đổi: " + error.getMessage(); }
+      target.busy = false;
+      target.outcome.postValue(result);
+    });
+  }
+
+  @Override public void onViewStateRestored(Bundle state) {
+    super.onViewStateRestored(state);
+    render(); // Metric checkbox restores after onViewCreated.
+  }
+
   private String macro(Double d) {
     return d == null ? "chưa đủ dữ liệu" : Units.format(d) + " g";
   }
@@ -353,6 +442,9 @@ public class DetailFragment extends Fragment {
   public void onSaveInstanceState(Bundle b) {
     super.onSaveInstanceState(b);
     b.putDouble("portions", portions);
+    b.putDouble("base_servings", baseServings);
+    b.putInt("photo_index", gallery.index());
+    b.putString("photo_path", gallery.path());
   }
 
   @Override
