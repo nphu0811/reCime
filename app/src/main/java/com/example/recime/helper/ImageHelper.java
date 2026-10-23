@@ -64,6 +64,12 @@ public final class ImageHelper {
   }
 
   static Bitmap readBitmap(Context context, String path) throws IOException {
+    return readBitmap(context, path, 800);
+  }
+
+  /** Bounded decode with all EXIF orientations, shared by OCR and explicit uploads. */
+  public static Bitmap readBitmap(Context context, String path, int maxSide) throws IOException {
+    if (maxSide < 100 || maxSide > 2400) throw new IllegalArgumentException("Invalid image size");
     byte[] bytes;
     try (InputStream input = open(context, path);
         ByteArrayOutputStream output = new ByteArrayOutputStream()) {
@@ -81,7 +87,7 @@ public final class ImageHelper {
     BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
     if (options.outWidth <= 0 || options.outHeight <= 0) throw new IOException("Ảnh không hợp lệ");
     options.inSampleSize = 1;
-    while (Math.max(options.outWidth, options.outHeight) / options.inSampleSize > 800)
+    while (Math.max(options.outWidth, options.outHeight) / options.inSampleSize > maxSide)
       options.inSampleSize *= 2;
     options.inJustDecodeBounds = false;
     Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);

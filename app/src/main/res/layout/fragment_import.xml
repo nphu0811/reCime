@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="20dp">
+        <com.google.android.material.button.MaterialButton android:id="@+id/import_back" android:layout_width="wrap_content" android:layout_height="48dp" android:text="← Quay lại" style="@style/Widget.Material3.Button.TextButton"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -79,12 +80,13 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/ai_pick"
-                    android:textColor="#24231F"
+                    android:textColor="#FFFFFF"
                     app:backgroundTint="@color/night_ink"
                     android:layout_width="match_parent"
-                    android:layout_height="52dp"
+                    android:layout_height="wrap_content"
+                    android:minHeight="52dp"
                     android:layout_marginTop="10dp"
-                    android:text="✦ SCAN MÓN ĂN"
+                    android:text="Tìm món tương tự trong catalog"
                     app:cornerRadius="14dp" />
 
             </LinearLayout>
@@ -118,6 +120,14 @@
                 app:cornerRadius="14dp" />
 
         </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/ai_extract_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:text="Đọc ảnh đã chọn bằng OpenAI"
+            style="@style/Widget.Material3.Button.OutlinedButton" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"

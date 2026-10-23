@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:padding="16dp" android:background="#FAF8F2">
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical">
         <TextView android:id="@+id/heading" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="Recipes" android:maxLines="2" android:ellipsize="end" android:textSize="28sp" android:textStyle="bold" android:textColor="#24231F"/>
-        <Button android:id="@+id/open_settings" android:layout_width="52dp" android:layout_height="52dp" android:text="⚙" android:contentDescription="Cài đặt và tài khoản"/>
+        <androidx.appcompat.widget.AppCompatImageButton android:id="@+id/open_settings" android:layout_width="48dp" android:layout_height="48dp" android:layout_marginEnd="8dp" android:padding="12dp" android:src="@drawable/ic_settings_outline" android:background="?attr/selectableItemBackgroundBorderless" android:contentDescription="Cài đặt và tài khoản"/>
         <Button android:id="@+id/add" android:layout_width="56dp" android:layout_height="52dp" android:text="+" android:textSize="24sp" android:contentDescription="Thêm công thức"/>
     </LinearLayout>
     <TextView android:id="@+id/catalog_notice" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Catalog offline · Nguồn ghi trong từng công thức" android:textColor="#69655E" android:visibility="gone"/>

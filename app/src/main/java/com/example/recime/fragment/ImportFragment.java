@@ -61,6 +61,7 @@ public class ImportFragment extends Fragment {
   public void onViewCreated(View v, Bundle state) {
     Motion.enter(v);
     root = v;
+    v.findViewById(R.id.import_back).setOnClickListener(x -> getParentFragmentManager().popBackStack());
     chrome = new com.example.recime.helper.ModalChrome(requireActivity());
     busy = false;
     webState = new ViewModelProvider(this).get(ImportWebState.class);
@@ -140,19 +141,19 @@ public class ImportFragment extends Fragment {
     v.findViewById(R.id.ai_extract).setOnClickListener(x -> {
       String text = Ui.text(v, R.id.raw);
       if (text.length() < 10) { status("Dán văn bản công thức trước; AI chỉ trích nội dung được cung cấp."); return; }
-      final android.content.Context context = requireContext().getApplicationContext();
-      com.example.recime.sql.RecipeRepository repository = new ViewModelProvider(requireActivity()).get(LabViewModel.class).repository;
-      webState.fetch("AI:text", repository.extraction, ignored -> {
-        JSONObject recipe = new LocalAiClient(context).extractText(text).getJSONObject("recipe");
-        StringBuilder raw = new StringBuilder(recipe.getString("title")).append('\n');
-        if (!recipe.isNull("servings")) raw.append("Servings: ").append(recipe.getDouble("servings")).append('\n');
-        for (String section : new String[] {"ingredients", "steps"}) {
-          raw.append(section.equals("ingredients") ? "Ingredients\n" : "Instructions\n");
-          JSONArray lines = recipe.getJSONArray(section);
-          for (int n = 0; n < lines.length(); n++) raw.append(lines.getString(n)).append('\n');
-        }
-        return raw.toString();
-      });
+      extractWithAi(false, text);
+    });
+    v.findViewById(R.id.ai_extract_image).setOnClickListener(x -> {
+      if (image.isEmpty()) {
+        status("Chọn ảnh bằng SCAN CHỮ hoặc Camera trước. OCR chạy trên máy; chỉ gửi ảnh khi bạn xác nhận OpenAI.");
+        return;
+      }
+      new MaterialAlertDialogBuilder(requireContext())
+          .setTitle("Gửi ảnh công thức tới OpenAI?")
+          .setMessage("Ảnh đã chọn sẽ được gửi qua backend của bạn đến OpenAI để đọc chữ, có thể phát sinh phí. Kiểm tra ảnh không chứa dữ liệu riêng tư. Không suy công thức từ hình món ăn. Kết quả cần bạn sửa và xác nhận trước khi lưu.")
+          .setNegativeButton("Hủy", null)
+          .setPositiveButton("Gửi ảnh", (dialog, which) -> extractWithAi(true, image))
+          .show();
     });
     v.findViewById(R.id.review)
         .setOnClickListener(
@@ -195,19 +196,40 @@ public class ImportFragment extends Fragment {
       if (root == null || event == null) return;
       if (event.loading) {
         loading(true);
-        status(event.url.startsWith("AI:") ? "Đang trích văn bản qua backend/OpenAI…" : "Đang đọc trang công khai…");
+        status(event.url.equals("AI:image") ? "Đang đọc chữ trong ảnh qua backend/OpenAI…"
+            : event.url.startsWith("AI:") ? "Đang trích văn bản qua backend/OpenAI…" : "Đang đọc trang công khai…");
         return;
       }
       loading(false);
       if (event.id <= appliedWebFetch) return;
       appliedWebFetch = event.id;
       if (event.error != null) {
-        status("Không nhập được: " + event.error + " Có thể sửa URL và thử lại.");
+        status("Không nhập được: " + event.error + (event.url.startsWith("AI:")
+            ? " Nháp vẫn được giữ; có thể tiếp tục bằng OCR/nhập tay."
+            : " Có thể sửa URL và thử lại."));
       } else {
-        image = "";
+        if (!event.url.startsWith("AI:")) image = "";
         Ui.set(root, R.id.raw, event.text);
         status(event.url.startsWith("AI:") ? "AI đã trích văn bản; kiểm tra mọi nguyên liệu, định lượng và bước trước khi lưu." : "Đã đọc Recipe JSON-LD. Kiểm tra văn bản rồi chọn Phân tích.");
       }
+    });
+  }
+
+  private void extractWithAi(boolean fromImage, String input) {
+    if (busy || root == null) return;
+    final android.content.Context context = requireContext().getApplicationContext();
+    com.example.recime.sql.RecipeRepository repository = new ViewModelProvider(requireActivity()).get(LabViewModel.class).repository;
+    webState.fetch(fromImage ? "AI:image" : "AI:text", repository.extraction, ignored -> {
+      LocalAiClient client = new LocalAiClient(context);
+      JSONObject recipe = (fromImage ? client.extractImage(new File(input)) : client.extractText(input)).getJSONObject("recipe");
+      StringBuilder raw = new StringBuilder(recipe.getString("title")).append('\n');
+      if (!recipe.isNull("servings")) raw.append("Servings: ").append(recipe.getDouble("servings")).append('\n');
+      for (String section : new String[] {"ingredients", "steps"}) {
+        raw.append(section.equals("ingredients") ? "Ingredients\n" : "Instructions\n");
+        JSONArray lines = recipe.getJSONArray(section);
+        for (int n = 0; n < lines.length(); n++) raw.append(lines.getString(n)).append('\n');
+      }
+      return raw.toString();
     });
   }
 
@@ -274,7 +296,7 @@ public class ImportFragment extends Fragment {
     for (int id :
         new int[] {
           R.id.fetch, R.id.pick, R.id.camera, R.id.review, R.id.manual, R.id.ai_pick, R.id.ai_text,
-          R.id.url, R.id.raw, R.id.ai_extract
+          R.id.url, R.id.raw, R.id.ai_extract, R.id.ai_extract_image
         }) root.findViewById(id).setEnabled(!on);
   }
 

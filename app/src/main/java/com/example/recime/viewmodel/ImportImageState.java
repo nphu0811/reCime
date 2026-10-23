@@ -63,17 +63,13 @@ public final class ImportImageState extends AndroidViewModel {
         while (Math.max(options.outWidth, options.outHeight) / options.inSampleSize > 2400)
           options.inSampleSize *= 2;
         if (!dish) {
-          options.inJustDecodeBounds = false;
-          bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
+          bitmap = com.example.recime.helper.ImageHelper.readBitmap(getApplication(), file.getAbsolutePath(), 2400);
           if (bitmap == null) throw new IOException("Không giải mã được ảnh");
-          int orientation = new android.media.ExifInterface(file.getAbsolutePath())
-              .getAttributeInt(android.media.ExifInterface.TAG_ORIENTATION, 1);
-          int rotation = orientation == 6 ? 90 : orientation == 3 ? 180 : orientation == 8 ? 270 : 0;
           recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS);
           // The recognizer may finish after timeout; release its bitmap only when complete.
           Bitmap owned = bitmap;
           TextRecognizer ownedRecognizer = recognizer;
-          com.google.android.gms.tasks.Task<com.google.mlkit.vision.text.Text> task = recognizer.process(InputImage.fromBitmap(bitmap, rotation));
+          com.google.android.gms.tasks.Task<com.google.mlkit.vision.text.Text> task = recognizer.process(InputImage.fromBitmap(bitmap, 0));
           task.addOnCompleteListener(executor, ignored -> { ownedRecognizer.close(); owned.recycle(); });
           recognizer = null; bitmap = null;
           next.text = Tasks.await(task, 60, TimeUnit.SECONDS).getText();
