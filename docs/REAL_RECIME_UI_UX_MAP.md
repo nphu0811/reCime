@@ -33,3 +33,10 @@ Implementation độc lập: giữ layout Detail hiện có, thêm ảnh lớn, 
 Dùng lại evidence Meal Plan empty `current-screen.png/xml` và findings9: tuần/previous-next được quan sát runtime; bốn meal types, drag callback và preference đầu tuần được static verified. Không phân tích lại APK hoặc bỏ draft của official để ép navigation. Lịch official có món, gesture drag thực tế, screen settings và chuyển nhóm bữa runtime vẫn UNKNOWN.
 
 UI độc lập mới: white/cream, hàng điều hướng tuần, Today, local week-start dialog, header từng ngày và bốn loại bữa. Tap một món mở actions: công thức/đổi món/khẩu phần/chuyển/bỏ. Giữ tay nắm để native drag; thả lên add/meal row đổi ngày và bữa, thả header ngày giữ loại bữa, ngoài list hủy; mép list hỗ trợ scroll. Dialog chuyển/khẩu phần giữ draft qua recreation. Không khẳng định gesture này pixel/behavior parity của official. Dock/navigation khác vẫn giữ baseline.
+
+
+## Groceries — tiếp từc0ffc04
+
+Dùng lại `groceries-empty.png/xml` và findings10; không phân tích lại APK. Official empty/Add đã quan sát; populated list, batch sheets, exact aisle/recipe grouping và merchant runtime vẫn UNKNOWN. Static evidence chứng minh chọn ingredients/serving overrides rồi thêm batch, không chứng minh continuous auto-sync.
+
+UI độc lập mới: cream/white; nhóm hàng/nguồn/chưa mua, số lượng/đơn vị và checkbox; bought strike-through; empty có hướng dẫn. Menu manual có Edit/Delete, planned giải thích sửa nguồn tại Planner. Source picker hỗ trợ recipes/meals và search; bước hai chỉnh khẩu phần/checkbox từng nguyên liệu. Hint rõ batch tạo bản sao independent trong mục tự thêm, không thay đổi/nhân đôi dữ liệu plan gốc; derived plan groceries vẫn hiển thị riêng nên cùng tên có thể có hai nguồn. Search/servings có IME Done đóng bàn phím. Sort và draft giữ qua recreation; không tuyên bố process-death/cloud parity.

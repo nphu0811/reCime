@@ -40,8 +40,8 @@ public class BoardFragment extends Fragment {
 
   @Override public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle state){
     boolean plan=requireArguments().getBoolean("planner");
-    android.content.Context context=plan?new ContextThemeWrapper(requireContext(),R.style.Theme_MealPlanner):requireContext();
-    return LayoutInflater.from(context).inflate(plan?R.layout.fragment_planner:R.layout.fragment_board,container,false);
+    android.content.Context context=new ContextThemeWrapper(requireContext(),plan?R.style.Theme_MealPlanner:R.style.Theme_Groceries);
+    return LayoutInflater.from(context).inflate(plan?R.layout.fragment_planner:R.layout.fragment_groceries,container,false);
   }
   private android.content.Context boardContext(){return root==null?requireContext():root.getContext();}
   private android.content.SharedPreferences planPrefs(){return requireContext().getSharedPreferences("planner",0);}
@@ -86,17 +86,24 @@ public class BoardFragment extends Fragment {
     v.findViewById(R.id.week_controls).setVisibility(planner ? View.VISIBLE : View.GONE);
     Ui.set(v, R.id.board_action, planner ? "Groceries ↗" : "+ Thêm nguyên liệu");
     Ui.set(v, R.id.board_secondary, planner ? "Hôm nay" : "Chia sẻ checklist");
+    if(!planner){
+      groceryOrder=state==null?requireContext().getSharedPreferences("groceries",0).getInt("sort",0):state.getInt("grocery_order",0);
+      if(groceryOrder<0||groceryOrder>3)groceryOrder=0;
+      v.findViewById(R.id.grocery_batch).setOnClickListener(x->{
+        if(getParentFragmentManager().findFragmentByTag("grocery-batch")==null)new GroceryBatchDialog().show(getParentFragmentManager(),"grocery-batch");
+      });
+    }
     Spinner sort=v.findViewById(R.id.grocery_sort);
     sort.setVisibility(planner?View.GONE:View.VISIBLE);
     if(!planner){
-      ArrayAdapter<String> sorting=new ArrayAdapter<>(requireContext(),
+      ArrayAdapter<String> sorting=new ArrayAdapter<>(boardContext(),
           android.R.layout.simple_spinner_dropdown_item,
           new String[]{"Theo nhóm","A → Z","Theo nguồn","Chưa mua trước"});
-      sort.setAdapter(sorting);
+      sort.setAdapter(sorting);sort.setSelection(groceryOrder);
       sort.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
         public void onNothingSelected(AdapterView<?> parent){}
         public void onItemSelected(AdapterView<?> parent,View item,int pos,long id){
-          groceryOrder=pos;render();
+          groceryOrder=pos;requireContext().getSharedPreferences("groceries",0).edit().putInt("sort",pos).apply();render();
         }
       });
     }
@@ -150,11 +157,15 @@ public class BoardFragment extends Fragment {
               public void onCheckedChanged(CompoundButton button, boolean checked) {
                 Grocery grocery = (Grocery) button.getTag();
                 if (grocery != null) {
-                  grocery.checked = checked;
-                  vm.repository.run(() -> vm.repository.dao.updateGrocery(grocery));
+                  Grocery snapshot=new Grocery(grocery);
+                  vm.repository.run(()->{
+                    try{vm.repository.dao.setGroceryChecked(snapshot,checked);}
+                    finally{vm.repository.dao.refresh();}
+                  });
                 }
               }
             });
+    adapter.setGroceryAction(this::groceryOptions);
     adapter.setDragListener(handle->{
       if(!(handle.getTag() instanceof Meal))return false;
       return handle.startDragAndDrop(android.content.ClipData.newPlainText("meal", ""),
@@ -258,31 +269,12 @@ public class BoardFragment extends Fragment {
       long count=meals.stream().filter(m->m.day.compareTo(day(week))>=0&&m.day.compareTo(day(end))<=0).count();
       Ui.set(root,R.id.board_empty,count==0?"Chưa có món trong tuần · thêm món vào từng bữa":count+" món trong tuần · nhiều món mỗi bữa");
     } else {
-      List<Grocery> sorted=new ArrayList<>(groceries);
-      if(groceryOrder==1) sorted.sort((a,b)->a.name.compareToIgnoreCase(b.name));
-      else if(groceryOrder==2) sorted.sort((a,b)->{
-        if(a.planned!=b.planned)return a.planned?-1:1;
-        return a.category.compareToIgnoreCase(b.category);
-      });
-      else if(groceryOrder==3) sorted.sort((a,b)->{
-        if(a.checked!=b.checked)return a.checked?1:-1;
-        return a.name.compareToIgnoreCase(b.name);
-      });
-      for (Grocery g : sorted) {
-        BoardRow row = new BoardRow();
-        row.grocery = g;
-        row.title = g.name;
-        row.meta =
-            (g.planned ? "✦ Tự đồng bộ · " : "Tự thêm · ") + g.category
-                + " · "
-                + (g.amount == null ? "tùy lượng" : Units.format(g.amount) + " " + g.unit);
-        rows.add(row);
-      }
+      rows.addAll(com.example.recime.helper.GroceryPresentation.rows(groceries,groceryOrder));
       Ui.set(
           root,
           R.id.board_empty,
           groceries.isEmpty()
-              ? "Giỏ trống. Thêm từ công thức, lịch tuần hoặc nhập tay."
+              ? getString(R.string.grocery_empty)
               : groceries.size()
                   + " nguyên liệu · "
                   + groceries.stream().filter(g -> g.checked).count()
@@ -388,79 +380,32 @@ public class BoardFragment extends Fragment {
   }
 
   private void groceryEditor(Grocery original) {
-    if(original!=null && original.planned) return;
-    LinearLayout l = new LinearLayout(requireContext());
-    l.setOrientation(LinearLayout.VERTICAL);
-    l.setPadding(36, 0, 36, 0);
-    EditText name =
-        Ui.field(requireContext(), l, "Tên nguyên liệu *", original == null ? "" : original.name);
-    EditText amount =
-        Ui.field(
-            requireContext(),
-            l,
-            "Số lượng (có thể trống)",
-            original == null || original.amount == null ? "" : Units.format(original.amount));
-    amount.setInputType(8194);
-    EditText unit =
-        Ui.field(
-            requireContext(), l, "Đơn vị: g, kg, ml, quả…", original == null ? "" : original.unit);
-    EditText group =
-        Ui.field(
-            requireContext(),
-            l,
-            "Nhóm hàng (tự phân loại nếu trống)",
-            original == null ? "" : original.category);
-    androidx.appcompat.app.AlertDialog dialog =
-        new MaterialAlertDialogBuilder(boardContext())
-            .setTitle(original == null ? "Thêm nguyên liệu" : "Sửa nguyên liệu")
-            .setView(l)
-            .setNegativeButton("Hủy", null)
-            .setPositiveButton("Lưu", null)
-            .create();
-    dialog.setOnShowListener(
-        d ->
-            dialog
-                .getButton(-1)
-                .setOnClickListener(
-                    x -> {
-                      try {
-                        if (name.getText().toString().trim().isEmpty())
-                          throw new IllegalArgumentException();
-                        Double value =
-                            amount.getText().toString().trim().isEmpty()
-                                ? null
-                                : Double.valueOf(amount.getText().toString().replace(',', '.'));
-                        if (value != null && (!Double.isFinite(value) || value < 0))
-                          throw new IllegalArgumentException();
-                        Grocery g = original == null ? new Grocery() : original;
-                        g.name = name.getText().toString().trim();
-                        g.amount = value;
-                        g.unit = Units.canonical(unit.getText().toString());
-                        g.category = group.getText().toString().trim();
-                        if (g.category.isEmpty()) g.category = GroceryAggregator.category(g.name);
-                        vm.repository.run(
-                            () -> {
-                              if (g.id == 0) vm.repository.dao.insertGrocery(g);
-                              else vm.repository.dao.updateGrocery(g);
-                            });
-                        dialog.dismiss();
-                      } catch (Exception e) {
-                        name.setError("Tên không trống; số lượng không âm hợp lệ");
-                      }
-                    }));
-    dialog.show();
+    if(original!=null&&original.planned)return;
+    if(getParentFragmentManager().findFragmentByTag("grocery-editor")==null)
+      GroceryEditorDialog.create(original).show(getParentFragmentManager(),"grocery-editor");
+  }
+
+  private void groceryOptions(Grocery reference){
+    if(reference.planned){
+      new MaterialAlertDialogBuilder(boardContext()).setMessage("Nguyên liệu tự tính từ lịch. Hãy sửa món/khẩu phần trong Meal Planner; mục tự thêm và bản sao batch không bị thay đổi.")
+          .setPositiveButton("Đóng",null).show();return;
+    }
+    new MaterialAlertDialogBuilder(boardContext()).setTitle(reference.name)
+        .setItems(new String[]{"Sửa","Xóa"},(dialog,which)->{
+          if(which==0)groceryEditor(reference);else confirmGroceryDelete(reference);
+        }).show();
+  }
+  private void confirmGroceryDelete(Grocery original){
+    Grocery snapshot=new Grocery(original);
+    new MaterialAlertDialogBuilder(boardContext()).setMessage("Xóa "+snapshot.name+"?")
+        .setNegativeButton("Hủy",null).setPositiveButton("Xóa",(d,w)->vm.repository.run(()->vm.repository.dao.deleteGrocery(snapshot))).show();
   }
 
   private void share() {
-    StringBuilder b = new StringBuilder("reCime · Danh sách đi chợ\n");
-    for (Grocery g : groceries)
-      b.append(g.checked ? "[x] " : "[ ] ")
-          .append(g.amount == null ? "" : Units.format(g.amount) + " " + g.unit + " ")
-          .append(g.name)
-          .append('\n');
+    String checklist=com.example.recime.helper.GroceryPresentation.checklist(rows);
     Intent intent = new Intent(Intent.ACTION_SEND);
     intent.setType("text/plain");
-    intent.putExtra(Intent.EXTRA_TEXT, b.toString());
+    intent.putExtra(Intent.EXTRA_TEXT, checklist);
     startActivity(Intent.createChooser(intent, "Chia sẻ checklist"));
   }
 
@@ -469,12 +414,7 @@ public class BoardFragment extends Fragment {
       if(r.meal!=null)mealOptions(r);
     } else {
       if(r.grocery==null || r.grocery.planned) return;
-      new MaterialAlertDialogBuilder(boardContext())
-          .setMessage("Xóa " + r.grocery.name + "?")
-          .setNegativeButton("Hủy", null)
-          .setPositiveButton(
-              "Xóa", (d, w) -> vm.repository.run(() -> vm.repository.dao.deleteGrocery(r.grocery)))
-          .show();
+      confirmGroceryDelete(r.grocery);
     }
   }
 
@@ -482,6 +422,7 @@ public class BoardFragment extends Fragment {
   public void onSaveInstanceState(Bundle b) {
     super.onSaveInstanceState(b);
     b.putLong("week", week.getTimeInMillis());
+    b.putInt("grocery_order",groceryOrder);
   }
 
   @Override

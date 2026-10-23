@@ -79,35 +79,11 @@ public class RecipeRepository {
     run(() -> db.deleteRecipe(r));
   }
 
-  public void addIngredients(List<Ingredient> values, double tsp, double tbsp, double cup) {
-    run(
-        () ->
-            db.runInTransaction(
-                () -> {
-                  for (Ingredient i : GroceryAggregator.merge(values, tsp, tbsp, cup)) {
-                    Grocery match = null;
-                    if (i.amount != null)
-                      for (Grocery g : dao.grocerySnapshot())
-                        if (!g.checked
-                            && g.amount != null
-                            && Units.key(g.name).equals(Units.key(i.name))
-                            && Units.dimension(g.unit).equals(Units.dimension(i.unit))) {
-                          match = g;
-                          break;
-                        }
-                    if (match != null) {
-                      match.amount += Units.convert(i.amount, i.unit, match.unit, tsp, tbsp, cup);
-                      dao.updateGrocery(match);
-                    } else {
-                      Grocery g = new Grocery();
-                      g.name = i.name;
-                      g.amount = i.amount;
-                      g.unit = i.unit;
-                      g.category = GroceryAggregator.category(i.name);
-                      dao.insertGrocery(g);
-                    }
-                  }
-                  message.postValue("Đã thêm nguyên liệu vào giỏ");
-                }));
+  public void addIngredients(List<Ingredient> values,double tsp,double tbsp,double cup) {
+    final List<Ingredient> snapshot=new java.util.ArrayList<>(values);
+    run(()->{
+      dao.addGroceryBatch(snapshot,tsp,tbsp,cup,null);
+      message.postValue("Đã thêm nguyên liệu độc lập vào giỏ");
+    });
   }
 }

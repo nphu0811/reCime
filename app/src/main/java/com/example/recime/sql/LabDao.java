@@ -385,6 +385,55 @@ public class LabDao {
     return getGroceries("SELECT * FROM groceries ORDER BY id");
   }
 
+  /** Add independent copies; planned rows and already-bought manual rows are never merged into. */
+  public void addGroceryBatch(List<Ingredient> input,double tsp,double tbsp,double cup,String category) {
+    List<Ingredient> merged=GroceryAggregator.merge(input,tsp,tbsp,cup);
+    if(merged.isEmpty())throw new IllegalArgumentException("Chọn ít nhất một nguyên liệu");
+    helper.runInTransaction(()->{
+      for(Ingredient item:merged){
+        Grocery match=null;
+        for(Grocery existing:grocerySnapshot()){
+          if(existing.checked||!Units.key(existing.name).equals(Units.key(item.name)))continue;
+          if(item.amount==null&&existing.amount==null&&Units.canonical(existing.unit).equals(Units.canonical(item.unit))){match=existing;break;}
+          if(item.amount!=null&&existing.amount!=null&&Units.dimension(existing.unit).equals(Units.dimension(item.unit))){match=existing;break;}
+        }
+        if(match!=null){
+          if(item.amount==null)continue;
+          double total=match.amount+Units.convert(item.amount,item.unit,match.unit,tsp,tbsp,cup);
+          if(!Double.isFinite(total))throw new IllegalArgumentException("Số lượng nguyên liệu quá lớn");
+          ContentValues values=new ContentValues();values.put("amount",total);
+          helper.getWritableDatabase().update("groceries",values,"id=?",new String[]{String.valueOf(match.id)});
+        }else{
+          Grocery next=new Grocery();next.name=item.name;next.unit=item.unit;next.amount=item.amount;
+          next.category=category==null||category.trim().isEmpty()?GroceryAggregator.category(item.name):category.trim();
+          insertGrocery(next);
+        }
+      }
+    });
+  }
+
+  public void saveManualGrocery(Grocery draft,double tsp,double tbsp,double cup){
+    GroceryAggregator.merge(java.util.Collections.singletonList(new Ingredient(draft.name,draft.amount,draft.unit)),tsp,tbsp,cup);
+    if(draft.planned)throw new IllegalArgumentException("Hãy sửa nguồn trong Meal Plan");
+    if(draft.id==0){addGroceryBatch(java.util.Collections.singletonList(new Ingredient(draft.name,draft.amount,draft.unit)),tsp,tbsp,cup,draft.category);return;}
+    ContentValues values=groceryValues(draft);values.remove("id");values.remove("checked");
+    if(helper.getWritableDatabase().update("groceries",values,"id=?",new String[]{String.valueOf(draft.id)})!=1)
+      throw new IllegalStateException("Nguyên liệu không còn tồn tại");
+    refresh();
+  }
+
+  /** Stable plan itemKey survives recomputation; manual checks only update the checked column. */
+  public void setGroceryChecked(Grocery reference,boolean checked){
+    ContentValues values=new ContentValues();values.put("checked",checked?1:0);
+    if(reference.planned){
+      String key=Units.key(reference.name)+"|"+Units.canonical(reference.unit);
+      if(helper.getWritableDatabase().update("plan_groceries",values,"itemKey=?",new String[]{key})!=1)
+        throw new IllegalStateException("Nguyên liệu trong lịch đã thay đổi");
+    }else if(helper.getWritableDatabase().update("groceries",values,"id=?",new String[]{String.valueOf(reference.id)})!=1)
+      throw new IllegalStateException("Nguyên liệu không còn tồn tại");
+    refresh();
+  }
+
   public long insertGrocery(Grocery grocery) {
     long id = helper.getWritableDatabase().insertOrThrow("groceries", null, groceryValues(grocery));
     refresh();
@@ -392,12 +441,7 @@ public class LabDao {
   }
 
   public void updateGrocery(Grocery grocery) {
-    if (grocery.planned) {
-      ContentValues v=new ContentValues(); v.put("checked",grocery.checked?1:0);
-      helper.getWritableDatabase().update("plan_groceries",v,"id=?",
-          new String[]{String.valueOf(-grocery.id)});
-      refresh();return;
-    }
+    if(grocery.planned){setGroceryChecked(grocery,grocery.checked);return;}
     helper
         .getWritableDatabase()
         .update(

@@ -35,11 +35,13 @@ public class BoardAdapter extends BaseAdapter {
   }
 
   private View.OnLongClickListener dragListener;
+  private java.util.function.Consumer<com.example.recime.model.Grocery> groceryAction;
+  public void setGroceryAction(java.util.function.Consumer<com.example.recime.model.Grocery> action){groceryAction=action;}
   public void setDragListener(View.OnLongClickListener listener){dragListener=listener;}
   @Override public int getViewTypeCount(){return 2;}
-  @Override public int getItemViewType(int position){return getItem(position).dayHeader?1:0;}
+  @Override public int getItemViewType(int position){return getItem(position).isHeader()?1:0;}
   @Override public boolean areAllItemsEnabled(){return false;}
-  @Override public boolean isEnabled(int position){return !getItem(position).dayHeader;}
+  @Override public boolean isEnabled(int position){return !getItem(position).isHeader();}
 
   @Override
   public int getCount() {
@@ -60,11 +62,11 @@ public class BoardAdapter extends BaseAdapter {
   public View getView(int position, View convertView, ViewGroup parent) {
     BoardRow row=getItem(position);
     if(convertView==null){
-      convertView=LayoutInflater.from(context).inflate(row.dayHeader?R.layout.item_plan_day:
-          (planner?R.layout.item_plan_meal:layout),parent,false);
-      if(!planner){Motion.card(convertView);Motion.stagger(convertView,position);}
+      convertView=LayoutInflater.from(context).inflate(row.isHeader()?R.layout.item_plan_day:
+          (planner?R.layout.item_plan_meal:R.layout.item_grocery),parent,false);
+
     }
-    if(row.dayHeader){((TextView)convertView.findViewById(R.id.row_title)).setText(row.title);return convertView;}
+    if(row.isHeader()){((TextView)convertView.findViewById(R.id.row_title)).setText(row.title);return convertView;}
     if(planner){
       ((TextView)convertView.findViewById(R.id.row_title)).setText(row.title);
       ((TextView)convertView.findViewById(R.id.row_meta)).setText(row.meta);
@@ -78,6 +80,14 @@ public class BoardAdapter extends BaseAdapter {
     TextView meta = convertView.findViewById(R.id.row_meta);
     CheckBox check = convertView.findViewById(R.id.checked);
     title.setText(row.title);
+    title.setPaintFlags(row.grocery!=null&&row.grocery.checked?
+        title.getPaintFlags()|android.graphics.Paint.STRIKE_THRU_TEXT_FLAG:
+        title.getPaintFlags()&~android.graphics.Paint.STRIKE_THRU_TEXT_FLAG);
+    View action=convertView.findViewById(R.id.row_action);
+    action.setFocusable(false);
+    action.setContentDescription("Tùy chọn: "+row.title);
+    action.setOnClickListener(v->{if(groceryAction!=null)groceryAction.accept(new com.example.recime.model.Grocery(row.grocery));});
+    check.setContentDescription("Đã mua: "+row.title);
     meta.setText(row.meta);
     // Bỏ listener cũ trước khi bind lại view để không ghi nhầm checkbox đã tái sử dụng.
     check.setOnCheckedChangeListener(null);

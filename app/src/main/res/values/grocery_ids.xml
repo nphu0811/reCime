@@ -1,0 +1,8 @@
+<resources>
+    <item name="grocery_name" type="id"/><item name="grocery_amount" type="id"/>
+    <item name="grocery_unit" type="id"/><item name="grocery_category" type="id"/>
+    <item name="grocery_error" type="id"/><item name="batch_search" type="id"/>
+    <item name="batch_source_mode" type="id"/><item name="batch_sources" type="id"/>
+    <item name="batch_entry" type="id"/><item name="batch_servings" type="id"/>
+    <item name="batch_ingredients" type="id"/>
+</resources>

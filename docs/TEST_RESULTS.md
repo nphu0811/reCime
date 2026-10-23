@@ -1,4 +1,4 @@
-# Kết quả kiểm thử — Editor, Detail và Meal Planner
+# Kết quả kiểm thử — reCime Android parity
 
 Nhóm lifecycle bên dưới là lịch sử commit92d2e77; nhóm ảnh mới dùng SQLitev5, xem phần cuối.
 
@@ -72,3 +72,22 @@ Lệnh bộ rộng: dùng class filter Recipe Detail phía trên, bổ sung `com
 ```powershell
 .\gradlew.bat assembleDebug testDebugUnitTest lintDebug connectedDebugAndroidTest '-Pandroid.testInstrumentationRunnerArguments.class=com.example.recime.LabUiTest#tabsHaveRealContentAndInvalidUrlHasRecoverableError'
 ```
+
+
+## Groceries — baselinec0ffc04
+
+Không đổi schema SQLite v5, Editor, Recipe Detail hoặc cơ chế auto-derived Planner. GroceryDomainTest5 JVM cases bổ sung (tổng31): source snapshot/servings/ingredient selection, meal-occurrence identity và tránh double-select, invalid quantity/empty/overflow, groups/checklist/source/checked và incompatible units. Không suy quy đổi khối lượng↔thể tích hoặc quantity khi unknown.
+
+GroceryDatabaseTest5 cases trên database riêng có reopen: batch g/kg/tbsp/ml giữ manual checked và plan riêng; custom category không bị ghi đè; manual CRUD/check column-only không làm mất edit; stale planned checkbox dùng itemKey sau recompute; FK/data recipe/cookbook/photo/meal giữ; SQL trigger batch failure rollback cả merge đã thực hiện; unknown chỉ dedup cùng unit và chưa mua. Không DROP/migration mới.
+
+GroceryUiTest4 cases dùng recipe fixtures riêng: manual validation/edit/delete/check/recreation và empty sau khi xóa; chọn nhiều recipes và bỏ từng ingredient, phần4/2→batch650g; chọn meal override4→400g/30ml; giữ source/query/portions/selection qua recreation, pending commit không double-add; cancel không ghi DB, sort qua rotation, checklist đúng checked/quantity/source. Share chooser được stub để không gửi ra app khác; nội dung Intent được kiểm tra. Fixtures/prefs được cleanup/restore.
+
+Vòng focused17cases:14 PASS/3FAIL khi Espresso đóng IME trong batch. Thêm IME Done cho search/portions và adjust-resize; retryUI3/4 PASS, case còn lại đã qua assertions dữ liệu nhưng ActivityScenario.close timeout ở PAUSED. Đã thêm kiểm tra dialog đóng/idle trước teardown và chạy lại đúng case; retry đúng case đã PASS1/1 (2m9s), gồm pending-commit recreation và dialog đóng. Không gọi lần FAIL trước là PASS. Screenshot `.tools/groceries-preview.png` đã mở kiểm tra groups/checked/amount/source; bản gốc tạm ở cache `qa/groceries.png`, không commit. Official populated grocery UI vẫn UNKNOWN.
+
+Build/unit/lint đã qua (31 JVM,0 lint errors/173warnings). Bộ rộng40 instrumentation:39 PASS/1 FAIL,0 errors/skipped. Duy nhất PlannerUiTest#selectMealRecreateAndBuildChecklist chạm dock trước khi animation khởi động ổn định, còn ở Home nên không thấy board_list. Đã thêm chờ700ms trước strict click, không đổi code sản phẩm hoặc bỏ assertion; retry đúng case:1/1 PASS,0 failures/errors/skipped. Build +31 JVM +lint +retry cùng lệnh BUILD SUCCESSFUL1m25s. Toàn bộ40cases đã qua theo vòng rộng39PASS và targeted retry1PASS; không gọi là một lần full40/40 PASS. logs cục bộ gitignored: `.tools/groceries-build.log`, `.tools/groceries-first-tests.log`, `.tools/groceries-ui-retry.log`, `.tools/groceries-batch-retry.log`, `.tools/groceries-final-tests.log`, `.tools/groceries-final-retry.log`; summary vòng rộng: `.tools/groceries-wide-summary.json`.
+
+Lệnh vòng rộng (40cases):
+```powershell
+.\gradlew.bat assembleDebug testDebugUnitTest lintDebug connectedDebugAndroidTest '-Pandroid.testInstrumentationRunnerArguments.class=com.example.recime.GroceryDatabaseTest,com.example.recime.GroceryUiTest,com.example.recime.PlannerDatabaseTest,com.example.recime.PlannerWorkflowTest,com.example.recime.PlannerUiTest,com.example.recime.DetailUiTest,com.example.recime.EditorLifecycleTest,com.example.recime.sql.PhotoV5MigrationTest,com.example.recime.CookbookMembershipTest,com.example.recime.LabV4FeaturesTest,com.example.recime.LabDatabaseTest,com.example.recime.sql.LegacyRoomV2MigrationTest,com.example.recime.LabUiTest'
+```
+Retry cùng build/unit/lint, class filter: `com.example.recime.PlannerUiTest#selectMealRecreateAndBuildChecklist`. Không chạy lại APK analysis hoặc các integrations AI/Print/OCR không đổi trong nhóm này. Bộ40 có9cases Groceries mới,31regressions liên quan. Official aggregation/grouping/source reconciliation và merchant backend vẫn UNKNOWN; không có merchant checkout giả.
