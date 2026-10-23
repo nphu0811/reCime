@@ -89,6 +89,14 @@ class ProviderContractTests(unittest.TestCase):
         asyncio.run(RequestGuard(endpoint)({'type': 'http', 'path': '/test', 'method': 'POST', 'headers': [], 'client': ('fixture', 0)}, receive, send))
         self.assertEqual(413, messages[0]['status'])
 
+    def test_auth_validation_never_echoes_rejected_password(self):
+        password = 'private!'
+        result = self.client.post('/v1/auth/register', json={'email': 'qa@example.invalid', 'password': password})
+        self.assertEqual(422, result.status_code)
+        self.assertNotIn(password, result.text)
+        for error in result.json()['detail']:
+            self.assertNotIn('input', error)
+
 
 if __name__ == '__main__':
     unittest.main()

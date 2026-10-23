@@ -37,3 +37,5 @@ Tạo tài khoản email/password trên chính backend này (mật khẩu ≥10 
 Model ảnh local là tra cứu CLIP catalog, cần model tải hợp pháp bằng công cụ `backend/download_model.py` đang có. Đây là tìm công thức có nguồn tương tự ảnh, không phải trích nguyên liệu từ ảnh món ăn. OCR Latin chạy trên thiết bị; dấu tiếng Việt cần kiểm tra thủ công. TikTok chỉ đọc caption/oEmbed công khai; các nền tảng khác yêu cầu dán caption/transcript/ảnh do bạn có quyền sử dụng.
 
 API thực tế có OpenAPI tại `/docs`: legacy AI/USDA vẫn tương thích; `/v1/auth/*`, `/v1/account`, `/v1/backup`, `/v1/sync/push`, `/v1/sync/pull`, `/v1/discover`, `/v1/import/ai-text`. Record sync đã có server contract, chưa nối tự động với SQLite Android; UI ghi rõ cloud backup thủ công.
+
+Contract OpenAI đã đối chiếu [Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs) (`text.format`, JSON schema strict) và [model GPT-4.1 mini](https://developers.openai.com/api/docs/models/gpt-4.1-mini). Đây là kiểm tra tài liệu/fixtures; chưa gọi provider bằng key thật.

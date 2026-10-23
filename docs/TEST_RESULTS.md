@@ -1,5 +1,28 @@
 # Kết quả kiểm thử — reCime Android parity
 
+## Kết quả hiện hành — 24/10/2026, Android code c6aa498
+
+- Baseline: workspace sạch, fast-forward lên2513e48; CI baseline run40006473676 SUCCESS. Lượt đầu không có Emulator nên không được tính test PASS. Khởi động Medium_Phone Android17, Library ban đầu4/5 (root Activity bị chọn khi dialog Lưu đang mở). Sửa root dialog và query members background: **Library5/5 PASS trong một lượt**, không bỏ assertions/retry tự động; nhóm Library/import/OCR trước đó12/12 PASS.
+- Build cuối: **assembleDebug PASS, JVM44/44 PASS, lint0errors/233warnings**. Không coi warnings đã được xử lý. Sau thay đổi tùy chọn giữ APK UTP, chạy build/JVM/lint thêm lần nữa PASS4s; không đổi Android product code sau lượt rộng cuối.
+- **Instrumentation toàn bộ72/72 PASS,0failures/0errors/0skipped trong một invocation6m41s**, trên Medium_Phone Android17; XML kiểm tra sau Gradle hoàn tất. Lượt rộng trước đó69PASS/3FAIL (Grocery modal root; thông báo URL; test bấm dock khi Import đang giữ draft) được lưu riêng, không đổi thành PASS. Sửa root cho dialog controls, message URL và test Back đúng luồng; chạy lại toàn bộ72, không retry có điều kiện để làm xanh.
+-72 gồm Library5; Editor lifecycle/photos5; Detail UI/integrations10; Planner DB/UI/workflow10; Grocery DB/UI9; cookbooks4; catalog2; import duplicate/web/OCR/integration/JSON-LD11; Settings/Cooking/catalog-copy3; backup/migration/account contract và các regression DAO còn lại. Có legacy Roomv2, v4→v6 và v5→v6 fixture; giữ recipe/photos/membership/meals/manual/check states, WAL/FK, restore rollback và backup idempotence.
+- `OcrRotationTest`: ảnh chữ do test tự tạo, trì hoãn executor rồi rotate, chạy ML Kit thật và giữ edit sau OCR; không dùng OCR response giả. `AiLaptopIntegrationTest`: local FastAPI + CLIP/TF-IDF thật; ảnh reference có sẵn trong catalog, **không chứng minh unseen-image accuracy**. Dish lookup là lựa chọn rõ sau OCR, không tự upload khi ít chữ.
+- `AccountContractTest`: Android HTTP thật tới FastAPI local/database QA riêng; register/login/Keystore/session/logout/delete, backup outbox/CAS conflict/merge và record push/pull idempotency. Không dùng tài khoản/key/cloud official hoặc dịch vụ trả phí. Cloud backup không được gọi là automatic record sync Android.
+- Backend cuối: **26/26 unittest PASS** (`test_cloud`, `test_health`, `test_backend`, `test_provider_contracts`),5.6s. Có auth/isolation/cascade, pagination/tombstone/conflict/idempotency, missing keys, structured JSON errors/timeout/429, request-body/chunked limit, production provider auth, redaction password trong validation error, USDA kcal-vs-kJ/missing macros/cache và provenance. OpenAI/USDA dùng mock; **live provider NOT VERIFIED**.
+- Không thấy `am_anr`/`am_crash` của com.example.recime trong event log giữ lại sau test. Không thay thế stress test hoặc chứng nhận mọi thiết bị/Doze. Functional instrumentation tắt animation bằng Gradle; motion/haptics official chưa xác minh.
+- **Giới hạn môi trường:** UTP mặc định gỡ app độc lập sau connected tests; package check cuối chỉ thấy com.recime.app. Đã bổ sung leaveApksInstalledAfterRun cho tương lai nhưng chưa runtime verify. Lệnh cài debug APK bị automatic approval review chặn (“blocked by policy”); chưa có manual visual QA screenshot cuối và cần người dùng Run trong Android Studio. Không chứng nhận dữ liệu cài thật của app độc lập được giữ qua cleanup UTP; data preservation chỉ đã xác minh trong fixtures. Không mở/xóa official app/draft.
+- Backend QA được dừng theo PID/executable/command line đã kiểm tra; backend development đang chạy localhost8765, `.env` mặc định, health ready547, accounts true, OpenAI/USDA false. Không in key. `.env`, DB, APK, ảnh QA và logs không commit.
+
+Evidence local gitignored: `.tools/total-baseline-library-device.log`, `total-checkpoint1.log`, `total-backup-contract.log`, `total-first-wide-summary.json`, `total-final-regression.log`, `total-final-wide-summary.json`, `total-backend-final.log`, `total-handoff-build.log`, `total-events-after-tests.log`. Lỗi focused trước đó (PDF test gọi getIntents trên main và Settings assert chưa scroll, AI root) đã sửa test đúng boundary, giữ checks output/permission/DB.
+
+```powershell
+# FastAPI QA local + adb reverse8765 phải sẵn sàng cho toàn bộ connected suite.
+.\gradlew.bat assembleDebug testDebugUnitTest lintDebug connectedDebugAndroidTest
+backend/.venv/Scripts/python.exe -m unittest backend.test_cloud backend.test_health backend.test_backend backend.test_provider_contracts -v
+```
+
+## Lịch sử kiểm thử trước phiên tổng lực
+
 Nhóm lifecycle bên dưới là lịch sử commit92d2e77; nhóm ảnh mới dùng SQLitev5, xem phần cuối.
 
 Ngày23/10/2026, nhánh `wip/rea-recime-602`, baseline15497c9, PR#5. Không đổi SQLite version4 hoặc migration.

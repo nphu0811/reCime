@@ -14,6 +14,15 @@ from backend.hardening import RequestGuard
 app.include_router(cloud_router)
 app.add_middleware(RequestGuard)
 
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
+
+@app.exception_handler(RequestValidationError)
+async def validation_error(request, error):
+    # Pydantic's default error includes raw input, including a rejected password.
+    return JSONResponse(status_code=422, content={'detail': [
+        {'loc': item['loc'], 'msg': item['msg'], 'type': item['type']} for item in error.errors()]})
+
 @lru_cache(maxsize=1)
 def engine():return RecipeEngine()
 

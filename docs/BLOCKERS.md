@@ -1,5 +1,17 @@
 # Blockers và phần chưa hoàn thành
 
+## Hiện hành — 24/10/2026
+
+- Tài khoản email/password/profile/logout/delete và cloud backup đã có implementation + contract local thật; không còn là nhóm hoàn toàn thiếu backend. **Automatic record sync Android, Google Login, email verification/reset, collaboration/access còn thiếu implementation**, không chỉ chờ key.
+- OpenAI/USDA live cần keys trong `.env`; có adapter/schema/timeout/lỗi và tests mock. Health chỉ báo cấu hình, chưa chứng nhận live. OCR Latin dùng được local; ảnh tiếng Việt đa dạng/EXIF mirror và process-kill ở mọi điểm chưa xác minh.
+- Social video/audio/transcript chưa có adapter hợp lệ. TikTok chỉ oEmbed caption; Instagram/YouTube/Facebook/Pinterest dùng caption/transcript/ảnh người dùng có quyền cung cấp. Không dùng catalog similarity làm kết quả video extraction.
+- Runtime official populated Detail/Cooking/Planner, exact motion/haptics, collaboration, paywall/merchant và public domain riêng vẫn UNKNOWN/chưa triển khai. Không đụng draft official để ép quan sát, không decompile lại toàn APK.
+- SQLite v6 chỉ thêm backup ledger và có test từ v5. Restore thêm bản sao/hợp nhất, giữ prefs hiện tại; snapshot khác nhau có thể tạo bản sao thêm. Full cloud photo record sync và conflict UI từng entity chưa có.
+- Timer cần người dùng cấp notification/exact-alarm; inexact fallback báo có thể trễ. Chưa test delivery timing/Doze/reboot/physical print hoặc Android13–16. Android17 Emulator và các phạm vi đã test xem TEST_RESULTS.
+- Release signing/hosting TLS/email recovery/security review/retention và domain/assetlinks cần hoàn thiện trước phân phối công khai. Không có checkout/paywall/public recipe link giả.
+
+## Lịch sử trước các checkpoint mới
+
 Cập nhật23/10/2026, WIP PR#5. Không còn blocker APK/JADX hoặc đăng nhập Emulator.
 
 - Lần quan sát trước Editor official có màn Something went wrong/Try again; form đã có screenshot/XML phiên trước. Chưa xác minh save→detail. Không suy nguyên nhân server hoặc bypass.
