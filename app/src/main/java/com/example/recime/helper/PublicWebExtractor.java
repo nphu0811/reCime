@@ -68,16 +68,18 @@ public final class PublicWebExtractor implements ExtractionAdapter {
                 })
             .build();
     String url = input;
+    long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(25);
     for (int redirects = 0; redirects <= 3; redirects++) {
       validate(url);
+      long remaining = deadline - System.nanoTime();
+      if (remaining <= 0) throw new java.io.IOException("Trang quá thời gian tải; thử lại sau");
+      Call call = client.newCall(new Request.Builder().url(url).header("User-Agent", "MyRecipeLab/1.0 public Recipe JSON-LD reader").build());
+      call.timeout().timeout(remaining, TimeUnit.NANOSECONDS);
       try (Response response =
-          client
-              .newCall(
-                  new Request.Builder()
-                      .url(url)
-                      .header("User-Agent", "MyRecipeLab/1.0 public Recipe JSON-LD reader")
-                      .build())
-              .execute()) {
+          call.execute()) {
+        if (response.code() == 401 || response.code() == 403)
+          throw new ImportProviderException(ImportProviders.Status.AUTHENTICATION_REQUIRED,
+              "Nguồn yêu cầu quyền truy cập hoặc không cho đọc công khai. Không vượt xác thực; dán nội dung bạn có quyền dùng.");
         if (response.code() >= 300 && response.code() < 400) {
           String location = response.header("Location");
           if (location == null) break;

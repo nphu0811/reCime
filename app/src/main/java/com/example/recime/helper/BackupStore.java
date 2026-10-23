@@ -63,7 +63,7 @@ public final class BackupStore {
   }
 
   private static String packPhoto(Context context, String path, JSONObject photos) throws Exception {
-    if (path.isEmpty() || path.startsWith("catalog/")) return path;
+    if (path.isEmpty() || path.startsWith("file:///android_asset/catalog/")) return path;
     File file = new File(path);
     File photoRoot = new File(context.getFilesDir(), "photos").getCanonicalFile();
     if (!file.getCanonicalPath().startsWith(photoRoot.getPath() + File.separator)) return path;
@@ -204,7 +204,8 @@ public final class BackupStore {
 
   private static String unpackPhoto(String path, Map<String, String> photos) throws IOException {
     if (path.startsWith("backup:")) { String value = photos.get(path); if (value == null) throw new IOException("Backup thiếu ảnh"); return value; }
-    return path.startsWith("catalog/") ? path : "";
+    if (path.startsWith("file:///android_asset/catalog/") && !path.contains("..")) return path;
+    return "";
   }
   private static long required(Map<Long, Long> mapping, long old) throws IOException { Long value = mapping.get(old); if (value == null) throw new IOException("Backup thiếu công thức/cookbook liên kết"); return value; }
   private static Long lookup(SQLiteDatabase db, String sql, String arg) { try (Cursor c = db.rawQuery(sql, new String[] {arg})) { return c.moveToFirst() ? c.getLong(0) : null; } }

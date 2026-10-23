@@ -24,4 +24,11 @@ public class ImportParsingTest {
     assertFalse(ImportProviders.forUrl("https://mytiktok.com/recipe").metadataOnly);
     assertEquals(ImportProviders.Status.PROVIDER_UNSUPPORTED, ImportProviders.forUrl("https://user@tiktok.com/video/1").status);
   }
+  @Test public void shareCaptionAndUrlAreBothPreserved() {
+    SharedRecipeInput input = SharedRecipeInput.parse("Try this https://example.org/recipe\n100 g rice\nCook");
+    assertEquals("https://example.org/recipe", input.url);
+    assertTrue(input.text.contains("100 g rice"));
+    assertEquals("", SharedRecipeInput.parse("https://example.org/recipe").text);
+    assertEquals("", SharedRecipeInput.parse(null).url);
+  }
 }

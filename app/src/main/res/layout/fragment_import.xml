@@ -180,6 +180,13 @@
             app:cornerRadius="14dp" />
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/ai_extract"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:text="Trích xuất văn bản bằng OpenAI (cần cấu hình)" />
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/review"
             android:textColor="@color/night_ink"
             app:backgroundTint="@color/electric_coral"

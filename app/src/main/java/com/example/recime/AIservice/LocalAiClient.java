@@ -57,6 +57,9 @@ public final class LocalAiClient {
             new JSONObject().put("text", text).toString(),
             MediaType.get("application/json; charset=utf-8")));
   }
+  public JSONObject extractText(String text) throws Exception {
+    return request("/v1/import/ai-text", RequestBody.create(new JSONObject().put("text", text).toString(), MediaType.get("application/json; charset=utf-8")));
+  }
 
   public JSONObject tiktok(String url) throws Exception {
     return request(

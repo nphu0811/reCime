@@ -5,6 +5,7 @@ import static androidx.test.espresso.Espresso.onIdle;
 import static androidx.test.espresso.action.ViewActions.*;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.*;
+import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.intent.Intents.*;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.*;
 import static org.junit.Assert.*;
@@ -55,6 +56,11 @@ public class DetailIntegrationTest {
     try(ActivityScenario<MainActivity> s=open()){
       intending(hasAction(Intent.ACTION_CHOOSER)).respondWith(new Instrumentation.ActivityResult(Activity.RESULT_CANCELED,null));
       onView(withId(R.id.export_pdf)).perform(scrollTo(),click());
+      long shareDeadline=android.os.SystemClock.uptimeMillis()+15000;
+      while(getIntents().stream().noneMatch(i->Intent.ACTION_CHOOSER.equals(i.getAction()))){
+        if(android.os.SystemClock.uptimeMillis()>shareDeadline)throw new AssertionError("PDF share was not dispatched");
+        onIdle();Thread.sleep(50);
+      }
       intended(hasAction(Intent.ACTION_CHOOSER));
       Intent send=null;
       for(Intent intent:getIntents())if(Intent.ACTION_CHOOSER.equals(intent.getAction()))send=intent.getParcelableExtra(Intent.EXTRA_INTENT);
@@ -109,10 +115,10 @@ public class DetailIntegrationTest {
       });
       try(ActivityScenario<MainActivity> s=open()){
         onView(withId(R.id.ask_recipe_ai)).perform(scrollTo(),click());
-        onView(withId(android.R.id.button1)).perform(click());
-        onView(isAssignableFrom(EditText.class)).check(matches(hasErrorText("Nhập câu hỏi")));
-        onView(isAssignableFrom(EditText.class)).perform(replaceText("How to cook?"),closeSoftKeyboard());
-        onView(withId(android.R.id.button1)).perform(click());assertTrue(received.await(15,TimeUnit.SECONDS));
+        onView(withId(android.R.id.button1)).inRoot(isDialog()).perform(click());
+        onView(isAssignableFrom(EditText.class)).inRoot(isDialog()).check(matches(hasErrorText("Nhập câu hỏi")));
+        onView(isAssignableFrom(EditText.class)).inRoot(isDialog()).perform(replaceText("How to cook?"),closeSoftKeyboard());
+        onView(withId(android.R.id.button1)).inRoot(isDialog()).perform(click());assertTrue(received.await(15,TimeUnit.SECONDS));
         s.recreate();respond.countDown();assertEquals("POST /assistant/ask HTTP/1.1",request.get(20,TimeUnit.SECONDS));
         long until=System.currentTimeMillis()+15000;
         while(System.currentTimeMillis()<until){
@@ -122,8 +128,8 @@ public class DetailIntegrationTest {
           });
           if(!busy[0])break;Thread.sleep(50);
         }
-        onIdle();onView(withText("Không thể hỏi AI: QA backend unavailable")).check(matches(isDisplayed()));
-        onView(withText("Đóng")).perform(click());
+        onIdle();onView(withText("Không thể hỏi AI: QA backend unavailable")).inRoot(isDialog()).check(matches(isDisplayed()));
+        onView(withText("Đóng")).inRoot(isDialog()).perform(click());
       }
     } finally {
       respond.countDown();serverThread.shutdownNow();

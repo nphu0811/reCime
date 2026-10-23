@@ -104,7 +104,7 @@ def ask(body:AskInput):
           headers={'Authorization':'Bearer '+key,'Content-Type':'application/json'},
           json=payload,timeout=55)
       if response.status_code!=200:
-        raise HTTPException(502,'Nhà cung cấp AI lỗi HTTP '+str(response.status_code))
+        raise HTTPException(429 if response.status_code == 429 else 502,'Nhà cung cấp AI lỗi HTTP '+str(response.status_code))
       data=response.json()
       parts=[]
       for item in data.get('output',[]):
@@ -132,8 +132,9 @@ def discover(q: str = '', offset: int = 0, limit: int = 30):
     if offset < 0 or not 1 <= limit <= 100 or len(q) > 200:
         raise HTTPException(422, 'Invalid pagination or search')
     e = engine()
-    query = e.normalize(q) if hasattr(e, 'normalize') else q.casefold()
-    rows = [r for r in e.recipes if not q or query in r['title'].casefold()]
+    from backend.engine import normalized
+    query = normalized(q)
+    rows = [r for r in e.recipes if not query or query in normalized(r['title'])]
     return {'recipes': rows[offset:offset + limit], 'total': len(rows),
             'nextOffset': offset + limit if offset + limit < len(rows) else None,
             'source': 'Independent attributed catalog; no fabricated ratings'}
@@ -141,6 +142,17 @@ def discover(q: str = '', offset: int = 0, limit: int = 30):
 
 class ExtractInput(BaseModel):
     text: str = Field(min_length=10, max_length=16000)
+
+
+@app.get('/v1/import/providers')
+def import_providers():
+    return {'providers': [
+        {'provider': 'website', 'status': 'supported', 'input': 'public-https-recipe-jsonld', 'on401or403': 'authentication-required'},
+        {'provider': 'text', 'status': 'supported', 'input': 'user-supplied-text'},
+        {'provider': 'image-ocr', 'status': 'supported', 'input': 'on-device-latin-ocr-review-required'},
+        {'provider': 'TikTok', 'status': 'supported', 'input': 'public-oembed-caption-only', 'videoExtraction': False},
+        *[{'provider': p, 'status': 'provider-unsupported', 'fallback': 'paste-authorized-caption-transcript-or-image'}
+          for p in ['Instagram', 'YouTube', 'Facebook', 'Pinterest']]]}
 
 
 @app.post('/v1/import/ai-text')

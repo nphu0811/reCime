@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
         .getInsetsController(getWindow(), getWindow().getDecorView());
     bars.setAppearanceLightStatusBars(true);
     bars.setAppearanceLightNavigationBars(true);
+    if (android.os.Build.VERSION.SDK_INT < 26) getWindow().setNavigationBarColor(0xFF101323);
     ViewCompat.setOnApplyWindowInsetsListener(
         findViewById(R.id.main),
         (v, insets) -> {
@@ -90,6 +91,11 @@ public class MainActivity extends AppCompatActivity {
                     .setValue(null);
               }
             });
+    com.example.recime.sql.RecipeRepository repository = com.example.recime.sql.RecipeRepository.get(this);
+    final android.content.Context appContext = getApplicationContext();
+    repository.io.execute(() -> {
+      if (com.example.recime.helper.CloudBackupQueue.pending(appContext)) com.example.recime.helper.CloudBackupQueue.schedule(appContext);
+    });
   }
 
   @Override

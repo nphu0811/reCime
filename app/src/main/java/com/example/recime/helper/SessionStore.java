@@ -38,5 +38,6 @@ public final class SessionStore {
   }
   public String user() { return prefs.getString("user", ""); }
   public String email() { return prefs.getString("email", ""); }
+  public boolean belongsTo(String endpoint) { return endpoint.equals(prefs.getString("endpoint", "")) && !prefs.getString("user", "").isEmpty(); }
   public void clear() { prefs.edit().clear().commit(); }
 }

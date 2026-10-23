@@ -1,4 +1,5 @@
 package com.example.recime;
+import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static com.example.recime.UiGestures.click;
 
 import static androidx.test.espresso.Espresso.onView;
@@ -134,7 +135,7 @@ public class DetailUiTest {
       onView(withId(R.id.delete)).perform(scrollTo(),click());onView(withText("Giữ lại")).perform(click());
       assertNotNull(repo.dao.find(fixture.id));
       onView(withId(R.id.delete)).perform(click());
-      onView(withId(android.R.id.button1)).perform(click());drain();
+      onView(withId(android.R.id.button1)).inRoot(isDialog()).perform(click());drain();
       assertNull(repo.dao.find(fixture.id));assertFalse(new File(files.get(0)).exists());
       onView(withId(R.id.detail_title)).check(doesNotExist());
     } finally {repo.io.submit(()->repo.dao.deleteCookbook(second)).get(30,TimeUnit.SECONDS);}
@@ -165,12 +166,12 @@ public class DetailUiTest {
         +" BEFORE DELETE ON recipes WHEN OLD.id="+fixture.id
         +" BEGIN SELECT RAISE(ABORT, 'QA deletion rejected'); END")).get(30,TimeUnit.SECONDS);
     try(ActivityScenario<MainActivity> s=open()){
-      onView(withId(R.id.delete)).perform(scrollTo(),click());onView(withId(android.R.id.button1)).perform(click());drain();
+      onView(withId(R.id.delete)).perform(scrollTo(),click());onView(withId(android.R.id.button1)).inRoot(isDialog()).perform(click());drain();
       onView(withId(R.id.detail_status)).perform(scrollTo()).check(matches(withSubstring("QA deletion rejected")));
       assertNotNull(repo.dao.find(fixture.id));assertTrue(new File(files.get(0)).exists());
       repo.io.submit(()->repo.db.getWritableDatabase().execSQL("DROP TRIGGER "+trigger)).get(30,TimeUnit.SECONDS);
       repo.io.submit(()->{try {release.await(20,TimeUnit.SECONDS);}catch(InterruptedException e){Thread.currentThread().interrupt();}});
-      onView(withId(R.id.delete)).perform(scrollTo(),click());onView(withId(android.R.id.button1)).perform(click());
+      onView(withId(R.id.delete)).perform(scrollTo(),click());onView(withId(android.R.id.button1)).inRoot(isDialog()).perform(click());
       s.recreate();onView(withId(R.id.delete)).perform(scrollTo()).check(matches(not(isEnabled())));
       release.countDown();drain();assertNull(repo.dao.find(fixture.id));
       onView(withId(R.id.detail_title)).check(doesNotExist());

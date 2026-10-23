@@ -1,4 +1,5 @@
 package com.example.recime;
+import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static com.example.recime.UiGestures.click;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.onData;
@@ -67,12 +68,12 @@ public class GroceryUiTest {
     meal=new Meal();meal.day="2030-01-01";meal.type="Sáng";meal.recipeId=a.id;meal.servings=4;meal.extraId=repo.dao.addMeal(meal);
   }).get(30,TimeUnit.SECONDS);onIdle();}
   private void chooseRecipe(String title){
-    onData(hasToString(is(title))).inAdapterView(withId(R.id.batch_sources)).perform(click());
+    onData(hasToString(is(title))).inRoot(isDialog()).inAdapterView(withId(R.id.batch_sources)).perform(click());
   }
   private void chooseBatchSources(){
     onView(withId(R.id.grocery_batch)).perform(click());
-    onView(withId(R.id.batch_search)).perform(replaceText(prefix),pressImeActionButton());chooseRecipe(a.title);chooseRecipe(b.title);
-    onView(withId(android.R.id.button1)).perform(click());
+    onView(withId(R.id.batch_search)).inRoot(isDialog()).perform(replaceText(prefix),pressImeActionButton());chooseRecipe(a.title);chooseRecipe(b.title);
+    onView(withId(android.R.id.button1)).inRoot(isDialog()).perform(click());
   }
 
   private java.util.List<Grocery> allGroceryRows(){
@@ -89,22 +90,22 @@ public class GroceryUiTest {
     java.util.List<String> baselineValues=groceryValues(baseline);
     try(ActivityScenario<MainActivity> scenario=open()){
       onView(withId(R.id.board_action)).perform(click());
-      onView(withId(R.id.grocery_name)).perform(replaceText(prefix+" manual"));
-      onView(withId(R.id.grocery_amount)).perform(replaceText("0.5"));onView(withId(R.id.grocery_unit)).perform(replaceText("kg"));
-      onView(withId(R.id.grocery_category)).perform(replaceText("QA group"),closeSoftKeyboard());
-      scenario.recreate();onView(withId(R.id.grocery_amount)).check(matches(withText("0.5")));
-      onView(withId(android.R.id.button1)).perform(click());drain();
+      onView(withId(R.id.grocery_name)).inRoot(isDialog()).perform(replaceText(prefix+" manual"));
+      onView(withId(R.id.grocery_amount)).inRoot(isDialog()).perform(replaceText("0.5"));onView(withId(R.id.grocery_unit)).inRoot(isDialog()).perform(replaceText("kg"));
+      onView(withId(R.id.grocery_category)).inRoot(isDialog()).perform(replaceText("QA group"),closeSoftKeyboard());
+      scenario.recreate();onView(withId(R.id.grocery_amount)).inRoot(isDialog()).check(matches(withText("0.5")));
+      onView(withId(android.R.id.button1)).inRoot(isDialog()).perform(click());drain();
       Grocery saved=manual(prefix+" manual");assertNotNull(saved);assertEquals(500,saved.amount,0.001);assertEquals("g",saved.unit);
       onData(row(saved.name)).inAdapterView(withId(R.id.board_list)).perform(click());
-      onView(withId(R.id.grocery_name)).perform(clearText(),closeSoftKeyboard());onView(withId(android.R.id.button1)).perform(click());
-      onView(withId(R.id.grocery_name)).check(matches(hasErrorText("Tên không trống; số lượng không âm, hữu hạn")));
-      onView(withId(R.id.grocery_name)).perform(replaceText(prefix+" edited"));onView(withId(R.id.grocery_amount)).perform(replaceText("750"),closeSoftKeyboard());
-      onView(withId(android.R.id.button1)).perform(click());drain();
+      onView(withId(R.id.grocery_name)).inRoot(isDialog()).perform(clearText(),closeSoftKeyboard());onView(withId(android.R.id.button1)).inRoot(isDialog()).perform(click());
+      onView(withId(R.id.grocery_name)).inRoot(isDialog()).check(matches(hasErrorText("Tên không trống; số lượng không âm, hữu hạn")));
+      onView(withId(R.id.grocery_name)).inRoot(isDialog()).perform(replaceText(prefix+" edited"));onView(withId(R.id.grocery_amount)).inRoot(isDialog()).perform(replaceText("750"),closeSoftKeyboard());
+      onView(withId(android.R.id.button1)).inRoot(isDialog()).perform(click());drain();
       onData(row(prefix+" edited")).inAdapterView(withId(R.id.board_list)).onChildView(withId(R.id.checked)).perform(click());drain();
       scenario.recreate();onData(row(prefix+" edited")).inAdapterView(withId(R.id.board_list)).onChildView(withId(R.id.checked)).check(matches(isChecked()));
       assertEquals(750,manual(prefix+" edited").amount,0.001);assertTrue(manual(prefix+" edited").checked);
       onData(row(prefix+" edited")).inAdapterView(withId(R.id.board_list)).perform(longClick());
-      onView(withId(android.R.id.button1)).perform(click());drain();assertNull(manual(prefix+" edited"));
+      onView(withId(android.R.id.button1)).inRoot(isDialog()).perform(click());drain();assertNull(manual(prefix+" edited"));
       assertEquals("CRUD must preserve every pre-existing manual/planned row",baselineValues,groceryValues(allGroceryRows()));
       if(baseline.isEmpty())onView(withId(R.id.board_empty)).check(matches(withText(R.string.grocery_empty)));
       else{
@@ -116,17 +117,17 @@ public class GroceryUiTest {
   @Test public void recipeBatchScalesSelectedIngredientsAndSurvivesRotation() throws Exception {
     plan();
     try(ActivityScenario<MainActivity> scenario=open()){
-      chooseBatchSources();onView(withId(R.id.batch_servings)).perform(replaceText("4"),pressImeActionButton());
-      onData(anything()).inAdapterView(withId(R.id.batch_ingredients)).atPosition(1).perform(click());
-      scenario.recreate();onView(withId(R.id.batch_servings)).check(matches(withText("4")));
-      onData(anything()).inAdapterView(withId(R.id.batch_ingredients)).atPosition(1).check(matches(not(isChecked())));
-      onView(withId(R.id.batch_entry)).perform(click());onData(is(b.title)).inRoot(androidx.test.espresso.matcher.RootMatchers.isPlatformPopup()).perform(click());
-      onData(anything()).inAdapterView(withId(R.id.batch_ingredients)).atPosition(1).perform(click());
+      chooseBatchSources();onView(withId(R.id.batch_servings)).inRoot(isDialog()).perform(replaceText("4"),pressImeActionButton());
+      onData(anything()).inRoot(isDialog()).inAdapterView(withId(R.id.batch_ingredients)).atPosition(1).perform(click());
+      scenario.recreate();onView(withId(R.id.batch_servings)).inRoot(isDialog()).check(matches(withText("4")));
+      onData(anything()).inRoot(isDialog()).inAdapterView(withId(R.id.batch_ingredients)).atPosition(1).check(matches(not(isChecked())));
+      onView(withId(R.id.batch_entry)).inRoot(isDialog()).perform(click());onData(is(b.title)).inRoot(androidx.test.espresso.matcher.RootMatchers.isPlatformPopup()).perform(click());
+      onData(anything()).inRoot(isDialog()).inAdapterView(withId(R.id.batch_ingredients)).atPosition(1).perform(click());
       java.util.concurrent.CountDownLatch release=new java.util.concurrent.CountDownLatch(1);
       repo.io.submit(()->{try{release.await(20,TimeUnit.SECONDS);}catch(InterruptedException failure){Thread.currentThread().interrupt();}});
       try {
-        onView(withId(android.R.id.button1)).perform(click());scenario.recreate();
-        onView(withId(android.R.id.button1)).check(matches(not(isEnabled())));
+        onView(withId(android.R.id.button1)).inRoot(isDialog()).perform(click());scenario.recreate();
+        onView(withId(android.R.id.button1)).inRoot(isDialog()).check(matches(not(isEnabled())));
         release.countDown();drain();
       } finally {release.countDown();}
       onView(withId(R.id.batch_servings)).check(doesNotExist());
@@ -142,14 +143,14 @@ public class GroceryUiTest {
   @Test public void mealBatchStartsFromServingOverrideAndRetainsSourceSelection() throws Exception {
     plan();
     try(ActivityScenario<MainActivity> scenario=open()){
-      onView(withId(R.id.grocery_batch)).perform(click());onView(withId(R.id.batch_source_mode)).perform(click());
+      onView(withId(R.id.grocery_batch)).perform(click());onView(withId(R.id.batch_source_mode)).inRoot(isDialog()).perform(click());
       onData(is("Bữa ăn đã lên lịch")).inRoot(androidx.test.espresso.matcher.RootMatchers.isPlatformPopup()).perform(click());
-      onView(withId(R.id.batch_search)).perform(replaceText(prefix),pressImeActionButton());
-      onData(hasToString(containsString(a.title))).inAdapterView(withId(R.id.batch_sources)).perform(click());
-      scenario.recreate();onData(hasToString(containsString(a.title))).inAdapterView(withId(R.id.batch_sources)).check(matches(isChecked()));
-      onView(withId(android.R.id.button1)).check(matches(isEnabled())).perform(click());
-      onView(withId(R.id.batch_servings)).check(matches(withText("4.0")));
-      onView(withId(android.R.id.button1)).perform(click());drain();
+      onView(withId(R.id.batch_search)).inRoot(isDialog()).perform(replaceText(prefix),pressImeActionButton());
+      onData(hasToString(containsString(a.title))).inRoot(isDialog()).inAdapterView(withId(R.id.batch_sources)).perform(click());
+      scenario.recreate();onData(hasToString(containsString(a.title))).inRoot(isDialog()).inAdapterView(withId(R.id.batch_sources)).check(matches(isChecked()));
+      onView(withId(android.R.id.button1)).inRoot(isDialog()).check(matches(isEnabled())).perform(click());
+      onView(withId(R.id.batch_servings)).inRoot(isDialog()).check(matches(withText("4.0")));
+      onView(withId(android.R.id.button1)).inRoot(isDialog()).perform(click());drain();
       assertEquals(400,manual(prefix+" rice").amount,0.001);assertEquals(30,manual(prefix+" oil").amount,0.001);
       assertEquals(1,repo.dao.mealSnapshot(null,null).stream().filter(m->m.recipeId==a.id).count());
     }
@@ -160,7 +161,7 @@ public class GroceryUiTest {
     }).get(30,TimeUnit.SECONDS);
     init();
     try(ActivityScenario<MainActivity> scenario=open()){
-      int before=repo.dao.grocerySnapshot().size();chooseBatchSources();onView(withId(android.R.id.button2)).perform(click());drain();assertEquals(before,repo.dao.grocerySnapshot().size());
+      int before=repo.dao.grocerySnapshot().size();chooseBatchSources();onView(withId(android.R.id.button2)).inRoot(isDialog()).perform(click());drain();assertEquals(before,repo.dao.grocerySnapshot().size());
       onView(withId(R.id.grocery_sort)).perform(click());onData(is("Theo nguồn")).inRoot(androidx.test.espresso.matcher.RootMatchers.isPlatformPopup()).perform(click());
       scenario.recreate();onView(withId(R.id.grocery_sort)).check(matches(withSpinnerText("Theo nguồn")));
       intending(hasAction(Intent.ACTION_CHOOSER)).respondWith(new Instrumentation.ActivityResult(Activity.RESULT_CANCELED,null));

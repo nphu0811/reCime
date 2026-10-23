@@ -38,6 +38,7 @@ public class LabUiTest {
       onView(withId(R.id.save)).perform(click());
       repo.io.submit(() -> {}).get(20, TimeUnit.SECONDS);
       Espresso.onIdle();
+      Espresso.pressBack(); // Leave Import with its draft intact before using root tabs.
       onView(withId(R.id.nav_recipes)).perform(click());
       onView(withId(R.id.search)).perform(replaceText(title), closeSoftKeyboard());
       onView(org.hamcrest.Matchers.allOf(withId(R.id.title), withText(title))).perform(click());

@@ -51,6 +51,8 @@ public class RecipesFragment extends Fragment {
       ingredient=saved.getString("ingredient",""); favorite=saved.getBoolean("favorite"); }
     Ui.set(v,R.id.heading,discover()?"Discover":book().isEmpty()?"Recipes":book());
     v.findViewById(R.id.catalog_notice).setVisibility(discover()?View.VISIBLE:View.GONE);
+    v.findViewById(R.id.remote_discover).setVisibility(discover()?View.VISIBLE:View.GONE);
+    v.findViewById(R.id.remote_discover).setOnClickListener(x -> ((MainActivity) requireActivity()).open(new RemoteDiscoverFragment()));
     v.findViewById(R.id.library_sections).setVisibility(discover()||!book().isEmpty()?View.GONE:View.VISIBLE);
     v.findViewById(R.id.cookbook_options).setVisibility(book().isEmpty()?View.GONE:View.VISIBLE);
     v.findViewById(R.id.cookbook_options).setOnClickListener(x->bookActions());

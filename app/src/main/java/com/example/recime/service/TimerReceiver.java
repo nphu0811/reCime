@@ -9,6 +9,8 @@ public final class TimerReceiver extends BroadcastReceiver {
   @Override public void onReceive(Context context, Intent intent) {
     android.content.SharedPreferences p = context.getSharedPreferences("cooking_timer", 0);
     if (p.getLong("deadline", 0) == 0) return;
+    if (com.example.recime.helper.CookingTimer.remaining(context) > 1000
+        || p.getLong("delivered", -1) == p.getLong("deadline", 0)) return;
     NotificationManager notifications = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
     if (Build.VERSION.SDK_INT >= 26) notifications.createNotificationChannel(new NotificationChannel("cooking", "Hẹn giờ nấu ăn", NotificationManager.IMPORTANCE_HIGH));
     if (Build.VERSION.SDK_INT >= 33 && context.checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != android.content.pm.PackageManager.PERMISSION_GRANTED) return;
@@ -18,5 +20,6 @@ public final class TimerReceiver extends BroadcastReceiver {
     notifications.notify(603, new NotificationCompat.Builder(context, "cooking").setSmallIcon(R.drawable.ic_leaf)
         .setContentTitle("Hết giờ nấu ăn").setContentText(p.getString("title", "Công thức"))
         .setContentIntent(activity).setAutoCancel(true).setPriority(NotificationCompat.PRIORITY_HIGH).build());
+    p.edit().putLong("delivered", p.getLong("deadline", 0)).apply();
   }
 }

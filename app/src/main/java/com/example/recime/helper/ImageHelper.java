@@ -63,7 +63,7 @@ public final class ImageHelper {
         });
   }
 
-  private static Bitmap readBitmap(Context context, String path) throws IOException {
+  static Bitmap readBitmap(Context context, String path) throws IOException {
     byte[] bytes;
     try (InputStream input = open(context, path);
         ByteArrayOutputStream output = new ByteArrayOutputStream()) {

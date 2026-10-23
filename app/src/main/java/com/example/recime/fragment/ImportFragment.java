@@ -37,6 +37,7 @@ public class ImportFragment extends Fragment {
   private ImportWebState webState;
   private com.example.recime.viewmodel.ImportImageState imageState;
   private long appliedImage;
+  private com.example.recime.helper.ModalChrome chrome;
   private long appliedWebFetch;
   private final ActivityResultLauncher<androidx.activity.result.PickVisualMediaRequest> picker =
       registerForActivityResult(
@@ -60,10 +61,12 @@ public class ImportFragment extends Fragment {
   public void onViewCreated(View v, Bundle state) {
     Motion.enter(v);
     root = v;
+    chrome = new com.example.recime.helper.ModalChrome(requireActivity());
     busy = false;
     webState = new ViewModelProvider(this).get(ImportWebState.class);
     imageState = new ViewModelProvider(this).get(com.example.recime.viewmodel.ImportImageState.class);
     if (state != null) {
+      if (state.containsKey("statusText")) status(state.getString("statusText"));
       appliedWebFetch = state.getLong("appliedWebFetch", 0L);
       appliedImage = state.getLong("appliedImage", 0L);
       image = state.getString("image", "");
@@ -134,6 +137,23 @@ public class ImportFragment extends Fragment {
                   .show();
             });
     v.findViewById(R.id.fetch).setOnClickListener(x -> fetch());
+    v.findViewById(R.id.ai_extract).setOnClickListener(x -> {
+      String text = Ui.text(v, R.id.raw);
+      if (text.length() < 10) { status("Dán văn bản công thức trước; AI chỉ trích nội dung được cung cấp."); return; }
+      final android.content.Context context = requireContext().getApplicationContext();
+      com.example.recime.sql.RecipeRepository repository = new ViewModelProvider(requireActivity()).get(LabViewModel.class).repository;
+      webState.fetch("AI:text", repository.extraction, ignored -> {
+        JSONObject recipe = new LocalAiClient(context).extractText(text).getJSONObject("recipe");
+        StringBuilder raw = new StringBuilder(recipe.getString("title")).append('\n');
+        if (!recipe.isNull("servings")) raw.append("Servings: ").append(recipe.getDouble("servings")).append('\n');
+        for (String section : new String[] {"ingredients", "steps"}) {
+          raw.append(section.equals("ingredients") ? "Ingredients\n" : "Instructions\n");
+          JSONArray lines = recipe.getJSONArray(section);
+          for (int n = 0; n < lines.length(); n++) raw.append(lines.getString(n)).append('\n');
+        }
+        return raw.toString();
+      });
+    });
     v.findViewById(R.id.review)
         .setOnClickListener(
             x -> {
@@ -144,9 +164,8 @@ public class ImportFragment extends Fragment {
     if (state == null && getArguments() != null) {
       String text = getArguments().getString("text", "");
       if (text != null) {
-        if (text.trim().startsWith("https://") && !text.trim().contains("\n"))
-          Ui.set(v, R.id.url, text);
-        else Ui.set(v, R.id.raw, text);
+        com.example.recime.helper.SharedRecipeInput shared = com.example.recime.helper.SharedRecipeInput.parse(text);
+        Ui.set(v, R.id.url, shared.url); Ui.set(v, R.id.raw, shared.text);
       }
       String uri = getArguments().getString("uri");
       if (uri != null) ocr(Uri.parse(uri));
@@ -176,7 +195,7 @@ public class ImportFragment extends Fragment {
       if (root == null || event == null) return;
       if (event.loading) {
         loading(true);
-        status("Đang đọc trang công khai…");
+        status(event.url.startsWith("AI:") ? "Đang trích văn bản qua backend/OpenAI…" : "Đang đọc trang công khai…");
         return;
       }
       loading(false);
@@ -187,7 +206,7 @@ public class ImportFragment extends Fragment {
       } else {
         image = "";
         Ui.set(root, R.id.raw, event.text);
-        status("Đã đọc Recipe JSON-LD. Kiểm tra văn bản rồi chọn Phân tích.");
+        status(event.url.startsWith("AI:") ? "AI đã trích văn bản; kiểm tra mọi nguyên liệu, định lượng và bước trước khi lưu." : "Đã đọc Recipe JSON-LD. Kiểm tra văn bản rồi chọn Phân tích.");
       }
     });
   }
@@ -248,13 +267,14 @@ public class ImportFragment extends Fragment {
   }
 
   private void loading(boolean on) {
+    on = on || (webState != null && webState.isLoading()) || (imageState != null && imageState.isLoading());
     busy = on;
     if (root == null) return;
     root.findViewById(R.id.progress).setVisibility(on ? View.VISIBLE : View.GONE);
     for (int id :
         new int[] {
           R.id.fetch, R.id.pick, R.id.camera, R.id.review, R.id.manual, R.id.ai_pick, R.id.ai_text,
-          R.id.url, R.id.raw
+          R.id.url, R.id.raw, R.id.ai_extract
         }) root.findViewById(id).setEnabled(!on);
   }
 
@@ -264,7 +284,7 @@ public class ImportFragment extends Fragment {
     com.example.recime.helper.ImportProviders.Provider provider =
         com.example.recime.helper.ImportProviders.forUrl(url);
     if (provider.status != com.example.recime.helper.ImportProviders.Status.SUPPORTED) {
-      status(provider.name + ": chưa có adapter trích xuất được phép. Dán caption, transcript bạn có quyền sử dụng hoặc chọn ảnh; không đọc nội dung video từ URL.");
+      status("Không nhập được: " + provider.name + ": chưa có adapter trích xuất được phép. Dán caption, transcript bạn có quyền sử dụng hoặc chọn ảnh; không đọc nội dung video từ URL.");
       return;
     }
     if (provider.metadataOnly) { aiRequest("tiktok", url); return; }
@@ -388,6 +408,7 @@ public class ImportFragment extends Fragment {
   public void onSaveInstanceState(Bundle b) {
     super.onSaveInstanceState(b);
     b.putString("image", image);
+    if (root != null) b.putString("statusText", Ui.text(root, R.id.status));
     b.putBoolean("interrupted", busy && !webState.isLoading() && !imageState.isLoading());
     b.putLong("appliedWebFetch", appliedWebFetch);
     b.putLong("appliedImage", appliedImage);
@@ -397,6 +418,7 @@ public class ImportFragment extends Fragment {
 
   @Override
   public void onDestroyView() {
+    if (chrome != null) chrome.restore(); chrome = null;
     root = null;
     super.onDestroyView();
   }

@@ -50,6 +50,15 @@ public class DetailFragment extends Fragment {
     root = v;
     LabViewModel vm = new ViewModelProvider(requireActivity()).get(LabViewModel.class);
     actions = new ViewModelProvider(this).get(com.example.recime.viewmodel.DetailActionState.class);
+    actions.exported.observe(getViewLifecycleOwner(), event -> {
+      if (event == null) return;
+      actions.exported.setValue(null); render();
+      try {
+        if (event.error != null) throw new java.io.IOException(event.error);
+        if (event.print) RecipeExport.printFile(requireActivity(), event.file, event.title);
+        else RecipeExport.shareFile(requireActivity(), event.file);
+      } catch (Exception error) { Toast.makeText(requireContext(), "Không xuất được: " + error.getMessage(), Toast.LENGTH_LONG).show(); }
+    });
     if (state != null) {
       portions = state.getDouble("portions", -1);
       baseServings = state.getDouble("base_servings", -1);
@@ -237,14 +246,22 @@ public class DetailFragment extends Fragment {
       dialog.show();
     });
     v.findViewById(R.id.export_pdf).setOnClickListener(x->{
-      if(recipe==null)return;
-      try{RecipeExport.share(requireActivity(),recipe);}
-      catch(Exception error){Toast.makeText(requireContext(),"Lỗi xuất PDF: "+error.getMessage(),Toast.LENGTH_LONG).show();}
+      export(vm, false);
     });
     v.findViewById(R.id.print_recipe).setOnClickListener(x->{
-      if(recipe==null)return;
-      try{RecipeExport.print(requireActivity(),recipe);}
-      catch(Exception error){Toast.makeText(requireContext(),"Lỗi in: "+error.getMessage(),Toast.LENGTH_LONG).show();}
+      export(vm, true);
+    });
+  }
+  private void export(LabViewModel vm, boolean print) {
+    if (recipe == null || actions.exportBusy) return;
+    Recipe snapshot = new Recipe(recipe); android.content.Context app = requireContext().getApplicationContext();
+    com.example.recime.viewmodel.DetailActionState target = actions; target.exportBusy = true; render();
+    vm.repository.extraction.execute(() -> {
+      com.example.recime.viewmodel.DetailActionState.Export event = new com.example.recime.viewmodel.DetailActionState.Export();
+      event.print = print; event.title = snapshot.title;
+      try { event.file = RecipeExport.pdf(app, snapshot); }
+      catch (Exception error) { event.error = "Không tạo được PDF"; }
+      target.exportBusy = false; target.exported.postValue(event);
     });
   }
 
@@ -288,6 +305,8 @@ public class DetailFragment extends Fragment {
   private void render() {
     if (root == null) return;
     for (int id : actionIds) root.findViewById(id).setEnabled(recipe != null && !actions.busy);
+    root.findViewById(R.id.export_pdf).setEnabled(recipe != null && !actions.busy && !actions.exportBusy);
+    root.findViewById(R.id.print_recipe).setEnabled(recipe != null && !actions.busy && !actions.exportBusy);
     root.findViewById(R.id.detail_content).setVisibility(recipe == null ? View.GONE : View.VISIBLE);
     root.findViewById(R.id.detail_status).setVisibility(recipe == null || actions.busy ? View.VISIBLE : View.GONE);
     if (recipe == null) {

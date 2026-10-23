@@ -96,7 +96,10 @@ public final class SettingsFragment extends Fragment {
   }
   private void identity(View v) {
     SessionStore session = new SessionStore(requireContext());
-    Ui.set(v, R.id.settings_identity, session.user().isEmpty() ? "Guest / Local-only" : session.email());
+    boolean signedIn;
+    try { signedIn = session.belongsTo(AccountClient.endpoint(requireContext())); } catch (Exception invalid) { signedIn = false; }
+    Ui.set(v, R.id.settings_identity, (signedIn ? session.email() : "Guest / Local-only")
+        + (CloudBackupQueue.pending(requireContext()) ? "\nCó cloud backup đang chờ gửi" : ""));
   }
   private void login(View v, boolean register) {
     String email = Ui.text(v, R.id.settings_email), password = Ui.text(v, R.id.settings_password);

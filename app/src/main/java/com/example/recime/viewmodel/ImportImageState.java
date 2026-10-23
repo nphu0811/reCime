@@ -27,6 +27,7 @@ public final class ImportImageState extends AndroidViewModel {
   private final Handler main = new Handler(Looper.getMainLooper());
   private long generation;
   private volatile boolean closed;
+  private final java.util.Set<String> ownedPaths = java.util.concurrent.ConcurrentHashMap.newKeySet();
   public ImportImageState(Application app) { super(app); }
   public boolean isLoading() { return result.getValue() != null && result.getValue().loading; }
   public void read(Uri uri, boolean dish, ExecutorService executor) {
@@ -43,6 +44,7 @@ public final class ImportImageState extends AndroidViewModel {
         File dir = new File(getApplication().getFilesDir(), "photos");
         if (!dir.isDirectory() && !dir.mkdirs()) throw new IOException("Không tạo được thư mục ảnh");
         file = File.createTempFile("recipe_", ".img", dir);
+        ownedPaths.add(file.getAbsolutePath());
         try (InputStream in = getApplication().getContentResolver().openInputStream(uri);
              OutputStream out = new FileOutputStream(file)) {
           if (in == null) throw new IOException("Không có quyền đọc ảnh; hãy chọn lại");
@@ -85,8 +87,17 @@ public final class ImportImageState extends AndroidViewModel {
         if (recognizer != null) recognizer.close();
         if (bitmap != null) bitmap.recycle();
       }
-      main.post(() -> { if (!closed && generation == next.id) result.setValue(next); });
+      main.post(() -> { if (!closed && generation == next.id) result.setValue(next); else cleanup(next.image); });
     });
   }
-  @Override protected void onCleared() { closed = true; }
+  private void cleanup(String path) {
+    if (path == null || path.isEmpty()) return;
+    com.example.recime.sql.RecipeRepository repo = com.example.recime.sql.RecipeRepository.get(getApplication());
+    repo.io.execute(() -> {
+      for (com.example.recime.model.Recipe recipe : repo.dao.recipeSnapshot()) if (recipe.photoPaths().contains(path)) return;
+      File file = new File(path);
+      if (file.getName().startsWith("recipe_") && file.getParentFile().equals(new File(getApplication().getFilesDir(), "photos"))) file.delete();
+    });
+  }
+  @Override protected void onCleared() { closed = true; for(String path:ownedPaths)cleanup(path); }
 }

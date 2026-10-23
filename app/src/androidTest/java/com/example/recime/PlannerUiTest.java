@@ -1,4 +1,5 @@
 package com.example.recime;
+import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static com.example.recime.UiGestures.click;
 
 import static androidx.test.espresso.Espresso.*;
@@ -86,7 +87,7 @@ public class PlannerUiTest {
       scenario.recreate();
       onView(withId(R.id.portions)).perform(scrollTo()).check(matches(withText("4 khẩu phần")));
       onView(withId(R.id.to_plan)).perform(scrollTo(), click());
-      onView(withId(android.R.id.button1))
+      onView(withId(android.R.id.button1)).inRoot(isDialog())
           .inRoot(androidx.test.espresso.matcher.RootMatchers.isDialog()).perform(click());
       onView(withText("Sáng"))
           .inRoot(androidx.test.espresso.matcher.RootMatchers.isDialog()).perform(click());

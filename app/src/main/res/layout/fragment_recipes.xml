@@ -6,6 +6,7 @@
         <Button android:id="@+id/add" android:layout_width="56dp" android:layout_height="52dp" android:text="+" android:textSize="24sp" android:contentDescription="Thêm công thức"/>
     </LinearLayout>
     <TextView android:id="@+id/catalog_notice" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Catalog offline · Nguồn ghi trong từng công thức" android:textColor="#69655E" android:visibility="gone"/>
+    <Button android:id="@+id/remote_discover" android:layout_width="match_parent" android:layout_height="48dp" android:text="Tìm catalog trên backend riêng" android:visibility="gone"/>
     <EditText android:id="@+id/search" style="@style/EditorField" android:hint="Tìm công thức" android:singleLine="true" android:imeOptions="actionDone"/>
     <LinearLayout android:id="@+id/library_sections" android:layout_width="match_parent" android:layout_height="wrap_content">
         <Button android:id="@+id/manage_books" style="@style/Widget.Material3.Button.TextButton" app:backgroundTint="@color/library_section" android:textColor="#24231F" android:layout_marginEnd="4dp" android:layout_width="0dp" android:layout_weight="1" android:layout_height="48dp" android:text="Cookbooks"/>
