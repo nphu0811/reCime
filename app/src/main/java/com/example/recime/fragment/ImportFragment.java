@@ -75,7 +75,7 @@ public class ImportFragment extends Fragment {
       status("Thao tác OCR/AI trước đó bị gián đoạn; văn bản nháp vẫn được giữ.");
     v.findViewById(R.id.manual).setOnClickListener(x -> open(null));
     v.findViewById(R.id.ai_settings)
-        .setOnClickListener(x -> ((MainActivity) requireActivity()).open(new AiSettingsFragment()));
+        .setOnClickListener(x -> ((MainActivity) requireActivity()).open(new SettingsFragment()));
     v.findViewById(R.id.ai_pick)
         .setOnClickListener(
             x -> {

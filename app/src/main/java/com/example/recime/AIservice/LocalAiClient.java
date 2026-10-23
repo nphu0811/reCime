@@ -11,14 +11,13 @@ import org.json.*;
 public final class LocalAiClient {
   private final String base;
   private final OkHttpClient http =
-      new OkHttpClient.Builder().callTimeout(180, TimeUnit.SECONDS).build();
+      new OkHttpClient.Builder().followRedirects(false).followSslRedirects(false)
+          .connectTimeout(8, TimeUnit.SECONDS).callTimeout(65, TimeUnit.SECONDS).build();
+  private final com.example.recime.helper.SessionStore session;
 
   public LocalAiClient(Context context) {
-    base =
-        context
-            .getSharedPreferences("ai", 0)
-            .getString("endpoint", "http://127.0.0.1:8765")
-            .replaceAll("/+$", "");
+    base = AccountClient.endpoint(context);
+    session = new com.example.recime.helper.SessionStore(context);
     HttpUrl parsed = HttpUrl.parse(base);
     if (parsed == null || parsed.username().length() > 0 || parsed.password().length() > 0)
       throw new IllegalArgumentException("Địa chỉ AI server không hợp lệ");
@@ -26,6 +25,8 @@ public final class LocalAiClient {
 
   private JSONObject request(String path, RequestBody body) throws Exception {
     Request.Builder request = new Request.Builder().url(base + path);
+    String token = session.token(base);
+    if (!token.isEmpty()) request.header("Authorization", "Bearer " + token);
     if (body != null) request.post(body);
     try (Response response = http.newCall(request.build()).execute()) {
       if (response.body() == null) throw new IOException("AI server không trả dữ liệu");

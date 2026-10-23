@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
   @Override
   public void onCreate(Bundle state) {
     super.onCreate(state);
+    boolean newInstall = !getDatabasePath(com.example.recime.sql.LabDatabase.DATABASE_NAME).exists();
     setContentView(R.layout.activity_main);
     androidx.core.view.WindowInsetsControllerCompat bars = androidx.core.view.WindowCompat
         .getInsetsController(getWindow(), getWindow().getDecorView());
@@ -69,6 +70,9 @@ public class MainActivity extends AppCompatActivity {
       getSupportFragmentManager().beginTransaction()
           .replace(R.id.host, RecipesFragment.create(false)).commitNow();
       if (Intent.ACTION_SEND.equals(getIntent().getAction())) handleShare(getIntent());
+      else if (getIntent().hasExtra("cookingRecipe")) open(com.example.recime.fragment.CookingFragment.create(getIntent().getLongExtra("cookingRecipe", 0)));
+      else if (newInstall && !getSharedPreferences("onboarding", 0).getBoolean("completed", false))
+        open(new com.example.recime.fragment.WelcomeFragment());
     }
     new androidx.lifecycle.ViewModelProvider(this)
         .get(LabViewModel.class)
@@ -93,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
     super.onNewIntent(intent);
     setIntent(intent);
     handleShare(intent);
+    if (intent.hasExtra("cookingRecipe")) open(com.example.recime.fragment.CookingFragment.create(intent.getLongExtra("cookingRecipe", 0)));
   }
 
   private void handleShare(Intent i) {
@@ -102,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
     Bundle b = new Bundle();
     b.putString("text", i.getStringExtra(Intent.EXTRA_TEXT));
     android.net.Uri uri = i.getParcelableExtra(Intent.EXTRA_STREAM);
-    if (uri != null) b.putString("uri", uri.toString());
+    if (uri != null && "content".equals(uri.getScheme())) b.putString("uri", uri.toString());
     ImportFragment f = new ImportFragment();
     f.setArguments(b);
     open(f);

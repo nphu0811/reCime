@@ -21,7 +21,7 @@
             android:textSize="10sp"
             android:letterSpacing="0.12"
             android:textStyle="bold"
-            android:textColor="@color/acid_lime" />
+            android:textColor="#316FAC" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -52,7 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             app:cardCornerRadius="28dp"
-            app:cardBackgroundColor="@color/acid_lime"
+            app:cardBackgroundColor="#EAF1FA"
             app:strokeWidth="0dp">
 
             <LinearLayout
@@ -79,7 +79,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/ai_pick"
-                    android:textColor="@color/soft_white"
+                    android:textColor="#24231F"
                     app:backgroundTint="@color/night_ink"
                     android:layout_width="match_parent"
                     android:layout_height="52dp"
@@ -159,7 +159,7 @@
             android:layout_marginVertical="12dp"
             android:text="Ảnh có chữ dùng OCR trên điện thoại. TikTok đọc caption công khai khi nền tảng cho phép. Luôn kiểm tra kết quả trước khi lưu."
             android:textSize="12sp"
-            android:textColor="@color/muted_ink" />
+            android:textColor="#69655E" />
 
         <EditText
             android:id="@+id/raw"

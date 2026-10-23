@@ -9,7 +9,7 @@ import com.example.recime.model.Recipe;
 /** SQLiteOpenHelper như project QuanLySinhVien. Giữ tên file và version cũ để bảo toàn dữ liệu. */
 public class LabDatabase extends SQLiteOpenHelper {
   public static final String DATABASE_NAME = "myrecipelab.db";
-  public static final int DATABASE_VERSION = 5;
+  public static final int DATABASE_VERSION = 6;
   private final LabDao dao;
 
   public LabDatabase(Context context) {
@@ -53,6 +53,11 @@ public class LabDatabase extends SQLiteOpenHelper {
         "CREATE TABLE IF NOT EXISTS `catalog_tombstones` (`catalogKey` TEXT NOT NULL, `deletedAt`"
             + " INTEGER NOT NULL, PRIMARY KEY(`catalogKey`))");
     createV4(db);
+    createV6(db);
+  }
+
+  private void createV6(SQLiteDatabase db) {
+    db.execSQL("CREATE TABLE IF NOT EXISTS backup_restores (backupId TEXT PRIMARY KEY NOT NULL, importedAt INTEGER NOT NULL)");
   }
 
   private void createV4(SQLiteDatabase db) {
@@ -96,6 +101,7 @@ public class LabDatabase extends SQLiteOpenHelper {
     if (oldVersion < 4) createV4(db);
     if (oldVersion < 5)
       db.execSQL("ALTER TABLE recipes ADD COLUMN imagesJson TEXT NOT NULL DEFAULT '[]'");
+    if (oldVersion < 6) createV6(db);
   }
 
   public LabDao dao() {

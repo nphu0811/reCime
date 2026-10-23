@@ -28,7 +28,7 @@ public class CookbookSelectionTest {
       assertNotNull(db.dao().find(r.id));assertNotNull(db.dao().find(catalog.id));
       assertTrue(db.dao().recipeIdsForCookbook("Two").contains(r.id));
       assertEquals("legacy.jpg",db.dao().find(r.id).image);assertEquals("test:catalog",db.dao().find(catalog.id).catalogKey);
-      db.close();db=new LabDatabase(c,name);assertEquals(5,db.getReadableDatabase().getVersion());
+      db.close();db=new LabDatabase(c,name);assertEquals(com.example.recime.sql.LabDatabase.DATABASE_VERSION,db.getReadableDatabase().getVersion());
       assertNotNull(db.dao().find(r.id));assertTrue(db.dao().recipeIdsForCookbook("Two").contains(r.id));
     }finally{db.close();c.deleteDatabase(name);}
   }

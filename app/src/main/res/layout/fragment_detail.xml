@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_screen_glow"
+    android:background="#FAF8F2"
     tools:context=".fragment.DetailFragment">
 
     <LinearLayout
@@ -26,6 +26,7 @@
         <LinearLayout android:id="@+id/detail_content"
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:orientation="vertical" android:visibility="gone">
+        <Button android:id="@+id/save_catalog" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:text="Lưu bản sao vào Recipes" android:visibility="gone"/>
         <TextView android:id="@+id/detail_photo_empty"
             android:layout_width="match_parent" android:layout_height="100dp"
             android:gravity="center" android:text="@string/detail_no_photo" android:visibility="gone" />
@@ -60,7 +61,7 @@
             android:layout_height="wrap_content"
             android:textSize="34sp"
             android:fontFamily="sans-serif-black"
-            android:textColor="@color/soft_white"
+            android:textColor="#24231F"
             tools:text="Bún bò Huế" />
 
         <TextView
@@ -221,7 +222,7 @@
 
         <TextView
             android:id="@+id/source"
-            android:textColor="@color/muted_ink"
+            android:textColor="#69655E"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textIsSelectable="true"

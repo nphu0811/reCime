@@ -40,7 +40,7 @@ public class GroceryDatabaseTest {
     db.dao().saveManualGrocery(draft,5,15,240);assertTrue(db.dao().grocerySnapshot().get(0).checked);
     db.dao().setGroceryChecked(original,false);db.close();db=new LabDatabase(context,name);
     Grocery saved=db.dao().grocerySnapshot().get(0);assertEquals("Edited",saved.name);assertEquals(20,saved.amount,0.001);assertFalse(saved.checked);
-    assertEquals(5,db.getWritableDatabase().getVersion());assertEquals(1,db.dao().mealSnapshot(null,null).size());
+    assertEquals(com.example.recime.sql.LabDatabase.DATABASE_VERSION,db.getWritableDatabase().getVersion());assertEquals(1,db.dao().mealSnapshot(null,null).size());
     db.dao().deleteGrocery(saved);assertTrue(db.dao().grocerySnapshot().isEmpty());assertNotNull(db.dao().find(recipe.id));
   }
   @Test public void stalePlannedCheckboxUsesItemKeyAfterRecomputation(){

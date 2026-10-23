@@ -45,6 +45,7 @@ public class RecipesFragment extends Fragment {
   }
   @Override public void onViewCreated(View v,Bundle saved) {
     root=v; bookListLoaded=false;
+    v.findViewById(R.id.open_settings).setOnClickListener(x -> ((MainActivity) requireActivity()).open(new SettingsFragment()));
     vm=new ViewModelProvider(requireActivity()).get(LabViewModel.class);
     if(saved!=null) { showBooks=saved.getBoolean("showBooks",true); query=saved.getString("query","");
       ingredient=saved.getString("ingredient",""); favorite=saved.getBoolean("favorite"); }

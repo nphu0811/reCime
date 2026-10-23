@@ -19,6 +19,7 @@ local.properties
 /.tools/
 /backend/.venv/
 /backend/models/
+/backend/data/
 /backend/__pycache__/
 /datasets/raw/
 /datasets/training-scratch/

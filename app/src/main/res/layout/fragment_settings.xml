@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true" android:background="#FAF8F2">
+ <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
+  <Button android:id="@+id/settings_back" android:layout_width="wrap_content" android:layout_height="48dp" android:text="← Recipes"/>
+  <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Cài đặt và tài khoản" android:textSize="26sp" android:textStyle="bold" android:textColor="#24231F"/>
+  <TextView android:id="@+id/settings_identity" android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingVertical="12dp" android:textColor="#24231F"/>
+  <TextView android:id="@+id/settings_status" android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingVertical="8dp" android:accessibilityLiveRegion="polite" android:textColor="#454039" android:textIsSelectable="true"/>
+  <EditText android:id="@+id/settings_endpoint" style="@style/EditorField" android:hint="Backend URL" android:inputType="textUri" android:singleLine="true"/>
+  <Button android:id="@+id/settings_connect" android:layout_width="match_parent" android:layout_height="48dp" android:text="Lưu địa chỉ / kiểm tra kết nối"/>
+  <EditText android:id="@+id/settings_email" style="@style/EditorField" android:hint="Email" android:inputType="textEmailAddress" android:singleLine="true"/>
+  <EditText android:id="@+id/settings_password" style="@style/EditorField" android:hint="Mật khẩu (tối thiểu 10 ký tự)" android:inputType="textPassword" android:saveEnabled="false" android:singleLine="true"/>
+  <Button android:id="@+id/settings_login" android:layout_width="match_parent" android:layout_height="48dp" android:text="Đăng nhập"/>
+  <Button android:id="@+id/settings_register" android:layout_width="match_parent" android:layout_height="48dp" android:text="Tạo tài khoản trên backend riêng"/>
+  <Button android:id="@+id/settings_profile" android:layout_width="match_parent" android:layout_height="48dp" android:text="Đổi tên hồ sơ"/>
+  <Button android:id="@+id/settings_logout" android:layout_width="match_parent" android:layout_height="48dp" android:text="Đăng xuất / dùng Guest"/>
+  <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Backup" android:textSize="22sp" android:textStyle="bold" android:paddingTop="20dp" android:textColor="#24231F"/>
+  <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Backup cloud được gửi khi bạn chọn lưu. Khôi phục thêm bản sao và hợp nhất cookbook, không xóa dữ liệu hiện có. Đồng bộ tự động từng bản ghi chưa được bật. Ảnh được gửi trong backup khi bạn yêu cầu." android:textColor="#69655E"/>
+  <Button android:id="@+id/settings_export" android:layout_width="match_parent" android:layout_height="48dp" android:text="Xuất backup tệp (gồm ảnh riêng)"/>
+  <Button android:id="@+id/settings_restore" android:layout_width="match_parent" android:layout_height="48dp" android:text="Khôi phục từ tệp"/>
+  <Button android:id="@+id/settings_upload" android:layout_width="match_parent" android:layout_height="48dp" android:text="Lưu cloud backup / gửi lại bản chờ"/>
+  <Button android:id="@+id/settings_download" android:layout_width="match_parent" android:layout_height="48dp" android:text="Tải và hợp nhất cloud backup"/>
+  <Button android:id="@+id/settings_cancel_pending" android:layout_width="match_parent" android:layout_height="48dp" android:text="Hủy backup đang chờ"/>
+  <Button android:id="@+id/settings_units" android:layout_width="match_parent" android:layout_height="48dp" android:text="Đơn vị đo ưu tiên"/>
+  <Button android:id="@+id/settings_privacy" android:layout_width="match_parent" android:layout_height="48dp" android:text="Quyền riêng tư và dữ liệu"/>
+  <Button android:id="@+id/settings_welcome" android:layout_width="match_parent" android:layout_height="48dp" android:text="Giới thiệu / Bắt đầu"/>
+  <Button android:id="@+id/settings_delete" android:layout_width="match_parent" android:layout_height="48dp" android:text="Xóa tài khoản cloud"/>
+ </LinearLayout>
+</ScrollView>

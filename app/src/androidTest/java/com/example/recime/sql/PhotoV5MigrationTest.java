@@ -41,7 +41,7 @@ public class PhotoV5MigrationTest {
     old.setVersion(4); old.close();
     LabDatabase db = new LabDatabase(context, name);
     try {
-      assertEquals(5, db.getWritableDatabase().getVersion());
+      assertEquals(com.example.recime.sql.LabDatabase.DATABASE_VERSION, db.getWritableDatabase().getVersion());
       Recipe recipe = db.dao().find(42);
       assertEquals("legacy-cover.jpg", recipe.image);
       assertEquals(Arrays.asList("legacy-cover.jpg"), recipe.photoPaths());

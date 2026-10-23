@@ -29,7 +29,7 @@ public class DetailFragment extends Fragment {
   private com.example.recime.viewmodel.DetailActionState actions;
   private final int[] actionIds = {R.id.edit, R.id.delete, R.id.favorite, R.id.to_grocery,
       R.id.add_to_book, R.id.to_plan, R.id.cooking_mode, R.id.export_pdf, R.id.print_recipe,
-      R.id.ask_recipe_ai, R.id.minus, R.id.plus, R.id.unit_settings, R.id.metric};
+      R.id.ask_recipe_ai, R.id.minus, R.id.plus, R.id.unit_settings, R.id.metric, R.id.save_catalog};
 
   public DetailFragment() {
     super(R.layout.fragment_detail);
@@ -46,6 +46,7 @@ public class DetailFragment extends Fragment {
   @Override
   public void onViewCreated(View v, Bundle state) {
     Motion.enter(v);
+    if (state == null) ((CheckBox) v.findViewById(R.id.metric)).setChecked(requireContext().getSharedPreferences("units", 0).getBoolean("metric", false));
     root = v;
     LabViewModel vm = new ViewModelProvider(requireActivity()).get(LabViewModel.class);
     actions = new ViewModelProvider(this).get(com.example.recime.viewmodel.DetailActionState.class);
@@ -189,7 +190,12 @@ public class DetailFragment extends Fragment {
       });
     });
     v.findViewById(R.id.cooking_mode).setOnClickListener(x->{
-      if(recipe!=null)((MainActivity)requireActivity()).open(CookingFragment.create(recipe.id));
+      if(recipe!=null)((MainActivity)requireActivity()).open(CookingFragment.create(recipe.id, portions));
+    });
+    v.findViewById(R.id.save_catalog).setOnClickListener(x -> {
+      if (recipe == null || recipe.catalogKey == null) return;
+      final Recipe copy = new Recipe(recipe); copy.id = 0; copy.catalogKey = null; copy.cookbook = "Món nhà";
+      mutate(vm, () -> vm.repository.dao.insert(copy), "Đã lưu bản sao cá nhân, giữ nguyên nguồn và giấy phép");
     });
     v.findViewById(R.id.to_plan).setOnClickListener(x->{
       if(recipe!=null)pickPlanDate(vm);
@@ -293,6 +299,7 @@ public class DetailFragment extends Fragment {
     root.findViewById(R.id.ask_recipe_ai).setEnabled(!actions.busy && !actions.aiBusy);
     if (actions.busy) Ui.set(root, R.id.detail_status, "Đang lưu thay đổi…");
     Ui.set(root, R.id.detail_title, recipe.title);
+      root.findViewById(R.id.save_catalog).setVisibility(recipe.catalogKey == null ? View.GONE : View.VISIBLE);
     Ui.set(root, R.id.detail_meta, recipe.cookbook + " · " + recipe.tags);
     renderGallery();
     Ui.set(root, R.id.favorite, recipe.favorite ? "♥ Đã thích" : "♡ Thích");
