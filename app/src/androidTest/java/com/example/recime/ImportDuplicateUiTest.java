@@ -11,7 +11,6 @@ import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import com.example.recime.activity.MainActivity;
-import com.example.recime.fragment.ImportFragment;
 import com.example.recime.model.Recipe;
 import com.example.recime.sql.RecipeRepository;
 import java.util.concurrent.TimeUnit;
@@ -31,7 +30,11 @@ public class ImportDuplicateUiTest {
     repository.io.submit(() -> existing.id = repository.dao.insert(existing)).get(30, TimeUnit.SECONDS);
 
     try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
-      scenario.onActivity(activity -> activity.open(new ImportFragment()));
+      // Exercise the actual Home → + → Import navigation. Launching a fragment
+      // immediately inside onActivity races the activity's window focus on API 37.
+      onView(withId(R.id.add)).perform(click());
+      onView(withText("Nhập link, ảnh, văn bản / AI")).perform(click());
+      onView(withId(R.id.url)).check(matches(isDisplayed()));
       onView(withId(R.id.url)).perform(scrollTo(), replaceText(existing.source),
           closeSoftKeyboard());
       onView(withId(R.id.raw)).perform(scrollTo(), replaceText(
@@ -66,7 +69,11 @@ public class ImportDuplicateUiTest {
     repository.io.submit(() -> existing.id = repository.dao.insert(existing)).get(30, TimeUnit.SECONDS);
 
     try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
-      scenario.onActivity(activity -> activity.open(new ImportFragment()));
+      // Exercise the actual Home → + → Import navigation. Launching a fragment
+      // immediately inside onActivity races the activity's window focus on API 37.
+      onView(withId(R.id.add)).perform(click());
+      onView(withText("Nhập link, ảnh, văn bản / AI")).perform(click());
+      onView(withId(R.id.url)).check(matches(isDisplayed()));
       onView(withId(R.id.url)).perform(scrollTo(), replaceText(existing.source),
           closeSoftKeyboard());
       onView(withId(R.id.raw)).perform(scrollTo(), replaceText(
