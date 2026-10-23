@@ -133,6 +133,7 @@ public class ImageAiImportTest {
           SystemClock.sleep(50);
         } while (SystemClock.elapsedRealtime() < deadline);
         assertTrue("Review must open Editor", opened[0]); onIdle();
+        onView(withId(R.id.bottom)).check(matches(withEffectiveVisibility(Visibility.GONE)));
         scenario.onActivity(a -> {
           androidx.fragment.app.Fragment editor = a.getSupportFragmentManager().findFragmentById(R.id.host);
           assertTrue(editor instanceof EditorFragment);

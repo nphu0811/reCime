@@ -37,7 +37,6 @@ public class ImportFragment extends Fragment {
   private ImportWebState webState;
   private com.example.recime.viewmodel.ImportImageState imageState;
   private long appliedImage;
-  private com.example.recime.helper.ModalChrome chrome;
   private long appliedWebFetch;
   private final ActivityResultLauncher<androidx.activity.result.PickVisualMediaRequest> picker =
       registerForActivityResult(
@@ -62,7 +61,6 @@ public class ImportFragment extends Fragment {
     Motion.enter(v);
     root = v;
     v.findViewById(R.id.import_back).setOnClickListener(x -> getParentFragmentManager().popBackStack());
-    chrome = new com.example.recime.helper.ModalChrome(requireActivity());
     busy = false;
     webState = new ViewModelProvider(this).get(ImportWebState.class);
     imageState = new ViewModelProvider(this).get(com.example.recime.viewmodel.ImportImageState.class);
@@ -440,7 +438,6 @@ public class ImportFragment extends Fragment {
 
   @Override
   public void onDestroyView() {
-    if (chrome != null) chrome.restore(); chrome = null;
     root = null;
     super.onDestroyView();
   }

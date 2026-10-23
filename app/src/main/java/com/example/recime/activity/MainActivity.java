@@ -15,6 +15,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class MainActivity extends AppCompatActivity {
   private static final int[] TABS = {R.id.nav_recipes, R.id.nav_plan, R.id.nav_grocery, R.id.nav_discover};
   private int selectedTab = R.id.nav_recipes;
+  private int rootHostMargin;
+  private static final String MODAL_ENTRY = "recipe-modal";
   private final java.util.Map<Integer, Fragment.SavedState> tabStates = new java.util.HashMap<>();
   @Override protected void onSaveInstanceState(Bundle out) {
     out.putInt("selectedTab", selectedTab);
@@ -28,6 +30,17 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(state);
     boolean newInstall = !getDatabasePath(com.example.recime.sql.LabDatabase.DATABASE_NAME).exists();
     setContentView(R.layout.activity_main);
+    rootHostMargin = ((android.view.ViewGroup.MarginLayoutParams) findViewById(R.id.host).getLayoutParams()).bottomMargin;
+    getSupportFragmentManager().addOnBackStackChangedListener(
+        new androidx.fragment.app.FragmentManager.OnBackStackChangedListener() {
+          @Override public void onBackStackChanged() { scheduleChrome(); }
+          @Override public void onBackStackChangeCommitted(Fragment fragment, boolean pop) {
+            // Fragment 1.8 predictive Back uses this callback and counts the
+            // transitioning entry until it returns; read the stack next loop.
+            scheduleChrome();
+          }
+          private void scheduleChrome() { findViewById(R.id.host).post(MainActivity.this::updateModalChrome); }
+        });
     androidx.core.view.WindowInsetsControllerCompat bars = androidx.core.view.WindowCompat
         .getInsetsController(getWindow(), getWindow().getDecorView());
     bars.setAppearanceLightStatusBars(true);
@@ -96,6 +109,28 @@ public class MainActivity extends AppCompatActivity {
     repository.io.execute(() -> {
       if (com.example.recime.helper.CloudBackupQueue.pending(appContext)) com.example.recime.helper.CloudBackupQueue.schedule(appContext);
     });
+    updateModalChrome();
+  }
+
+  private boolean isRecipeModal(Fragment fragment) {
+    return fragment instanceof ImportFragment
+        || fragment instanceof com.example.recime.fragment.EditorFragment
+        || fragment instanceof com.example.recime.fragment.CookingFragment;
+  }
+
+  /** A child such as Settings must not expose root tabs over an unfinished draft. */
+  private void updateModalChrome() {
+    androidx.fragment.app.FragmentManager manager = getSupportFragmentManager();
+    // During a pop the outgoing view can still be attached for its exit animation.
+    // The committed back stack, rather than that view, owns the dock policy.
+    boolean modal = false;
+    for (int i = 0; i < manager.getBackStackEntryCount(); i++)
+      modal |= MODAL_ENTRY.equals(manager.getBackStackEntryAt(i).getName());
+    findViewById(R.id.bottom).setVisibility(modal ? android.view.View.GONE : android.view.View.VISIBLE);
+    android.view.View host = findViewById(R.id.host);
+    android.view.ViewGroup.MarginLayoutParams params = (android.view.ViewGroup.MarginLayoutParams) host.getLayoutParams();
+    params.bottomMargin = modal ? 0 : rootHostMargin;
+    host.setLayoutParams(params);
   }
 
   @Override
@@ -130,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
             R.anim.recime_slide_down,
             R.anim.recime_fade_out)
         .replace(R.id.host, f)
-        .addToBackStack(null)
+        .addToBackStack(isRecipeModal(f) ? MODAL_ENTRY : null)
         .commit();
   }
 }

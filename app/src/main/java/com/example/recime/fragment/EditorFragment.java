@@ -23,9 +23,8 @@ import com.example.recime.viewmodel.EditorSaveState;
 public class EditorFragment extends Fragment {
   private Recipe recipe = new Recipe();
   private EditorSaveState photoState;
-  private View activityRoot, dock, host;
+  private View activityRoot;
   private android.graphics.drawable.Drawable previousBackground;
-  private int previousDockVisibility, previousHostMargin;
   private boolean previousLightStatus, previousLightNavigation;
   private final ActivityResultLauncher<PickVisualMediaRequest> photoPicker =
       registerForActivityResult(new ActivityResultContracts.PickMultipleVisualMedia(5),
@@ -363,15 +362,8 @@ public class EditorFragment extends Fragment {
 
   private void enterEditorChrome() {
     activityRoot = requireActivity().findViewById(R.id.main);
-    dock = requireActivity().findViewById(R.id.bottom);
-    host = requireActivity().findViewById(R.id.host);
     previousBackground = activityRoot.getBackground();
-    previousDockVisibility = dock.getVisibility();
-    previousHostMargin = ((ViewGroup.MarginLayoutParams) host.getLayoutParams()).bottomMargin;
     activityRoot.setBackgroundColor(android.graphics.Color.rgb(250, 248, 242));
-    dock.setVisibility(View.GONE);
-    ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) host.getLayoutParams();
-    params.bottomMargin = 0; host.setLayoutParams(params);
     androidx.core.view.WindowInsetsControllerCompat bars = androidx.core.view.WindowCompat
         .getInsetsController(requireActivity().getWindow(), activityRoot);
     previousLightStatus = bars.isAppearanceLightStatusBars();
@@ -382,14 +374,11 @@ public class EditorFragment extends Fragment {
   @Override public void onDestroyView() {
     if (activityRoot != null) {
       activityRoot.setBackground(previousBackground);
-      dock.setVisibility(previousDockVisibility);
-      ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) host.getLayoutParams();
-      params.bottomMargin = previousHostMargin; host.setLayoutParams(params);
       androidx.core.view.WindowInsetsControllerCompat bars = androidx.core.view.WindowCompat
           .getInsetsController(requireActivity().getWindow(), activityRoot);
       bars.setAppearanceLightStatusBars(previousLightStatus);
       bars.setAppearanceLightNavigationBars(previousLightNavigation);
-      activityRoot = null; dock = null; host = null; previousBackground = null;
+      activityRoot = null; previousBackground = null;
     }
     super.onDestroyView();
   }

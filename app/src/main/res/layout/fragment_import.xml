@@ -134,8 +134,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-            app:boxStrokeColor="@color/acid_lime"
-            app:boxBackgroundColor="@color/card_ink">
+            app:boxStrokeColor="#8C8880"
+            app:boxBackgroundColor="#FFFFFF">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/url"

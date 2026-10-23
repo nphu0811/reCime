@@ -31,7 +31,7 @@ public class LabUiTest {
             .setType("text/plain")
             .putExtra(
                 Intent.EXTRA_TEXT,
-                title + "\nNguyên liệu\n200 g đậu phụ\n1 muỗng canh dầu\nCách làm\nÁp chảo đậu.");
+                title + "\nNguyên liệu\n200 g " + title + " đậu phụ\n1 muỗng canh " + title + " dầu\nCách làm\nÁp chảo đậu.");
     try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(intent)) {
       onView(withId(R.id.review)).perform(scrollTo(), click());
       onView(withId(R.id.edit_title)).check(matches(withText(title)));
@@ -68,6 +68,8 @@ public class LabUiTest {
               () -> {
                 for (Recipe r : repo.dao.recipeSnapshot())
                   if (r.title.equals(title)) repo.dao.delete(r);
+                for (com.example.recime.model.Grocery g : repo.dao.grocerySnapshot())
+                  if (g.name.contains(title)) repo.dao.deleteGrocery(g);
               })
           .get(20, TimeUnit.SECONDS);
     }

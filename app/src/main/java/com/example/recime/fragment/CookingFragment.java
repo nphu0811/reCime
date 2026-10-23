@@ -24,7 +24,6 @@ public final class CookingFragment extends Fragment {
   private String name="";
   private double portions = -1;
   private Recipe selected;
-  private com.example.recime.helper.ModalChrome chrome;
   private final java.util.HashSet<String> checked = new java.util.HashSet<>();
   private final android.os.Handler clock = new android.os.Handler(android.os.Looper.getMainLooper());
   private final Runnable tick = new Runnable() { public void run() { timerLabel(); if (screen != null) clock.postDelayed(this, 1000); } };
@@ -46,7 +45,6 @@ public final class CookingFragment extends Fragment {
 
   @Override public void onViewCreated(View v,Bundle savedState){
     screen=v;
-    chrome = new com.example.recime.helper.ModalChrome(requireActivity());
     Motion.enter(v);
     v.setKeepScreenOn(true);
     if(savedState!=null)index=savedState.getInt("step",0);
@@ -138,7 +136,6 @@ public final class CookingFragment extends Fragment {
     out.putDouble("portions", portions); out.putStringArrayList("checked", new ArrayList<>(checked));
   }
   @Override public void onDestroyView(){
-    if (chrome != null) chrome.restore(); chrome = null;
     if(screen!=null)screen.setKeepScreenOn(false);
     screen=null;
     super.onDestroyView();

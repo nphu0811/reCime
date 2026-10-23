@@ -27,12 +27,18 @@ public class SettingsCookingUiTest {
   private Context context;
   private RecipeRepository repo;
   private Recipe recipe;
+  private String fixtureCatalogBook;
   @Before public void setup() throws Exception {
     context=ApplicationProvider.getApplicationContext();repo=RecipeRepository.get(context);repo.io.submit(()->{}).get(30,TimeUnit.SECONDS);
     recipe=new Recipe();recipe.title="CookingQA"+System.nanoTime();recipe.ingredients="100 g rice\nwater as needed";recipe.steps="Wash rice\nCook rice\nServe";recipe.servings=2;
     repo.io.submit(()->recipe.id=repo.dao.insert(recipe)).get(30,TimeUnit.SECONDS);
   }
-  @After public void cleanup() throws Exception { repo.io.submit(()->repo.dao.delete(recipe)).get(30,TimeUnit.SECONDS);CookingTimer.cancel(context); }
+  @After public void cleanup() throws Exception {
+    repo.io.submit(()->{
+      for(Recipe row:repo.dao.recipeSnapshot())if(row.title.equals(recipe.title))repo.dao.delete(row);
+      if(fixtureCatalogBook!=null)repo.dao.deleteCookbook(fixtureCatalogBook);
+    }).get(30,TimeUnit.SECONDS);CookingTimer.cancel(context);
+  }
   @Test public void settingsKeepEmailButNeverRestorePasswordAndWelcomeReturns() throws Exception {
     try(ActivityScenario<MainActivity> scenario=ActivityScenario.launch(MainActivity.class)){
       onView(withId(R.id.open_settings)).perform(click());
@@ -68,7 +74,8 @@ public class SettingsCookingUiTest {
     }
   }
   @Test public void discoverCopiesToPersonalWithoutDroppingLicenseOrOriginal() throws Exception {
-    repo.io.submit(()->{Recipe update=new Recipe(recipe);update.catalogKey="catalogQA"+System.nanoTime();update.source="https://example.org/fixture";update.attribution="QA test CC0";update.cookbook="QA catalog";repo.dao.update(update);recipe=update;}).get(30,TimeUnit.SECONDS);
+    fixtureCatalogBook=recipe.title+" catalog";
+    repo.io.submit(()->{Recipe update=new Recipe(recipe);update.catalogKey="catalogQA"+System.nanoTime();update.source="https://example.org/fixture";update.attribution="QA test CC0";update.cookbook=fixtureCatalogBook;repo.dao.update(update);recipe=update;}).get(30,TimeUnit.SECONDS);
     try(ActivityScenario<MainActivity> scenario=ActivityScenario.launch(MainActivity.class)){
       scenario.onActivity(a->a.open(DetailFragment.create(recipe.id)));
       onView(withId(R.id.save_catalog)).perform(scrollTo(),click());
