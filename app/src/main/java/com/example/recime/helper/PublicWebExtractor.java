@@ -17,11 +17,23 @@ public final class PublicWebExtractor implements ExtractionAdapter {
         || (u.getPort() != -1 && u.getPort() != 443))
       throw new IllegalArgumentException("Chỉ nhận URL HTTPS công khai");
     String host = u.getHost().toLowerCase(Locale.ROOT);
-    if (host.matches(
-        ".*(instagram\\.com|tiktok\\.com|facebook\\.com|youtube\\.com|youtu\\.be|pinterest\\.com)$"))
+    if (isSocialHost(host))
       throw new IllegalArgumentException(
           "Chưa hỗ trợ video social. Hãy dán caption hoặc chọn screenshot.");
     for (InetAddress a : InetAddress.getAllByName(host)) checkAddress(a);
+  }
+
+  // Match only the actual social domain and its subdomains, not e.g. mytiktok.com.
+  static boolean isSocialHost(String host) {
+    if (host == null) return false;
+    String value = host.toLowerCase(Locale.ROOT);
+    for (String domain : new String[] {
+        "instagram.com", "tiktok.com", "facebook.com", "youtube.com",
+        "youtu.be", "pinterest.com"
+    }) {
+      if (value.equals(domain) || value.endsWith("." + domain)) return true;
+    }
+    return false;
   }
 
   private static void checkAddress(InetAddress a) throws UnknownHostException {
@@ -97,20 +109,44 @@ public final class PublicWebExtractor implements ExtractionAdapter {
     throw new IllegalArgumentException("Quá nhiều chuyển hướng hoặc trang không hợp lệ");
   }
 
+  // Schema.org permits a short type, a full type URL, or a list of types.
+  static boolean isRecipeTypeName(String name) {
+    if (name == null) return false;
+    String value = name.trim();
+    return "Recipe".equals(value)
+        || "https://schema.org/Recipe".equals(value)
+        || "http://schema.org/Recipe".equals(value);
+  }
+
+  static boolean isRecipeType(Object type) throws JSONException {
+    if (type instanceof String) return isRecipeTypeName((String) type);
+    if (type instanceof JSONArray) {
+      JSONArray types = (JSONArray) type;
+      for (int i = 0; i < types.length(); i++)
+        if (types.opt(i) instanceof String && isRecipeTypeName((String) types.get(i)))
+          return true;
+    }
+    return false;
+  }
+
   static JSONObject find(Object o) throws JSONException {
     if (o instanceof JSONArray) {
-      JSONArray a = (JSONArray) o;
-      for (int i = 0; i < a.length(); i++) {
-        JSONObject found = find(a.get(i));
+      JSONArray array = (JSONArray) o;
+      for (int i = 0; i < array.length(); i++) {
+        JSONObject found = find(array.get(i));
         if (found != null) return found;
       }
-    }
-    if (o instanceof JSONObject) {
-      JSONObject j = (JSONObject) o;
-      Object type = j.opt("@type");
-      if ("Recipe".equals(type)
-          || (type instanceof JSONArray && type.toString().contains("\"Recipe\""))) return j;
-      if (j.has("@graph")) return find(j.get("@graph"));
+    } else if (o instanceof JSONObject) {
+      JSONObject item = (JSONObject) o;
+      if (isRecipeType(item.opt("@type"))) return item;
+      // Recipe JSON-LD is often inside WebPage.mainEntity or an @graph node.
+      for (String key : new String[] {"@graph", "mainEntity", "itemListElement"}) {
+        Object child = item.opt(key);
+        if (child instanceof JSONObject || child instanceof JSONArray) {
+          JSONObject found = find(child);
+          if (found != null) return found;
+        }
+      }
     }
     return null;
   }
@@ -120,9 +156,12 @@ public final class PublicWebExtractor implements ExtractionAdapter {
         new StringBuilder(Jsoup.parse(r.optString("name", "Công thức nhập web")).text())
             .append("\nIngredients\n");
     JSONArray a = r.optJSONArray("recipeIngredient");
-    if (a != null)
+    if (a != null) {
       for (int i = 0; i < a.length(); i++)
         b.append(Jsoup.parse(a.getString(i)).text()).append('\n');
+    } else if (r.opt("recipeIngredient") instanceof String) {
+      b.append(Jsoup.parse(r.optString("recipeIngredient")).text()).append('\n');
+    }
     b.append("Instructions\n");
     instructions(r.opt("recipeInstructions"), b);
     return b.toString();
