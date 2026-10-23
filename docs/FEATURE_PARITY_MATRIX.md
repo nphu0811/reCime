@@ -4,19 +4,20 @@
 
 Các bảng/section cũ bên dưới là lịch sử theo checkpoint. Trạng thái mới nhất: app độc lập SQLite v6 (v5→6 chỉ thêm backup restore ledger), theme trắng/kem, import web/text/OCR giữ rotation, social caption fallback rõ ràng, Discover lưu bản sao cá nhân có nguồn, Cooking checklist/timer, PDF background có ảnh/nguồn, Settings/Welcome/Guest.
 
-FastAPI hiện có email/password/session/profile/account delete, cloud backup CAS/outbox/restore và API record sync có conflict/idempotency/tombstones. Android đã nối account + cloud backup; **chưa nối automatic record sync**. OpenAI Q&A + structured text extraction và USDA cần server keys; không tạo câu trả lời hoặc nutrition giả. Discover backend có search/pagination, offline catalog vẫn độc lập.
+FastAPI hiện có email/password/session/profile/account delete, cloud backup CAS/outbox/restore và API record sync có conflict/idempotency/tombstones. Android đã nối account + cloud backup; **chưa nối automatic record sync**. OpenAI Q&A + structured text/image extraction và USDA dùng server keys do người dùng đã cấu hình; smoke test live HTTP200 ngày 24/10 trên dữ liệu tự tạo, không tạo câu trả lời hoặc nutrition giả. Discover backend có search/pagination, offline catalog vẫn độc lập.
 
 | Nhóm | Triển khai độc lập hiện tại | Giới hạn/parity official |
 |---|---|---|
+| Navigation/modal | Dock theo back stack có tên, xử lý callback Predictive Back của Fragment1.8; Settings trên draft vẫn giữ ẩn dock; khôi phục Home margin | Fix dựa screenshot độc lập; không suy motion/pixel parity official |
 | Regression Library/ANR | Baseline Library 5/5 một lượt; giữ WAL/catalog optimization, member query background | Không coi sửa test root là sửa server/official |
-| Import | Servings/author/license metadata, HTTPS redirects/body/time/DNS limits, duplicate review; OCR thực qua rotation; Share giữ caption+URL | OCR Việt thực tế đa dạng/process-kill chưa đủ QA; không tự lấy ảnh website |
+| Import | Servings/author/license metadata, HTTPS redirects/body/time/DNS limits, duplicate review; OCR thực qua rotation; tùy chọn đọc chữ ảnh bằng OpenAI có consent/giữ ảnh/review; Share giữ caption+URL | OCR Việt thực tế đa dạng/process-kill chưa đủ QA; không tự lấy ảnh website |
 | Social | Provider statuses + fallback; TikTok caption công khai, không tự mở catalog như kết quả trích video | Không có video/audio/transcript adapter cho các nền tảng |
 | Account/backup | Auth độc lập, encrypted Android session, additive restore có checksum/FK/idempotence; contract local thật | Google/email verification/reset/collaboration chưa hoàn tất |
 | Record sync | Generic server API có user isolation/revision/conflict/tombstone/cursor | Android mutation/outbox mapping, merge từng entity và multi-device runtime chưa triển khai |
-| Nutrition/AI | JSON schema/errors/rate/timeout; USDA g/kg, kiểm tra kcal/g, không điền khi thiếu | Mock không xác minh live provider; user phải xác nhận mapping |
+| Nutrition/AI | JSON schema/errors/rate/timeout; USDA g/kg, kiểm tra kcal/g, không điền khi thiếu | Live smoke HTTP200 cho text/ảnh tiếng Việt/Q&A/USDA; không chứng nhận accuracy rộng; user phải xác nhận mapping |
 | Cooking/export | Step/checklist/portions, timer persisted, quyền notifications/exact alarm; PDF ảnh/nguồn background, Print ranges | Notification timing/Doze/reboot/physical printer và official Cooking UNKNOWN |
 
-Kết quả build/tests cuối: `TEST_RESULTS.md`. DONE/CONFIGURATION REQUIRED/BLOCKED/NOT VERIFIED và cách dùng: `FINAL_HANDOFF.md`. Không chứng nhận parity1:1 hoặc toàn bộ roadmap DONE.
+Kết quả cuối trên c6a22de: build PASS,44JVM PASS,75/75 instrumentation PASS trong một lượt,31backend PASS,lint0errors/230warnings. Chi tiết: `TEST_RESULTS.md`. DONE/CONFIGURATION REQUIRED/BLOCKED/NOT VERIFIED và cách dùng: `FINAL_HANDOFF.md`. Không chứng nhận parity1:1 hoặc toàn bộ roadmap DONE.
 
 ## Ma trận và evidence lịch sử
 

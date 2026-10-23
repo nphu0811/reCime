@@ -3,7 +3,7 @@
 ## Hiện hành — 24/10/2026
 
 - Tài khoản email/password/profile/logout/delete và cloud backup đã có implementation + contract local thật; không còn là nhóm hoàn toàn thiếu backend. **Automatic record sync Android, Google Login, email verification/reset, collaboration/access còn thiếu implementation**, không chỉ chờ key.
-- OpenAI/USDA live cần keys trong `.env`; có adapter/schema/timeout/lỗi và tests mock. Health chỉ báo cấu hình, chưa chứng nhận live. OCR Latin dùng được local; ảnh tiếng Việt đa dạng/EXIF mirror và process-kill ở mọi điểm chưa xác minh.
+- Người dùng đã cấu hình `.env`: OpenAI text/ảnh công thức tiếng Việt/Q&A và USDA đã smoke test HTTP200 trên fixture nhỏ. Health vẫn chỉ báo cấu hình; không chứng nhận accuracy trên mọi ảnh/nguyên liệu. OCR Latin local, decode EXIF mirror và AI-image consent/review đã triển khai; ảnh đa dạng, mọi dạng EXIF mirror và process-kill ở mọi điểm chưa xác minh đầy đủ.
 - Social video/audio/transcript chưa có adapter hợp lệ. TikTok chỉ oEmbed caption; Instagram/YouTube/Facebook/Pinterest dùng caption/transcript/ảnh người dùng có quyền cung cấp. Không dùng catalog similarity làm kết quả video extraction.
 - Runtime official populated Detail/Cooking/Planner, exact motion/haptics, collaboration, paywall/merchant và public domain riêng vẫn UNKNOWN/chưa triển khai. Không đụng draft official để ép quan sát, không decompile lại toàn APK.
 - SQLite v6 chỉ thêm backup ledger và có test từ v5. Restore thêm bản sao/hợp nhất, giữ prefs hiện tại; snapshot khác nhau có thể tạo bản sao thêm. Full cloud photo record sync và conflict UI từng entity chưa có.

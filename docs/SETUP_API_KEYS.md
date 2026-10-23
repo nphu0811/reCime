@@ -7,7 +7,7 @@ Từ root repository (PowerShell):
 ```powershell
 python -m venv backend/.venv
 backend/.venv/Scripts/python.exe -m pip install -r backend/requirements.txt
-Copy-Item backend/.env.example backend/.env # chỉ khi chưa có .env
+if (-not (Test-Path backend/.env)) { Copy-Item backend/.env.example backend/.env }
 backend/.venv/Scripts/python.exe -m uvicorn backend.app:app --host 127.0.0.1 --port 8765
 ```
 
@@ -19,7 +19,7 @@ Backend đọc `backend/.env` khi khởi động; biến process environment đ�
 | DATABASE_URL | sqlite:///backend/data/recime.db | SQLite có WAL/FK, migration server v1; bảo vệ thư mục dữ liệu |
 | ALLOW_REGISTRATION | true/false | Tắt đăng ký khi chỉ dùng riêng; không có email verification/password reset |
 | OPENAI_API_KEY | key server của bạn | Chỉ để trống nếu không dùng AI từ xa; thiếu key trả 503 rõ ràng |
-| OPENAI_MODEL | gpt-4.1-mini mặc định, model hỗ trợ Responses structured output | Chọn model trong tài khoản của bạn; không chứng nhận live model trong phiên này |
+| OPENAI_MODEL | gpt-4.1-mini mặc định, model hỗ trợ Responses structured output và image input | Mặc định gpt-4.1-mini đã smoke test live text/ảnh/Q&A trong phiên này; model khác cần kiểm tra riêng |
 | FDC_API_KEY | key USDA FoodData Central của bạn | Đăng ký tại [USDA](https://fdc.nal.usda.gov/api-key-signup.html); thiếu key không tạo số dinh dưỡng |
 
 `JWT_SECRET`, Google OAuth/SMTP/YouTube secrets không có trong template vì code hiện chưa dùng. Auth hiện dùng scrypt cho mật khẩu và session ngẫu nhiên có hạn 7 ngày; server chỉ lưu SHA-256 của bearer token. APK dùng Android Keystore mã hóa session. Logout offline chỉ thu hồi local; server token vẫn có thể dùng tới khi hết hạn. Không có Google Login giả.
@@ -36,6 +36,8 @@ Tạo tài khoản email/password trên chính backend này (mật khẩu ≥10 
 
 Model ảnh local là tra cứu CLIP catalog, cần model tải hợp pháp bằng công cụ `backend/download_model.py` đang có. Đây là tìm công thức có nguồn tương tự ảnh, không phải trích nguyên liệu từ ảnh món ăn. OCR Latin chạy trên thiết bị; dấu tiếng Việt cần kiểm tra thủ công. TikTok chỉ đọc caption/oEmbed công khai; các nền tảng khác yêu cầu dán caption/transcript/ảnh do bạn có quyền sử dụng.
 
-API thực tế có OpenAPI tại `/docs`: legacy AI/USDA vẫn tương thích; `/v1/auth/*`, `/v1/account`, `/v1/backup`, `/v1/sync/push`, `/v1/sync/pull`, `/v1/discover`, `/v1/import/ai-text`. Record sync đã có server contract, chưa nối tự động với SQLite Android; UI ghi rõ cloud backup thủ công.
+API thực tế có OpenAPI tại `/docs`: legacy AI/USDA vẫn tương thích; `/v1/auth/*`, `/v1/account`, `/v1/backup`, `/v1/sync/push`, `/v1/sync/pull`, `/v1/discover`, `/v1/import/ai-text`, `/v1/import/ai-image`. Record sync đã có server contract, chưa nối tự động với SQLite Android; UI ghi rõ cloud backup thủ công.
 
-Contract OpenAI đã đối chiếu [Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs) (`text.format`, JSON schema strict) và [model GPT-4.1 mini](https://developers.openai.com/api/docs/models/gpt-4.1-mini). Đây là kiểm tra tài liệu/fixtures; chưa gọi provider bằng key thật.
+Contract OpenAI đã đối chiếu [Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs) (`text.format`, JSON schema strict) và [model GPT-4.1 mini](https://developers.openai.com/api/docs/models/gpt-4.1-mini). Ngày 24/10/2026 đã smoke test HTTP200 bằng key do người dùng cấu hình: OpenAI trích văn bản, đọc ảnh công thức tiếng Việt tự tạo và Q&A; USDA trả candidate cho 100 g rice raw. Đây là kiểm tra kết nối/schema trên ví dụ nhỏ, không chứng nhận accuracy mọi công thức. Hướng dẫn image input: [Images and vision](https://developers.openai.com/api/docs/guides/images-vision).
+
+Import ảnh AI: chọn SCAN CHỮ/Camera để có ảnh và OCR local → “Đọc ảnh đã chọn bằng OpenAI” → xác nhận Gửi ảnh → sửa văn bản → Review/Editor → Lưu. Ảnh chỉ được gửi sau xác nhận, được chuẩn hướng EXIF/ảnh lật, thu nhỏ và bỏ metadata; backend giới hạn 8MB/40MP, không suy công thức từ hình món ăn. OpenAI có thể tính phí và áp dụng chính sách dữ liệu riêng. Nếu không có chữ đọc được, trả lỗi thật; OCR/nháp vẫn dùng được.
