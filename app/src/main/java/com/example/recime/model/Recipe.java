@@ -13,6 +13,7 @@ public class Recipe {
     nutritionSource = other.nutritionSource; catalogKey = other.catalogKey;
     attribution = other.attribution; imageAttribution = other.imageAttribution;
     servingsKnown = other.servingsKnown;
+    images = new java.util.ArrayList<>(other.images);
   }
 
   public long id;
@@ -37,4 +38,19 @@ public class Recipe {
   public String imageAttribution = "";
 
   public boolean servingsKnown = true;
+
+  public java.util.List<String> images = new java.util.ArrayList<>();
+
+  /** Legacy recipes keep their existing single cover until explicitly edited. */
+  public java.util.List<String> photoPaths() {
+    if (!images.isEmpty()) return new java.util.ArrayList<>(images);
+    return image == null || image.isEmpty() ? new java.util.ArrayList<>()
+        : new java.util.ArrayList<>(java.util.Collections.singletonList(image));
+  }
+
+  public void setPhotoPaths(java.util.List<String> paths) {
+    if (paths.size() > 5) throw new IllegalArgumentException("Tối đa 5 ảnh mỗi công thức");
+    images = new java.util.ArrayList<>(paths);
+    image = images.isEmpty() ? "" : images.get(0);
+  }
 }

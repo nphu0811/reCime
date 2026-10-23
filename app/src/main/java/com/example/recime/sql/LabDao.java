@@ -142,6 +142,7 @@ public class LabDao {
     values.put("tags", recipe.tags);
     values.put("source", recipe.source);
     values.put("image", recipe.image);
+    values.put("imagesJson", new org.json.JSONArray(recipe.images).toString());
     values.put("servings", recipe.servings);
     values.put("favorite", recipe.favorite ? 1 : 0);
     values.put("calories", recipe.calories);
@@ -169,6 +170,14 @@ public class LabDao {
         recipe.tags = text(cursor, "tags");
         recipe.source = text(cursor, "source");
         recipe.image = text(cursor, "image");
+        try {
+          org.json.JSONArray photos = new org.json.JSONArray(text(cursor, "imagesJson"));
+          for (int index = 0; index < photos.length(); index++)
+            recipe.images.add(photos.getString(index));
+        } catch (org.json.JSONException invalidPhotos) {
+          // Retain the original cover even if an older/externally edited list is invalid.
+          recipe.images.clear();
+        }
         recipe.servings = cursor.getDouble(cursor.getColumnIndexOrThrow("servings"));
         recipe.favorite = cursor.getInt(cursor.getColumnIndexOrThrow("favorite")) != 0;
         recipe.calories = number(cursor, "calories");

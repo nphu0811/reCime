@@ -34,7 +34,7 @@ public class LabUiTest {
     try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(intent)) {
       onView(withId(R.id.review)).perform(scrollTo(), click());
       onView(withId(R.id.edit_title)).check(matches(withText(title)));
-      onView(withId(R.id.save)).perform(scrollTo(), click());
+      onView(withId(R.id.save)).perform(click());
       repo.io.submit(() -> {}).get(20, TimeUnit.SECONDS);
       Espresso.onIdle();
       onView(withId(R.id.nav_recipes)).perform(click());

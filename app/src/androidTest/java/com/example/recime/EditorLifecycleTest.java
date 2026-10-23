@@ -68,13 +68,14 @@ public class EditorLifecycleTest {
       });
       assertNotNull(observed[0]);
       onView(withId(R.id.edit_title)).perform(scrollTo(), replaceText("Valid retry"), closeSoftKeyboard());
+      onView(withId(R.id.nutrition_toggle)).perform(scrollTo(), click());
       onView(withId(R.id.edit_kcal)).perform(scrollTo(), replaceText("120"), closeSoftKeyboard());
-      onView(withId(R.id.save)).perform(scrollTo(), click());
+      onView(withId(R.id.save)).perform(click());
       onView(withId(R.id.edit_error)).check(matches(withSubstring("nguồn dinh dưỡng")));
       assertEquals(fixture.title, observed[0].title);
       assertEquals(fixture.title, repo.dao.find(fixture.id).title);
       onView(withId(R.id.edit_nutrition_source)).perform(scrollTo(), replaceText("Test fixture source"), closeSoftKeyboard());
-      onView(withId(R.id.save)).perform(scrollTo(), click());
+      onView(withId(R.id.save)).perform(click());
       drain(repo);
       assertEquals("Valid retry", repo.dao.find(fixture.id).title);
       assertEquals(120.0, repo.dao.find(fixture.id).calories, 0.001);
@@ -100,9 +101,9 @@ public class EditorLifecycleTest {
         try { release.await(30, TimeUnit.SECONDS); }
         catch (InterruptedException e) { Thread.currentThread().interrupt(); }
       });
-      onView(withId(R.id.save)).perform(scrollTo(), click());
+      onView(withId(R.id.save)).perform(click());
       scenario.recreate();
-      onView(withId(R.id.save)).perform(scrollTo()).check(matches(not(isEnabled())));
+      onView(withId(R.id.save)).check(matches(not(isEnabled())));
       release.countDown();
       drain(repo);
       onView(withId(R.id.save)).check(doesNotExist());

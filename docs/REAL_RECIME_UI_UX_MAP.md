@@ -15,3 +15,7 @@
 | Discover | Search, popular searches, recipe of day, share/save | discover.png/xml | Chưa chứng minh save/detail/cooking thành công |
 
 Bố cục quan sát: nền cream/white, chữ đen, accent xanh; collection card2cột, menu/sheet bo góc, dock4tab. XML app độc lập hiện midnight/lime, dock5tab và form Editor dài; UI parity chưa đạt. Font file/dp chính xác, motion timing và haptics runtime chưa đo. Static transition500ms được ghi riêng trong findings.
+
+## Editor độc lập sau92d2e77
+
+Chỉ Editor dùng theme trắng/kem; toolbar Cancel–Save luôn ở trên. Dock ẩn trong Editor và khôi phục khi thoát. Sections theo ảnh đã quan sát; nội dung Info/Nutrition/Tags triển khai bằng panel mở rộng riêng, hành vi màn con official UNKNOWN. Images có thumbnail, preview, Thay/Xóa; giới hạn5 là yêu cầu triển khai, không phải suy diễn quota của official. Không sử dụng logo, ảnh, font hay icon từ APK.

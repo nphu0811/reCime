@@ -69,7 +69,7 @@ public class LabV4FeaturesTest {
     String name="test-v4-"+System.nanoTime()+".db";
     LabDatabase db=new LabDatabase(context,name);
     try{
-      assertEquals(4,db.getWritableDatabase().getVersion());
+      assertEquals(com.example.recime.sql.LabDatabase.DATABASE_VERSION,db.getWritableDatabase().getVersion());
       Recipe r=new Recipe();r.title="Cơm";r.ingredients="200 g gạo";
       r.steps="Nấu";r.cookbook="Món nhà";
       r.id=db.dao().insert(r);

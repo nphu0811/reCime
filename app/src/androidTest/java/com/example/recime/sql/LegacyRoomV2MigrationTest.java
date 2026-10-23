@@ -68,7 +68,7 @@ public class LegacyRoomV2MigrationTest {
 
     LabDatabase database = new LabDatabase(context, name);
     try {
-      assertEquals(4, database.getReadableDatabase().getVersion());
+      assertEquals(com.example.recime.sql.LabDatabase.DATABASE_VERSION, database.getReadableDatabase().getVersion());
 
       Recipe recipe = database.dao().find(91);
       assertNotNull(recipe);
