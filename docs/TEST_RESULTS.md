@@ -113,3 +113,9 @@ Lệnh broad: gradlew.bat assembleDebug testDebugUnitTest lintDebug connectedDeb
 Lệnh nhóm sau sửa: gradlew.bat assembleDebug testDebugUnitTest lintDebug connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.example.recime.PlannerWorkflowTest.
 
 Animation settings đã khôi phục đúng snapshot trước thử nghiệm: animator_duration_scale=null (default), transition_animation_scale=1.0, window_animation_scale=1.0. Không đổi long_press_timeout400, không reboot/clear official app/draft. Functional tests dùng animationsDisabled; motion timing/haptics/official populated UI, live AI/merchant/Print/backend integration không được chứng nhận trong nhóm này. Không đổi schema SQLite v5.
+
+## Import reliability — GitHub-only, sau 18c8b31
+- Cập nhật PublicWebExtractor: schema.org full type/nested JSON-LD; thêm PublicWebExtractorTypeTest (JVM2), PublicWebExtractorJsonLdTest (Android3).
+- ImportDuplicateChecker thuần Java nhận diện nguồn HTTPS trùng hoặc ba trường recipe nội dung trùng; thêm ImportDuplicateCheckerTest (JVM6). ImportFragment kiểm tra ở executor SQLite, hiển thị dialog mở bản cũ / nhập bản sao / hủy; không tự insert hoặc update. Thêm ImportDuplicateUiTest (Android2).
+- Đây là bộ test mới, **không được tính PASS Android** cho tới khi chạy trên Emulator. GitHub CI kiểm tra compile, JVM, lint; xem kết quả workflow tương ứng commit mới.
+- Lệnh kiểm tra Emulator: `./gradlew.bat :app:connectedDebugAndroidTest "-Pandroid.testInstrumentationRunnerArguments.class=com.example.recime.helper.PublicWebExtractorJsonLdTest,com.example.recime.ImportDuplicateUiTest"` (PowerShell).

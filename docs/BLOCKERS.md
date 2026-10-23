@@ -28,3 +28,9 @@ Groceries (tiếpc0ffc04): nhóm local UI/CRUD/batch selection/servings/source s
 - Không thay schema SQLite v5; không cần API key cho Home, cookbook CRUD, search/filter và local Discover.
 \nCookbook mặc định Món nhà tiếp tục được DAO bảo vệ khỏi xóa như baseline; cookbook người dùng tạo có CRUD. OcrUiTest đã PASS Share ảnh tự tạo tiếng Anh → review → SQLite; OCR ảnh thực tế đa dạng, video/provider và live AI vẫn cần kiểm thử riêng.\n
 Nhóm Home/cookbook/local Discover đã qua các kiểm tra cần thiết; không cần key/tài khoản bổ sung. Test đã phân biệt tap/long-press bằng input sequence thật và khôi phục animation settings Emulator. Lượt broad còn1 lỗi test root Planner, nhóm Workflow sau sửa PASS3/3; không nhận là một lượt49/49 xanh.
+
+## Import / JSON-LD / duplicate review — 24/10/2026
+- PublicWebExtractor đã nhận type Recipe ngắn và Schema.org URL, tìm trong @graph/mainEntity/itemListElement, hỗ trợ recipeIngredient dạng chuỗi; giữ HTTPS-only, private-address guards và giới hạn redirects.
+- Import text/website/OCR sẽ kiểm tra trùng với recipe cá nhân trước khi mở Editor (trùng URL nguồn HTTPS hoặc title+ingredients+instructions chuẩn hóa). Người dùng tự chọn mở bản đã lưu/nhập bản sao/hủy; không tự ghi đè. Dữ liệu catalog offline không được tính là bản copy cá nhân.
+- Android instrumentation mới gồm PublicWebExtractorJsonLdTest và ImportDuplicateUiTest. Chưa chạy trên Emulator trong phiên GitHub-only; CI build/unit/lint không thay thế connectedDebugAndroidTest. Cần QA UI thật và chạy test trên thiết bị trước khi merge.
+- Social video/audio, nguồn ngoài cần auth, server-based import, OCR đa ngôn ngữ, process-death và duplicate detection sau khi người dùng sửa draft ở Editor vẫn chưa được xác minh hoàn toàn.

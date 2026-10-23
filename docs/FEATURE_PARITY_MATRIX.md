@@ -91,3 +91,9 @@ Build/unit/lint PASS; 19/19 JVM và 21/21 instrumentation PASS (0 failures/error
 | Discover | Search/popular/recipe of day/share/save thấy runtime; thành công detail/save chưa xác minh | Catalog offline có nguồn, search + ingredient/favorite filter, Detail; tách personal | discover.png/xml; catalog assets/LibraryScope/RecipeAdapter | Dynamic recommendations, creator search, feed server UNKNOWN/blocked | Ghi catalog offline; không dựng trending/recipe-of-day giả | Dùng dataset hiện hữu và attribution; không đoán API official | LOCAL PASS; xem TEST_RESULTS |
 
 Build +32 JVM PASS; lint0 lỗi/182 warnings. Instrumentation49 ca riêng biệt đã PASS qua các lượt: broad48/49, PlannerWorkflow sửa harness3/3. Không phải một invocation49/49 xanh. LibraryUi4/4, CookbookSelection2/2 và GroceryUi4/4 PASS trong lượt broad; không retry tự động. Official UI/server parity vẫn UNKNOWN ngoài evidence đã có.
+
+## Import reliability — nhóm sau 18c8b31
+| Nhóm | Chứng cứ ReciMe chính thức | App độc lập sau thay đổi | Giới hạn | Kiểm thử |
+|---|---|---|---|---|
+| Website Recipe JSON-LD | STATIC VERIFIED: URL/HTML qua repository; server parsing UNKNOWN | Parser schema.org/Recipe, nested @graph/mainEntity, ingredient dạng mảng/chuỗi; HTTPS public, chặn private hosts | Không có hỗ trợ mọi trang/video, không dùng endpoint official | JVM type/host + Android JSON-LD tests; chờ Emulator |
+| Cảnh báo import trùng | UNKNOWN original duplicate handling | Trước Editor, phát hiện same HTTPS source hoặc title+ingredients+steps, bỏ qua catalog; chọn mở/nhập bản sao/hủy, không overwrite | Người dùng có thể chủ động lưu bản sao; không suy hành vi official | JVM DuplicateChecker + Android ImportDuplicateUiTest; chờ Emulator |
