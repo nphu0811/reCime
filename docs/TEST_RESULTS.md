@@ -1,4 +1,4 @@
-# Kết quả kiểm thử — Recipe Editor và Detail
+# Kết quả kiểm thử — Editor, Detail và Meal Planner
 
 Nhóm lifecycle bên dưới là lịch sử commit92d2e77; nhóm ảnh mới dùng SQLitev5, xem phần cuối.
 
@@ -51,4 +51,24 @@ QA: screenshot sau recreation được lưu tạm ở app cache `qa/detail-galle
 Lệnh vòng cuối:
 ```powershell
 .\gradlew.bat assembleDebug testDebugUnitTest lintDebug connectedDebugAndroidTest '-Pandroid.testInstrumentationRunnerArguments.class=com.example.recime.DetailUiTest,com.example.recime.DetailIntegrationTest,com.example.recime.EditorLifecycleTest,com.example.recime.EditorPhotosTest,com.example.recime.sql.PhotoV5MigrationTest,com.example.recime.CookbookMembershipTest,com.example.recime.LabV4FeaturesTest,com.example.recime.LabDatabaseTest,com.example.recime.sql.LegacyRoomV2MigrationTest,com.example.recime.PlannerUiTest,com.example.recime.LabUiTest,com.example.recime.OcrUiTest,com.example.recime.CatalogDatabaseTest'
+```
+
+
+## Meal Planner — baseline3a3179f
+
+Giữ SQLite v5; không sửa Editor/Recipe Detail/recipe images. PlannerWeekTest4 JVM cases: bảy ngày đầu tuần, giao năm/tháng, DST và next/previous, giữ input, legacy meal keys/English labels và validation. PlannerDatabaseTest kiểm tra move vào bữa đã có món, giữ legacy/destination/servings, checked derived groceries, manual items, recipe/ảnh/cookbook; SQL/FK hoặc sync failure rollback cả lịch và giỏ; clear chỉ tuần được chọn; move không reset serving override mới hơn snapshot.
+
+PlannerWorkflowTest dùng touch thật để hold drag handle/drop Lunch; xác nhận đúng occurrence, tổng servings/ingredients và recreation. Dialog portions/move giữ input/date/type sau recreation; move qua tuần rồi remove đúng món. Week-start Sunday được giữ qua activity mới, tuần đang xem giữ qua recreation và Detail backstack; 7 headers/28 add slots. UI sử dụng dữ liệu recipe test có tên riêng, không dữ liệu giả trong sản phẩm. Prefs/recipe rows được cleanup/restore.
+
+PhotoV5MigrationTest được mở rộng: sau migration4→5, move legacy English Lunch sang ngày khác, giữ món extras, planned amount/check state, photos/cookbook/manual groceries/tombstone và reopen. Các migration cũ tiếp tục chạy trong bộ regression.
+
+Vòng thiết bị đầu9/10 PASS; lỗi test chọn dropdown bữa không chỉ định popup. Đã chỉ định dropdown và RootMatchers.isPlatformPopup. Retry cold launch gặp navigation chưa chuyển khỏi Home; test giữ strict click và chờ animation dock ban đầu ổn định, kiểm tra Board hiển thị trước thao tác. Không bỏ assertion DB/UI.
+
+QA screenshot từ touch-drag run: app cache `qa/planner-week.png` kéo về `.tools/planner-week-preview.png`, đã mở kiểm tra lịch cream/white, ngày/bữa và Lunch4/Dinner2. Ảnh tự tạo/dữ liệu test, không commit. Runtime gesture này xác minh **app mình**, không chứng minh populated planner official.
+
+Build/unit/lint PASS:26/26 JVM,0 lint errors/168 warnings (baseline162;6 warnings layout/accessibility/autofill mới). Retry dialog portions/move PASS1/1; cả8 Planner instrumentation mới PASS. Bộ rộng39cases:38 PASS/1 FAIL (LabUiTest còn chờ title cũ “Một tuần ngon lành”). Đã sửa strict assertion thành “Meal Plan”; targeted retry đúng case FAIL:1/1 PASS,0 failures/errors/skipped. Build/unit/lint + retry cùng lệnh BUILD SUCCESSFUL57s. Toàn bộ39cases đã qua theo vòng rộng + retry, không gọi đó là một lần full39/39 PASS. Logs cục bộ gitignored: `.tools/planner-build.log`, `.tools/planner-first-tests.log`, `.tools/planner-dialog-retry.log`, `.tools/planner-dialog-retry2.log`, `.tools/planner-final-tests.log`, `.tools/planner-final-retry.log`; summary vòng rộng giữ ở `.tools/planner-wide-summary.json`. Official continuous grocery auto-sync, cloud week-start và gesture parity vẫn UNKNOWN.
+
+Lệnh bộ rộng: dùng class filter Recipe Detail phía trên, bổ sung `com.example.recime.PlannerDatabaseTest,com.example.recime.PlannerWorkflowTest`. Retry chỉ assertion title đã sửa, không đổi code sản phẩm sau bộ rộng:
+```powershell
+.\gradlew.bat assembleDebug testDebugUnitTest lintDebug connectedDebugAndroidTest '-Pandroid.testInstrumentationRunnerArguments.class=com.example.recime.LabUiTest#tabsHaveRealContentAndInvalidUrlHasRecoverableError'
 ```

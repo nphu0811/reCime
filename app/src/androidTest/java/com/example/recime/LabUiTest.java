@@ -75,7 +75,7 @@ public class LabUiTest {
   public void tabsHaveRealContentAndInvalidUrlHasRecoverableError() throws Exception {
     try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
       onView(withId(R.id.nav_plan)).perform(click());
-      onView(withId(R.id.board_title)).check(matches(withText("Một tuần ngon lành")));
+      onView(withId(R.id.board_title)).check(matches(withText("Meal Plan")));
       onView(withId(R.id.next_week)).perform(click());
       onView(withId(R.id.prev_week)).perform(click());
       onView(withId(R.id.nav_discover)).perform(click());

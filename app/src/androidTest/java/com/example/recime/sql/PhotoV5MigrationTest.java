@@ -59,6 +59,21 @@ public class PhotoV5MigrationTest {
       assertEquals("one", db.dao().find(42).image);
       assertEquals(1, db.dao().grocerySnapshot().size());
       assertTrue(db.dao().find(42).favorite);
+      // A move after migration must keep the occupied slot, legacy yield, images and collections.
+      com.example.recime.model.Meal legacy=db.dao().mealSnapshot(null,null).stream()
+          .filter(m->m.extraId==0).findFirst().get();
+      assertEquals("Trưa",legacy.type); // Old English labels remain visible under the four UI categories.
+      db.dao().moveMeal(legacy,"2030-01-02","Tối");
+      assertEquals(1,db.dao().mealSnapshot("2030-01-01","2030-01-01").size());
+      assertEquals(1,db.dao().mealSnapshot("2030-01-02","2030-01-02").size());
+      assertEquals(600.0,db.dao().plannedGrocerySnapshot().get(0).amount,0.001);
+      assertTrue(db.dao().plannedGrocerySnapshot().get(0).checked);
+      db.close();db=new LabDatabase(context,name);
+      assertEquals(recipe.photoPaths(),db.dao().find(42).photoPaths());
+      assertEquals(2,db.dao().mealSnapshot(null,null).size());
+      assertTrue(db.dao().grocerySnapshot().get(0).checked);
+      assertTrue(db.dao().recipeIdsForCookbook("Family").contains(42L));
+      assertEquals(1,db.dao().wasCatalogDeleted("deleted-key"));
     } finally { db.close(); context.deleteDatabase(name); }
   }
 }

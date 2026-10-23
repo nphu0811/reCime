@@ -227,7 +227,7 @@ public class LabDao {
       while(cursor.moveToNext()){
         Meal m=new Meal();
         m.extraId=cursor.getLong(0);
-        m.day=text(cursor,"day"); m.type=text(cursor,"type");
+        m.day=text(cursor,"day"); m.type=mealType(text(cursor,"type"));
         m.slot=m.day+"|"+m.type; m.recipeId=cursor.getLong(3);
         m.servings=cursor.getDouble(4);
         list.add(m);
@@ -237,33 +237,74 @@ public class LabDao {
   }
 
   public void putMeal(Meal meal) {
-    ContentValues values = new ContentValues();
-    values.put("slot", meal.slot);
-    values.put("day", meal.day);
-    values.put("type", meal.type);
-    values.put("recipeId", meal.recipeId);
-    helper.getWritableDatabase().insertWithOnConflict("meals",null,values,SQLiteDatabase.CONFLICT_REPLACE);
-    syncPlanGroceries();
-    refresh();
+    helper.runInTransaction(() -> {
+      ContentValues values=new ContentValues();
+      values.put("slot",meal.slot);values.put("day",meal.day);values.put("type",meal.type);
+      values.put("recipeId",meal.recipeId);
+      helper.getWritableDatabase().insertWithOnConflict("meals",null,values,SQLiteDatabase.CONFLICT_REPLACE);
+      syncPlanGroceries();
+    });
   }
 
   public long addMeal(Meal meal) {
-    ContentValues values=new ContentValues();
-    values.put("day",meal.day); values.put("type",meal.type);
-    values.put("recipeId",meal.recipeId);
-    values.put("servings",meal.servings > 0 ? meal.servings : 0.0);
-    long id=helper.getWritableDatabase().insertOrThrow("meal_extras",null,values);
-    syncPlanGroceries();
-    refresh();
-    return id;
+    com.example.recime.helper.PlannerWeek.validate(meal.day,meal.type,meal.servings);
+    final long[] id={0};
+    helper.runInTransaction(() -> {
+      ContentValues values=mealValues(meal.day,meal.type,meal.recipeId,meal.servings);
+      id[0]=helper.getWritableDatabase().insertOrThrow("meal_extras",null,values);
+      syncPlanGroceries();
+    });
+    return id[0];
+  }
+
+  private String mealType(String value){
+    try{return com.example.recime.helper.PlannerWeek.TYPES[com.example.recime.helper.PlannerWeek.typeIndex(value)];}
+    catch(IllegalArgumentException unsupported){return value;}
+  }
+
+  private ContentValues mealValues(String day,String type,long recipeId,double servings) {
+    ContentValues values=new ContentValues();values.put("day",day);values.put("type",mealType(type));
+    values.put("recipeId",recipeId);values.put("servings",servings);return values;
+  }
+
+  /** Update a single occurrence. Legacy rows become extras, never replace a destination dish. */
+  public void editMeal(Meal original,String day,String type,long recipeId,double servings) {
+    changeMeal(original,day,type,recipeId,servings,false);
+  }
+
+  private void changeMeal(Meal original,String day,String type,long recipeId,double servings,boolean moveOnly) {
+    com.example.recime.helper.PlannerWeek.validate(day,type,servings);
+    helper.runInTransaction(() -> {
+      SQLiteDatabase db=helper.getWritableDatabase();
+      ContentValues values=mealValues(day,type,recipeId,servings);
+      if(original.extraId>0) {
+        if(moveOnly){values.remove("recipeId");values.remove("servings");}
+        if(db.update("meal_extras",values,"id=? AND recipeId=?",
+            new String[]{String.valueOf(original.extraId),String.valueOf(original.recipeId)})!=1)
+          throw new IllegalStateException("Món trong lịch đã thay đổi hoặc bị xóa");
+      } else {
+        if(db.delete("meals","slot=? AND recipeId=?",
+            new String[]{original.slot,String.valueOf(original.recipeId)})!=1)
+          throw new IllegalStateException("Món trong lịch đã thay đổi hoặc bị xóa");
+        db.insertOrThrow("meal_extras",null,values);
+      }
+      syncPlanGroceries();
+    });
+  }
+
+  public void moveMeal(Meal original,String day,String type) {
+    changeMeal(original,day,type,original.recipeId,0,true);
   }
 
   public void deleteMeal(Meal meal) {
-    if(meal.extraId > 0)
-      helper.getWritableDatabase().delete("meal_extras","id=?",new String[]{String.valueOf(meal.extraId)});
-    else helper.getWritableDatabase().delete("meals","slot=?",new String[]{meal.slot});
-    syncPlanGroceries();
-    refresh();
+    helper.runInTransaction(() -> {
+      if(meal.extraId>0)
+        helper.getWritableDatabase().delete("meal_extras","id=? AND recipeId=?",
+            new String[]{String.valueOf(meal.extraId),String.valueOf(meal.recipeId)});
+      else helper.getWritableDatabase().delete("meals","slot=? AND recipeId=?",
+          new String[]{meal.slot,String.valueOf(meal.recipeId)});
+      syncPlanGroceries();
+    });
   }
 
   private List<Meal> getMeals(String sql,String... args) {
@@ -272,7 +313,7 @@ public class LabDao {
       while(cursor.moveToNext()){
         Meal m=new Meal();
         m.slot=text(cursor,"slot");m.day=text(cursor,"day");
-        m.type=text(cursor,"type");m.recipeId=cursor.getLong(cursor.getColumnIndexOrThrow("recipeId"));
+        m.type=mealType(text(cursor,"type"));m.recipeId=cursor.getLong(cursor.getColumnIndexOrThrow("recipeId"));
         list.add(m);
       }
     }
@@ -280,10 +321,11 @@ public class LabDao {
   }
 
   public void clearMealWeek(String start,String end) {
-    helper.getWritableDatabase().delete("meals","day>=? AND day<=?",new String[]{start,end});
-    helper.getWritableDatabase().delete("meal_extras","day>=? AND day<=?",new String[]{start,end});
-    syncPlanGroceries();
-    refresh();
+    helper.runInTransaction(() -> {
+      helper.getWritableDatabase().delete("meals","day>=? AND day<=?",new String[]{start,end});
+      helper.getWritableDatabase().delete("meal_extras","day>=? AND day<=?",new String[]{start,end});
+      syncPlanGroceries();
+    });
   }
 
   /** Fully recompute derived rows. Manual groceries are NEVER altered. */

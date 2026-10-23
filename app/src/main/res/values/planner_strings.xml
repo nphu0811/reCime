@@ -1,0 +1,12 @@
+<resources>
+    <string name="planner_title">Meal Plan</string>
+    <string name="planner_week_start">Ngày đầu tuần</string>
+    <string name="planner_previous">Tuần trước</string>
+    <string name="planner_next">Tuần sau</string>
+    <string name="planner_previous_symbol">‹</string>
+    <string name="planner_next_symbol">›</string>
+    <string name="planner_drag">Kéo để chuyển món</string>
+    <string name="planner_drag_symbol">⋮⋮</string>
+    <string name="planner_servings_hint">Để trống hoặc 0: dùng định lượng gốc của công thức</string>
+    <string name="planner_servings">Khẩu phần</string>
+</resources>

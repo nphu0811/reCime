@@ -35,6 +35,18 @@ public class BoardFragment extends Fragment {
   private final List<BoardRow> rows = new ArrayList<>();
   private BoardAdapter adapter;
   private int groceryOrder = 0;
+  private boolean weekInitialized;
+  private int firstDay;
+
+  @Override public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle state){
+    boolean plan=requireArguments().getBoolean("planner");
+    android.content.Context context=plan?new ContextThemeWrapper(requireContext(),R.style.Theme_MealPlanner):requireContext();
+    return LayoutInflater.from(context).inflate(plan?R.layout.fragment_planner:R.layout.fragment_board,container,false);
+  }
+  private android.content.Context boardContext(){return root==null?requireContext():root.getContext();}
+  private android.content.SharedPreferences planPrefs(){return requireContext().getSharedPreferences("planner",0);}
+  private void alignWeek(){week.setTimeInMillis(com.example.recime.helper.PlannerWeek.start(week,firstDay).getTimeInMillis());}
+
 
   public BoardFragment() {
     super(R.layout.fragment_board);
@@ -58,21 +70,22 @@ public class BoardFragment extends Fragment {
     root = v;
     planner = requireArguments().getBoolean("planner");
     vm = new ViewModelProvider(requireActivity()).get(LabViewModel.class);
-    week.set(Calendar.HOUR_OF_DAY, 12);
-    week.set(Calendar.MINUTE, 0);
-    week.set(Calendar.SECOND, 0);
-    week.add(Calendar.DAY_OF_MONTH, -((week.get(Calendar.DAY_OF_WEEK) + 5) % 7));
-    if (state != null) week.setTimeInMillis(state.getLong("week", week.getTimeInMillis()));
-    Ui.set(v, R.id.board_title, planner ? "Một tuần ngon lành" : "Giỏ đi chợ");
+    firstDay=planPrefs().getInt("first_day",Calendar.MONDAY);
+    if(firstDay<1||firstDay>7)firstDay=Calendar.MONDAY;
+    if(state!=null)week.setTimeInMillis(state.getLong("week",week.getTimeInMillis()));
+    else if(!weekInitialized)week.setTimeInMillis(System.currentTimeMillis());
+    alignWeek();weekInitialized=true;
+    if(planner)v.findViewById(R.id.plan_week_start).setOnClickListener(x->chooseWeekStart());
+    Ui.set(v, R.id.board_title, planner ? "Meal Plan" : "Giỏ đi chợ");
     Ui.set(
         v,
         R.id.board_subtitle,
         planner
-            ? "Thêm nhiều món cho mỗi bữa; nguyên liệu tự đồng bộ vào giỏ."
+            ? "Lập lịch tuần · giữ tay nắm để chuyển món"
             : "Nguyên liệu theo lịch ăn tự cập nhật; món thêm tay giữ riêng.");
     v.findViewById(R.id.week_controls).setVisibility(planner ? View.VISIBLE : View.GONE);
-    Ui.set(v, R.id.board_action, planner ? "Xem giỏ đồng bộ tự động ↗" : "+ Thêm nguyên liệu");
-    Ui.set(v, R.id.board_secondary, planner ? "Hôm nay (giữ để xóa tuần)" : "Chia sẻ checklist");
+    Ui.set(v, R.id.board_action, planner ? "Groceries ↗" : "+ Thêm nguyên liệu");
+    Ui.set(v, R.id.board_secondary, planner ? "Hôm nay" : "Chia sẻ checklist");
     Spinner sort=v.findViewById(R.id.grocery_sort);
     sort.setVisibility(planner?View.GONE:View.VISIBLE);
     if(!planner){
@@ -110,7 +123,7 @@ public class BoardFragment extends Fragment {
             x -> {
               if (planner) {
                 week.setTimeInMillis(System.currentTimeMillis());
-                week.add(Calendar.DAY_OF_MONTH, -((week.get(Calendar.DAY_OF_WEEK) + 5) % 7));
+                alignWeek();
                 render();
               } else share();
             });
@@ -118,7 +131,7 @@ public class BoardFragment extends Fragment {
       if(!planner)return false;
       Calendar end=(Calendar)week.clone();end.add(Calendar.DAY_OF_MONTH,6);
       String start=day(week),finish=day(end);
-      new MaterialAlertDialogBuilder(requireContext()).setTitle("Xóa lịch ăn tuần này?")
+      new MaterialAlertDialogBuilder(boardContext()).setTitle("Xóa lịch ăn tuần này?")
         .setMessage("Giỏ tự đồng bộ lại, nguyên liệu nhập thủ công vẫn giữ.")
         .setNegativeButton("Hủy",null)
         .setPositiveButton("Xóa tuần",(d,w)->vm.repository.run(
@@ -128,7 +141,7 @@ public class BoardFragment extends Fragment {
     ListView list = v.findViewById(R.id.board_list);
     adapter =
         new BoardAdapter(
-            requireContext(),
+            list.getContext(),
             R.layout.item_board,
             rows,
             planner,
@@ -142,15 +155,36 @@ public class BoardFragment extends Fragment {
                 }
               }
             });
+    adapter.setDragListener(handle->{
+      if(!(handle.getTag() instanceof Meal))return false;
+      return handle.startDragAndDrop(android.content.ClipData.newPlainText("meal", ""),
+          new View.DragShadowBuilder(handle),(Meal)handle.getTag(),0);
+    });
     list.setAdapter(adapter);
+    if(planner)list.setOnDragListener((target,event)->{
+      if(!(event.getLocalState() instanceof Meal))return false;
+      if(event.getAction()==DragEvent.ACTION_DRAG_LOCATION){
+        int edge=(int)(48*target.getResources().getDisplayMetrics().density);
+        if(event.getY()<edge)list.smoothScrollBy(-edge,100);
+        else if(event.getY()>list.getHeight()-edge)list.smoothScrollBy(edge,100);
+      }else if(event.getAction()==DragEvent.ACTION_DROP){
+        int position=list.pointToPosition((int)event.getX(),(int)event.getY());
+        if(position==AdapterView.INVALID_POSITION||position>=rows.size())return false;
+        BoardRow destination=rows.get(position);Meal original=new Meal((Meal)event.getLocalState());
+        String targetDay=destination.day;
+        String targetType=destination.dayHeader?original.type:destination.type;
+        vm.repository.run(()->vm.repository.dao.moveMeal(original,targetDay,targetType));
+      }
+      return true;
+    });
     list.setOnItemClickListener(
         new AdapterView.OnItemClickListener() {
           @Override
           public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             BoardRow row = adapter.getItem(position);
-            if (planner) selectMeal(row);
+            if (planner) { if(row.meal==null)selectMeal(row);else mealOptions(row); }
             else if (row.grocery != null && !row.grocery.planned) groceryEditor(row.grocery);
-            else if (row.grocery != null) new MaterialAlertDialogBuilder(requireContext())
+            else if (row.grocery != null) new MaterialAlertDialogBuilder(boardContext())
                 .setMessage("Nguyên liệu này tự tính từ lịch ăn. Chỉnh món trong lịch để thay đổi số lượng.")
                 .setPositiveButton("Đóng",null).show();
           }
@@ -197,8 +231,11 @@ public class BoardFragment extends Fragment {
       end.add(Calendar.DAY_OF_MONTH, 6);
       Ui.set(root, R.id.week_label, day(week) + "\n→ " + day(end));
       Calendar d = (Calendar) week.clone();
-      String[] types = {"Sáng", "Trưa", "Tối", "Ăn nhẹ"};
+      String[] types = com.example.recime.helper.PlannerWeek.TYPES;
       for (int n = 0; n < 7; n++, d.add(Calendar.DAY_OF_MONTH, 1)) {
+        BoardRow header=new BoardRow();header.dayHeader=true;header.day=day(d);header.type="";
+        header.title=new SimpleDateFormat("EEEE · dd MMM",Locale.getDefault()).format(d.getTime());
+        rows.add(header);
         for (String type : types) {
           for (Meal m : meals) {
             if (!m.day.equals(day(d)) || !m.type.equals(type)) continue;
@@ -206,19 +243,20 @@ public class BoardFragment extends Fragment {
             row.day = day(d);row.type=type;row.meal=m;
             Recipe r=recipe(m.recipeId);
             row.title=r==null?"Món đã xóa":r.title;
-            row.meta=new SimpleDateFormat("EEE dd/MM",new Locale("vi")).format(d.getTime())
-                +" · "+type+" · Nhấn để sửa";
+            double quantity=m.servings>0?m.servings:(r==null?0:r.servings);
+            row.meta=com.example.recime.helper.PlannerWeek.label(type)+" · "+Units.format(quantity)
+                +(r!=null&&!r.servingsKnown?" mẻ":" khẩu phần");
             rows.add(row);
           }
           BoardRow add = new BoardRow();
           add.day=day(d);add.type=type;
           add.title="+ Thêm món";
-          add.meta=new SimpleDateFormat("EEE dd/MM",new Locale("vi")).format(d.getTime())
-              +" · "+type;
+          add.meta=com.example.recime.helper.PlannerWeek.label(type);
           rows.add(add);
         }
       }
-      Ui.set(root, R.id.board_empty, "4 bữa/ngày · nhiều món/bữa · giỏ tự đồng bộ");
+      long count=meals.stream().filter(m->m.day.compareTo(day(week))>=0&&m.day.compareTo(day(end))<=0).count();
+      Ui.set(root,R.id.board_empty,count==0?"Chưa có món trong tuần · thêm món vào từng bữa":count+" món trong tuần · nhiều món mỗi bữa");
     } else {
       List<Grocery> sorted=new ArrayList<>(groceries);
       if(groceryOrder==1) sorted.sort((a,b)->a.name.compareToIgnoreCase(b.name));
@@ -261,13 +299,13 @@ public class BoardFragment extends Fragment {
       return;
     }
     View content =
-        LayoutInflater.from(requireContext()).inflate(R.layout.dialog_recipe_picker, null);
+        LayoutInflater.from(boardContext()).inflate(R.layout.dialog_recipe_picker, null);
     EditText search = content.findViewById(R.id.meal_search);
     ListView list = content.findViewById(R.id.meal_recipe_list);
     java.util.List<Recipe> matching = new ArrayList<>();
     ArrayAdapter<String> adapter =
         new ArrayAdapter<>(
-            requireContext(), android.R.layout.simple_list_item_1, new ArrayList<>());
+            boardContext(), android.R.layout.simple_list_item_1, new ArrayList<>());
     list.setAdapter(adapter);
     Runnable filter =
         () -> {
@@ -275,7 +313,7 @@ public class BoardFragment extends Fragment {
           matching.clear();
           adapter.setNotifyOnChange(false);
           adapter.clear();
-          adapter.add("Bỏ món khỏi bữa này");
+          if(row.meal!=null)adapter.add("Bỏ món khỏi bữa này");
           for (Recipe r : recipes)
             if (Units.key(r.title + " " + r.tags).contains(query)) {
               matching.add(r);
@@ -295,39 +333,52 @@ public class BoardFragment extends Fragment {
           public void afterTextChanged(android.text.Editable e) {}
         });
     androidx.appcompat.app.AlertDialog dialog =
-        new MaterialAlertDialogBuilder(requireContext())
-            .setTitle(row.day + " · " + row.type)
+        new MaterialAlertDialogBuilder(boardContext())
+            .setTitle(row.day + " · " + com.example.recime.helper.PlannerWeek.label(row.type))
             .setView(content)
             .setNegativeButton("Đóng", null)
             .create();
     list.setOnItemClickListener(
         (parent, view, position, id) -> {
-          if (position == 0) {
-            if (row.meal != null) vm.repository.run(() -> vm.repository.dao.deleteMeal(row.meal));
+          if (row.meal!=null && position == 0) {
+            vm.repository.run(() -> vm.repository.dao.deleteMeal(row.meal));
           } else {
             Meal meal = new Meal();
             meal.day=row.day; meal.type=row.type;
             meal.slot=row.day+"|"+row.type;
-            meal.recipeId=matching.get(position-1).id;
-            boolean primaryExists=false;
-            for(Meal m:meals)
-              if(m.day.equals(meal.day) && m.type.equals(meal.type) && m.extraId==0)
-                primaryExists=true;
-            final boolean hasPrimary=primaryExists;
+            meal.recipeId=matching.get(position-(row.meal==null?0:1)).id;
+            final Meal original=row.meal==null?null:new Meal(row.meal);
             vm.repository.run(() -> {
-              if(row.meal!=null){
-                if(row.meal.extraId==0)vm.repository.dao.putMeal(meal);
-                else{
-                  vm.repository.dao.deleteMeal(row.meal);
-                  vm.repository.dao.addMeal(meal);
-                }
-              }else if(hasPrimary) vm.repository.dao.addMeal(meal);
-              else vm.repository.dao.putMeal(meal);
+              if(original!=null)vm.repository.dao.editMeal(original,meal.day,meal.type,meal.recipeId,original.servings);
+              else vm.repository.dao.addMeal(meal);
             });
           }
           dialog.dismiss();
         });
     dialog.show();
+  }
+
+  private void chooseWeekStart(){
+    String[] labels={"Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
+    new MaterialAlertDialogBuilder(boardContext()).setTitle("Ngày bắt đầu tuần")
+        .setSingleChoiceItems(labels,firstDay-1,(dialog,index)->{
+          firstDay=index+1;planPrefs().edit().putInt("first_day",firstDay).apply();
+          alignWeek();render();dialog.dismiss();
+          ((ListView)root.findViewById(R.id.board_list)).setSelection(0);
+        }).setNegativeButton("Hủy",null).show();
+  }
+
+  private void mealOptions(BoardRow row){
+    final Meal selected=new Meal(row.meal);
+    new MaterialAlertDialogBuilder(boardContext()).setTitle(row.title)
+        .setItems(new String[]{"Mở công thức","Đổi món","Khẩu phần","Chuyển món","Bỏ món"},(dialog,which)->{
+          if(which==0)((com.example.recime.activity.MainActivity)requireActivity()).open(DetailFragment.create(selected.recipeId));
+          else if(which==1)selectMeal(row);
+          else if(which==2||which==3)PlannerItemDialog.create(selected,which==3).show(getParentFragmentManager(),"planner-item");
+          else new MaterialAlertDialogBuilder(boardContext()).setMessage("Bỏ món khỏi bữa này?")
+              .setNegativeButton("Hủy",null).setPositiveButton("Bỏ món",(d,w)->
+                  vm.repository.run(()->vm.repository.dao.deleteMeal(selected))).show();
+        }).show();
   }
 
   private void planGroceries() {
@@ -360,7 +411,7 @@ public class BoardFragment extends Fragment {
             "Nhóm hàng (tự phân loại nếu trống)",
             original == null ? "" : original.category);
     androidx.appcompat.app.AlertDialog dialog =
-        new MaterialAlertDialogBuilder(requireContext())
+        new MaterialAlertDialogBuilder(boardContext())
             .setTitle(original == null ? "Thêm nguyên liệu" : "Sửa nguyên liệu")
             .setView(l)
             .setNegativeButton("Hủy", null)
@@ -415,16 +466,10 @@ public class BoardFragment extends Fragment {
 
   private void onRowLongClick(BoardRow r) {
     if (planner) {
-      if (r.meal != null)
-        new MaterialAlertDialogBuilder(requireContext())
-            .setMessage("Bỏ món khỏi bữa này?")
-            .setNegativeButton("Hủy", null)
-            .setPositiveButton(
-                "Bỏ món", (d, w) -> vm.repository.run(() -> vm.repository.dao.deleteMeal(r.meal)))
-            .show();
+      if(r.meal!=null)mealOptions(r);
     } else {
       if(r.grocery==null || r.grocery.planned) return;
-      new MaterialAlertDialogBuilder(requireContext())
+      new MaterialAlertDialogBuilder(boardContext())
           .setMessage("Xóa " + r.grocery.name + "?")
           .setNegativeButton("Hủy", null)
           .setPositiveButton(

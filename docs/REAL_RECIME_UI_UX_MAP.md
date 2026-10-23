@@ -14,7 +14,7 @@
 | Groceries | 0items, empty No groceries yet, FAB thêm | groceries-empty.png/xml | Chưa chứng minh continuous meal auto-sync |
 | Discover | Search, popular searches, recipe of day, share/save | discover.png/xml | Chưa chứng minh save/detail/cooking thành công |
 
-Bố cục quan sát: nền cream/white, chữ đen, accent xanh; collection card2cột, menu/sheet bo góc, dock4tab. XML app độc lập hiện midnight/lime, dock5tab và form Editor dài; UI parity chưa đạt. Font file/dp chính xác, motion timing và haptics runtime chưa đo. Static transition500ms được ghi riêng trong findings.
+Bố cục quan sát: nền cream/white, chữ đen, accent xanh; collection card2cột, menu/sheet bo góc, dock4tab. Baseline trước nhóm Editor/Detail/Planner là midnight/lime, dock5tab và form Editor dài; các cập nhật cục bộ được ghi ở section bên dưới, chưa chứng nhận parity1:1. Font file/dp chính xác, motion timing và haptics runtime chưa đo. Static transition500ms được ghi riêng trong findings.
 
 ## Editor độc lập sau92d2e77
 
@@ -26,3 +26,10 @@ Chỉ Editor dùng theme trắng/kem; toolbar Cancel–Save luôn ở trên. Doc
 Runtime official: đã mở `com.recime.app/com.recime.ReciMeActivity`, thấy Editor “Something went wrong / Try again / Cancel”. Cancel mở “Would you like to save your changes? / No / Save edits”; chỉ đóng dialog bằng Back, giữ draft. Không mở được Recipe Detail trong lần quan sát này, không lưu/xóa draft tài khoản. Evidence cục bộ ngoài git: `research-20261023/detail-attempt-editor-error.png`; XML tạm trong `.tools/official-detail-current.xml`. Layout, gallery, gesture và transition của **Detail official: UNKNOWN**. Không phân tích lại APK.
 
 Implementation độc lập: giữ layout Detail hiện có, thêm ảnh lớn, trước/sau, chỉ số1–5 và empty “Chưa có ảnh”. Cover legacy lấy qua `Recipe.photoPaths()`. Giữ ảnh theo đường dẫn khi danh sách đổi, clamp khi ảnh bị xóa; selection/portions qua recreation. Đây là cách triển khai theo yêu cầu, chưa được gọi là UI parity official. Không dùng ảnh/tài nguyên APK.
+
+
+## Meal Planner — tiếp từ3a3179f
+
+Dùng lại evidence Meal Plan empty `current-screen.png/xml` và findings9: tuần/previous-next được quan sát runtime; bốn meal types, drag callback và preference đầu tuần được static verified. Không phân tích lại APK hoặc bỏ draft của official để ép navigation. Lịch official có món, gesture drag thực tế, screen settings và chuyển nhóm bữa runtime vẫn UNKNOWN.
+
+UI độc lập mới: white/cream, hàng điều hướng tuần, Today, local week-start dialog, header từng ngày và bốn loại bữa. Tap một món mở actions: công thức/đổi món/khẩu phần/chuyển/bỏ. Giữ tay nắm để native drag; thả lên add/meal row đổi ngày và bữa, thả header ngày giữ loại bữa, ngoài list hủy; mép list hỗ trợ scroll. Dialog chuyển/khẩu phần giữ draft qua recreation. Không khẳng định gesture này pixel/behavior parity của official. Dock/navigation khác vẫn giữ baseline.
