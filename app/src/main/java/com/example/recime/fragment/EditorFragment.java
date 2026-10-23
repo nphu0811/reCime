@@ -113,6 +113,9 @@ public class EditorFragment extends Fragment {
         recipe.title = p.title;
         recipe.ingredients = p.ingredients;
         recipe.steps = p.steps;
+          recipe.servingsKnown = p.servings != null;
+          if (p.servings != null) recipe.servings = p.servings;
+          recipe.attribution = p.attribution;
       }
       if (state == null) fill(v);
     }

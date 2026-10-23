@@ -43,7 +43,10 @@ public final class PublicWebExtractor implements ExtractionAdapter {
         || a.isLinkLocalAddress()
         || a.isSiteLocalAddress()
         || a.isMulticastAddress()
-        || (b.length == 16 && (b[0] & 0xfe) == 0xfc))
+        || (b.length == 16 && (b[0] & 0xfe) == 0xfc)
+        || (b.length == 4 && ((b[0] & 255) == 0
+            || (b[0] & 255) >= 224
+            || ((b[0] & 255) == 100 && (b[1] & 255) >= 64 && (b[1] & 255) <= 127))))
       throw new UnknownHostException("Không nhận địa chỉ mạng nội bộ");
   }
 
@@ -55,6 +58,8 @@ public final class PublicWebExtractor implements ExtractionAdapter {
             .followRedirects(false)
             .followSslRedirects(false)
             .callTimeout(20, TimeUnit.SECONDS)
+            .connectTimeout(8, TimeUnit.SECONDS)
+            .readTimeout(12, TimeUnit.SECONDS)
             .dns(
                 host -> {
                   List<InetAddress> list = Arrays.asList(InetAddress.getAllByName(host));
@@ -94,7 +99,10 @@ public final class PublicWebExtractor implements ExtractionAdapter {
             bytes.write(buffer, 0, n);
           }
         }
-        String html = bytes.toString("UTF-8");
+        java.nio.charset.Charset charset = response.body().contentType() == null
+            ? java.nio.charset.StandardCharsets.UTF_8
+            : response.body().contentType().charset(java.nio.charset.StandardCharsets.UTF_8);
+        String html = new String(bytes.toByteArray(), charset);
         for (Element e : Jsoup.parse(html).select("script[type=application/ld+json]")) {
           try {
             JSONObject r = find(new JSONTokener(e.data()).nextValue());
@@ -152,9 +160,21 @@ public final class PublicWebExtractor implements ExtractionAdapter {
   }
 
   static String toText(JSONObject r) throws JSONException {
-    StringBuilder b =
-        new StringBuilder(Jsoup.parse(r.optString("name", "Công thức nhập web")).text())
-            .append("\nIngredients\n");
+    StringBuilder b = new StringBuilder(Jsoup.parse(r.optString("name", "Công thức nhập web")).text()).append('\n');
+    Object yield = r.opt("recipeYield");
+    if (yield instanceof JSONArray) yield = ((JSONArray) yield).opt(0);
+    if (yield != null) {
+      java.util.regex.Matcher m = java.util.regex.Pattern.compile("^\\s*(\\d+(?:[.,]\\d+)?)(?:\\s+(?:servings|people|persons|nguoi|phần|người))?\\s*$", java.util.regex.Pattern.CASE_INSENSITIVE).matcher(yield.toString());
+      if (m.matches()) b.append("Servings: ").append(m.group(1)).append('\n');
+    }
+    Object author = r.opt("author");
+    if (author instanceof JSONArray) author = ((JSONArray) author).opt(0);
+    String credit = author instanceof JSONObject ? ((JSONObject) author).optString("name")
+        : author instanceof String ? (String) author : "";
+    String license = r.opt("license") instanceof String ? r.optString("license") : "";
+    if (!credit.isEmpty() || !license.isEmpty())
+      b.append("Attribution: ").append(Jsoup.parse(credit + " " + license).text()).append('\n');
+    b.append("Ingredients\n");
     JSONArray a = r.optJSONArray("recipeIngredient");
     if (a != null) {
       for (int i = 0; i < a.length(); i++)
