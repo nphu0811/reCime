@@ -1,10 +1,12 @@
 package com.example.recime.helper;
 
 import android.content.Context;
+import android.database.Cursor;
 import com.example.recime.model.Recipe;
 import com.example.recime.sql.LabDatabase;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.*;
 import org.json.*;
 
 /** Bundled, versioned open recipes: real SQLite rows, no network required at launch. */
@@ -19,14 +21,34 @@ public final class CatalogImporter {
     JSONArray recipes =
         new JSONObject(bytes.toString(StandardCharsets.UTF_8.name())).getJSONArray("recipes");
     int[] added = {0};
+
+    // Pre-fetch deleted tombstones and existing catalog recipes in bulk
+    // before starting the transaction to avoid thousands of individual SELECT queries.
+    Set<String> deletedTombstones = new HashSet<>();
+    try (Cursor cursor = database.getReadableDatabase().rawQuery("SELECT catalogKey FROM catalog_tombstones", null)) {
+      while (cursor.moveToNext()) {
+        String key = cursor.getString(0);
+        if (key != null) deletedTombstones.add(key);
+      }
+    }
+
+    Map<String, Recipe> existingCatalogMap = new HashMap<>();
+    for (Recipe r : database.dao().recipeSnapshot()) {
+      if (r.catalogKey != null) {
+        existingCatalogMap.put(r.catalogKey, r);
+      }
+    }
+
     database.runInTransaction(
         () -> {
           try {
             for (int i = 0; i < recipes.length(); i++) {
               JSONObject value = recipes.getJSONObject(i);
+              String catalogKey = value.getString("catalogKey");
+              if (deletedTombstones.contains(catalogKey)) continue;
+
               Recipe recipe = new Recipe();
-              recipe.catalogKey = value.getString("catalogKey");
-              if (database.dao().wasCatalogDeleted(recipe.catalogKey) > 0) continue;
+              recipe.catalogKey = catalogKey;
               recipe.title = value.getString("title");
               recipe.ingredients = value.getString("ingredients");
               recipe.steps = value.getString("steps");
@@ -60,7 +82,8 @@ public final class CatalogImporter {
                         + value.optString("imageMatch")
                         + "\n"
                         + value.optString("imageModification");
-              Recipe existing = database.dao().findCatalog(recipe.catalogKey);
+
+              Recipe existing = existingCatalogMap.get(catalogKey);
               if (existing != null) {
                 // Catalog upgrades can fill missing photos without overwriting user edits or
                 // favorites.

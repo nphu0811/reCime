@@ -95,14 +95,39 @@ public class RecipesFragment extends Fragment {
     render();
   }
   private void refreshBooks(){
-    books.clear(); members.clear();
-    for(String name:vm.repository.dao.bookNamesSnapshot()){
-      Set<Long> ids=vm.repository.dao.recipeIdsForCookbook(name);
-      boolean personal=ids.isEmpty();
-      for(Recipe r:all)if(LibraryScope.includes(r,false)&&ids.contains(r.id))personal=true;
-      if(personal){books.add(name);members.put(name,ids);}
-    }
-    render();
+    if (root == null || vm == null) return;
+    vm.repository.io.execute(() -> {
+      List<String> allBookNames = vm.repository.dao.bookNamesSnapshot();
+      Map<String, Set<Long>> allMembers = vm.repository.dao.allCookbookMemberships();
+      List<String> personalBooks = new ArrayList<>();
+      Map<String, Set<Long>> personalMembers = new HashMap<>();
+
+      for (String name : allBookNames) {
+        Set<Long> ids = allMembers.getOrDefault(name, Collections.emptySet());
+        boolean personal = false;
+        for (Recipe r : all) {
+          if (LibraryScope.includes(r, false) && (ids.contains(r.id) || name.equalsIgnoreCase(r.cookbook))) {
+            personal = true;
+            break;
+          }
+        }
+        if (personal) {
+          personalBooks.add(name);
+          personalMembers.put(name, ids);
+        }
+      }
+
+      if (root != null) {
+        root.post(() -> {
+          if (root == null || !isAdded()) return;
+          books.clear();
+          books.addAll(personalBooks);
+          members.clear();
+          members.putAll(personalMembers);
+          render();
+        });
+      }
+    });
   }
   private void bookActions(){
     new com.google.android.material.dialog.MaterialAlertDialogBuilder(root.getContext()).setTitle(book())
@@ -119,7 +144,7 @@ public class RecipesFragment extends Fragment {
     root.findViewById(R.id.manage_books).setSelected(isBooks);
     root.findViewById(R.id.all_recipes).setSelected(!isBooks);
     shown.clear(); String q=Units.key(query);
-    Set<Long> selected=book().isEmpty()?Collections.emptySet():vm.repository.dao.recipeIdsForCookbook(book());
+    Set<Long> selected=book().isEmpty()?Collections.emptySet():members.getOrDefault(book(),Collections.emptySet());
     for(Recipe r:all){
       if(!LibraryScope.includes(r,discover())||(!book().isEmpty()&&!selected.contains(r.id)))continue;
       String hay=Units.key(r.title+" "+r.tags+" "+r.ingredients);boolean ok=true;
@@ -131,7 +156,7 @@ public class RecipesFragment extends Fragment {
     int count=target.getCount();Ui.set(root,R.id.empty,!Boolean.TRUE.equals(vm.repository.ready.getValue())?"Đang tải…":
         count==0?(isBooks?"Chưa có cookbook. Nhấn + để tạo.":"Chưa có công thức phù hợp."):
         count+(isBooks?" cookbooks":" công thức"));
-    if(!book().isEmpty()&&!vm.repository.dao.bookNamesSnapshot().contains(book())){
+    if(!book().isEmpty()&&!books.contains(book())){
       root.findViewById(R.id.cookbook_options).setEnabled(false);
       Ui.set(root,R.id.empty,"Cookbook đã đổi tên hoặc bị xóa. Nhấn Back để về thư viện.");
     }

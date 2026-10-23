@@ -335,9 +335,13 @@ public class LabDao {
     try(Cursor c=db.rawQuery("SELECT itemKey,checked FROM plan_groceries",null)){
       while(c.moveToNext()) checked.put(c.getString(0),c.getInt(1)!=0);
     }
+    List<Recipe> allRecipes = recipeSnapshot();
+    java.util.Map<Long, Recipe> recipeMap = new java.util.HashMap<>();
+    for (Recipe r : allRecipes) recipeMap.put(r.id, r);
+
     List<Ingredient> items=new ArrayList<>();
     for(Meal m:allMeals(null,null)){
-      Recipe r=find(m.recipeId);
+      Recipe r=recipeMap.get(m.recipeId);
       if(r!=null) {
         double ratio= m.extraId > 0 && m.servings > 0 && r.servings > 0
             ? m.servings/r.servings : 1.0;
@@ -591,6 +595,24 @@ public class LabDao {
       db.endTransaction();
     }
     refresh();
+  }
+
+  public java.util.Map<String, java.util.Set<Long>> allCookbookMemberships() {
+    java.util.Map<String, java.util.Set<Long>> map = new java.util.HashMap<>();
+    try (Cursor c = helper.getReadableDatabase().rawQuery(
+        "SELECT c.name, m.recipeId FROM cookbooks c JOIN cookbook_members m ON m.cookbookId=c.id ORDER BY c.name COLLATE NOCASE", null)) {
+      while (c.moveToNext()) {
+        String name = c.getString(0);
+        long recipeId = c.getLong(1);
+        java.util.Set<Long> set = map.get(name);
+        if (set == null) {
+          set = new java.util.HashSet<>();
+          map.put(name, set);
+        }
+        set.add(recipeId);
+      }
+    }
+    return map;
   }
 
   public List<String> bookNamesSnapshot(){

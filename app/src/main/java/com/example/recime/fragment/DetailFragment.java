@@ -159,27 +159,34 @@ public class DetailFragment extends Fragment {
             });
     v.findViewById(R.id.add_to_book).setOnClickListener(x->{
       if(recipe==null)return;
-      List<String> books=vm.repository.dao.bookNamesSnapshot();
-      if(books.isEmpty()){
-        Toast.makeText(requireContext(),"Hãy tạo cookbook trong Home",Toast.LENGTH_SHORT).show();
-        return;
-      }
       long recipeId=recipe.id;
-      List<String> memberships=vm.repository.dao.cookbookNamesForRecipe(recipeId);
-      boolean[] selected=new boolean[books.size()];
-      for(int index=0;index<books.size();index++)selected[index]=memberships.contains(books.get(index));
-      new MaterialAlertDialogBuilder(requireContext()).setTitle("Quản lý cookbooks")
-        .setMultiChoiceItems(books.toArray(new String[0]),selected,
-            (dialog,which,checked)->selected[which]=checked)
-        .setNegativeButton("Hủy",null)
-        .setPositiveButton("Lưu",(dialog,which)->{
-          List<String> draft=new ArrayList<>();
-          for(int index=0;index<books.size();index++)if(selected[index])draft.add(books.get(index));
-          vm.repository.run(()->{
-            vm.repository.dao.replaceRecipeCookbooks(recipeId,draft);
-            vm.repository.message.postValue("Đã cập nhật cookbooks; công thức được giữ lại");
-          });
-        }).show();
+      vm.repository.io.execute(() -> {
+        List<String> books = vm.repository.dao.bookNamesSnapshot();
+        List<String> memberships = vm.repository.dao.cookbookNamesForRecipe(recipeId);
+        v.post(() -> {
+          if (getView() != v || !isAdded()) return;
+          if (books.isEmpty()) {
+            Toast.makeText(requireContext(), "Hãy tạo cookbook trong Home", Toast.LENGTH_SHORT).show();
+            return;
+          }
+          boolean[] selected = new boolean[books.size()];
+          for (int index = 0; index < books.size(); index++)
+            selected[index] = memberships.contains(books.get(index));
+          new MaterialAlertDialogBuilder(requireContext()).setTitle("Quản lý cookbooks")
+            .setMultiChoiceItems(books.toArray(new String[0]), selected,
+                (dialog, which, checked) -> selected[which] = checked)
+            .setNegativeButton("Hủy", null)
+            .setPositiveButton("Lưu", (dialog, which) -> {
+              List<String> draft = new ArrayList<>();
+              for (int index = 0; index < books.size(); index++)
+                if (selected[index]) draft.add(books.get(index));
+              vm.repository.run(() -> {
+                vm.repository.dao.replaceRecipeCookbooks(recipeId, draft);
+                vm.repository.message.postValue("Đã cập nhật cookbooks; công thức được giữ lại");
+              });
+            }).show();
+        });
+      });
     });
     v.findViewById(R.id.cooking_mode).setOnClickListener(x->{
       if(recipe!=null)((MainActivity)requireActivity()).open(CookingFragment.create(recipe.id));

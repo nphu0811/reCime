@@ -26,6 +26,7 @@ public class LabDatabase extends SQLiteOpenHelper {
   public void onConfigure(SQLiteDatabase db) {
     super.onConfigure(db);
     db.setForeignKeyConstraintsEnabled(true);
+    db.enableWriteAheadLogging();
   }
 
   @Override
