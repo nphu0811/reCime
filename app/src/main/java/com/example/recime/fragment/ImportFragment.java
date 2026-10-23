@@ -15,6 +15,8 @@ import com.example.recime.*;
 import com.example.recime.AIservice.LocalAiClient;
 import com.example.recime.activity.MainActivity;
 import com.example.recime.helper.PublicWebExtractor;
+import com.example.recime.helper.ImportDuplicateChecker;
+import com.example.recime.helper.RecipeParser;
 import com.example.recime.helper.Ui;
 import com.example.recime.viewmodel.LabViewModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -143,8 +145,54 @@ public class ImportFragment extends Fragment {
   }
 
   private void open(String raw) {
-    ((MainActivity) requireActivity())
-        .open(EditorFragment.create(0, raw, Ui.text(root, R.id.url), image));
+    if (root == null || busy) return;
+    final View target = root;
+    final String source = Ui.text(target, R.id.url);
+    final String photo = image;
+    if (raw == null || raw.trim().isEmpty()) {
+      ((MainActivity) requireActivity()).open(EditorFragment.create(0, raw, source, photo));
+      return;
+    }
+    // Read SQLite off the UI thread; do not alter an existing recipe automatically.
+    final com.example.recime.sql.RecipeRepository repository =
+        new ViewModelProvider(requireActivity()).get(LabViewModel.class).repository;
+    loading(true);
+    repository.io.execute(() -> {
+      com.example.recime.model.Recipe existing = null;
+      String error = null;
+      try {
+        existing = ImportDuplicateChecker.find(
+            repository.dao.recipeSnapshot(), RecipeParser.parse(raw), source);
+      } catch (Exception e) {
+        error = e.getMessage() == null ? "Không đọc được thư viện" : e.getMessage();
+      }
+      final com.example.recime.model.Recipe duplicate = existing;
+      final String failure = error;
+      target.post(() -> {
+        if (root != target || !isAdded()) return;
+        loading(false);
+        if (failure != null) {
+          status("Không kiểm tra được công thức trùng: " + failure);
+          return;
+        }
+        if (duplicate == null) {
+          ((MainActivity) requireActivity())
+              .open(EditorFragment.create(0, raw, source, photo));
+          return;
+        }
+        new MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Có thể bạn đã lưu công thức này")
+            .setMessage("Đã tìm thấy \"" + duplicate.title
+                + "\" trong Recipes. Bạn muốn mở bản cũ hay nhập bản sao?")
+            .setNeutralButton("Hủy", null)
+            .setNegativeButton("Mở bản đã lưu", (dialog, which) ->
+                ((MainActivity) requireActivity()).open(DetailFragment.create(duplicate.id)))
+            .setPositiveButton("Nhập bản sao", (dialog, which) ->
+                ((MainActivity) requireActivity())
+                    .open(EditorFragment.create(0, raw, source, photo)))
+            .show();
+      });
+    });
   }
 
   private void status(String s) {
