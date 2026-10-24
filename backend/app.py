@@ -12,6 +12,8 @@ app=FastAPI(title='reCime AI service',version='3.0')
 from backend.cloud import router as cloud_router
 from backend.hardening import RequestGuard
 app.include_router(cloud_router)
+from backend.cooking import router as cooking_router
+app.include_router(cooking_router)
 app.add_middleware(RequestGuard)
 
 from fastapi.exceptions import RequestValidationError
@@ -41,11 +43,13 @@ class AskInput(BaseModel):
 @app.get('/health')
 def health():
     e=engine()
+    from cooking_ai.inference.local import model_info
     return {'status':'ready','recipes':len(e.recipes),
             'assistantAvailable':bool(os.getenv('OPENAI_API_KEY','').strip()),
             'imageTextExtractionConfigured':bool(os.getenv('OPENAI_API_KEY','').strip()),
             'nutritionAvailable':bool(os.getenv('FDC_API_KEY','').strip()),
             'accountsAvailable':True,
+            'cookingModel':model_info(),
             'syncProtocol':'optimistic-record-revision-v1',
             'cloudBackupAvailable':True,
             'googleSignInAvailable':False,

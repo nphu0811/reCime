@@ -18,7 +18,12 @@ jobs:
           cache-dependency-path: backend/requirements.txt
       - run: python -m pip install -r backend/requirements.txt
       - name: Auth, sync, provider mocks and health contracts
-        run: python -m unittest backend.test_cloud backend.test_health backend.test_provider_contracts backend.test_image_import -v
+        run: python -m unittest backend.test_backend backend.test_cloud backend.test_health backend.test_provider_contracts backend.test_image_import backend.test_cooking cooking_ai.tests.test_data cooking_ai.tests.test_video cooking_ai.tests.test_evaluation cooking_ai.tests.test_catalog cooking_ai.tests.test_pipeline -v
+      - name: Real bounded video decoder fixtures
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg
+          python -m unittest cooking_ai.tests.test_video -v
   android-build:
     runs-on: ubuntu-latest
     timeout-minutes: 30

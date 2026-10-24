@@ -96,6 +96,34 @@ public final class LocalAiClient {
     return uploadImage(file, "/v1/import/ai-image", 2400);
   }
 
+  public JSONObject cookingModels() throws Exception { return request("/v1/cooking/models", null); }
+  public JSONObject cookingStatus(String id) throws Exception { return request("/v1/cooking/jobs/" + id, null); }
+  public JSONObject cancelCooking(String id) throws Exception {
+    return request("/v1/cooking/jobs/" + id + "/cancel",
+        RequestBody.create("{}", MediaType.get("application/json")));
+  }
+  public JSONObject cookingUpload(File file, boolean video, String provider, boolean consent, String key) throws Exception {
+    MultipartBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
+        .addFormDataPart("kind", video ? "video" : "image")
+        .addFormDataPart("provider", provider)
+        .addFormDataPart("external_consent", Boolean.toString(consent))
+        .addFormDataPart("media", file.getName(), RequestBody.create(file,
+            MediaType.get(video ? "video/mp4" : "image/jpeg"))).build();
+    Request.Builder builder = new Request.Builder().url(base + "/v1/cooking/jobs")
+        .header("Idempotency-Key", key).post(body);
+    String token = session.token(base);
+    if (!token.isEmpty()) builder.header("Authorization", "Bearer " + token);
+    try (Response response = http.newCall(builder.build()).execute()) {
+      if (response.body() == null) throw new IOException("Backend không trả dữ liệu");
+      JSONObject data;
+      try (InputStream in = response.body().byteStream()) {
+        data = new JSONObject(new String(com.example.recime.helper.BackupStore.read(in, 1024 * 1024), java.nio.charset.StandardCharsets.UTF_8));
+      }
+      if (!response.isSuccessful()) throw new IOException("HTTP " + response.code() + ": " + data.optString("detail"));
+      return data;
+    }
+  }
+
   private JSONObject uploadImage(File file, String path, int maxSide) throws Exception {
     Bitmap bitmap = com.example.recime.helper.ImageHelper.readBitmap(context, file.getPath(), maxSide);
     if (bitmap == null) throw new IOException("Không đọc được ảnh");

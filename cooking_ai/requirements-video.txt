@@ -1,0 +1,3 @@
+faster-whisper==1.2.1
+pytesseract==0.3.13
+# Install FFmpeg + Tesseract with vie/eng language packs separately.

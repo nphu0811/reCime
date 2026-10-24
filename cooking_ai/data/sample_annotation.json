@@ -1,0 +1,23 @@
+{
+  "id": "replace-with-unique-id",
+  "source_id": "same-id-for-all-frames-from-one-original-video",
+  "kind": "image",
+  "media": "media/your-photo.jpg",
+  "text": "",
+  "attribution": "Tên chủ sở hữu; nguồn; ngày chụp",
+  "license": "owner-permission",
+  "permission_to_train": false,
+  "permission_evidence": "Thay bằng tham chiếu giấy phép/đồng ý huấn luyện thật",
+  "language": "vi",
+  "fixture": false,
+  "target": {
+    "is_cooking": true,
+    "title": null,
+    "language": "vi",
+    "ingredients": [{"name": "gạo", "quantity": null, "unit": null,
+      "evidence": {"source": "visual", "text": "Hạt gạo nhìn thấy trong bát", "start": null, "end": null}}],
+    "steps": [],
+    "uncertainty": ["Không xác định được khối lượng hoặc cách nấu chỉ từ ảnh này"],
+    "suggested_recipe": null
+  }
+}

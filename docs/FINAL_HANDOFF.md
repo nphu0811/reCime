@@ -1,6 +1,6 @@
 # Bàn giao reCime — 24/10/2026
 
-Ứng dụng độc lập `com.example.recime`, Java/XML/Fragment/SQLite. Nhánh `wip/rea-recime-602`, tiếp tục Draft PR#5; không merge master, không force-push. Baseline được fast-forward từ c208ea0 lên 2513e48; workspace ban đầu sạch. Giữ WAL/background cookbook/catalog optimization của f91ca9d. Không thao tác lên app/tài khoản/draft official.
+Ứng dụng độc lập `com.example.recime`, Java/XML/Fragment/SQLite. PR#5 đã merge vào `master` ngày24/10/2026 bằng commit `91311aa` theo yêu cầu mới; tiếp tục trực tiếp trên master. Trạng thái Cooking AI/training/video mới xem `COOKING_AI_HANDOFF.md`, thay thế các mô tả thiếu adapter bên dưới. Giữ WAL/background cookbook/catalog optimization. Không thao tác lên app/tài khoản/draft official.
 
 | Trạng thái | Nhóm | Phạm vi thực tế |
 |---|---|---|

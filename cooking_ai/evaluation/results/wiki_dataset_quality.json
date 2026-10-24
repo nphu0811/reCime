@@ -1,0 +1,19 @@
+{
+  "records": 614,
+  "sources": 485,
+  "duplicates": [],
+  "splits": {
+    "train": 493,
+    "validation": 62,
+    "test": 59
+  },
+  "fixtures": 0,
+  "manifest_sha256": "9c474c2c0cd0917cee8d07b114df10885ac86d9936a4af05b1dafb29e5e73a10",
+  "real_accuracy_evidence": false,
+  "catalog_sha256": "2fc1bd05d2634fc831b7a8d71d1d81fb6841a82eaa2d5eff43f7663676c8c26f",
+  "image_records": 109,
+  "text_records": 505,
+  "supervision": "Wiki text extraction + weak source-associated image title; no image ingredient or step labels",
+  "skipped": [],
+  "manual_annotation_verified": false
+}

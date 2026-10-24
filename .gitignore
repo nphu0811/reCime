@@ -19,6 +19,10 @@ local.properties
 /.tools/
 /backend/.venv/
 /backend/models/
+/cooking_ai/data/private/
+/cooking_ai/runs/
+/cooking_ai/.venv/
+/cooking_ai/cache/
 /backend/data/
 /backend/__pycache__/
 /datasets/raw/

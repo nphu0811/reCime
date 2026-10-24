@@ -1,0 +1,56 @@
+{
+  "records": 3,
+  "sources": 3,
+  "duplicates": [],
+  "splits": {
+    "train": 1,
+    "validation": 1,
+    "test": 1
+  },
+  "fixtures": 3,
+  "manifest_sha256": "e6f5cf0e863b18cef1aa5f5bb4e67236af4adf411189c15ec4ae551e12179eb1",
+  "real_accuracy_evidence": false,
+  "base_model": "HuggingFaceTB/SmolVLM-256M-Instruct",
+  "revision": "7e3e67edbbed1bf9888184d9df282b700a323964",
+  "config": {
+    "base_model": "HuggingFaceTB/SmolVLM-256M-Instruct",
+    "revision": "main",
+    "rank": 8,
+    "learning_rate": 0.0002,
+    "max_length": 4096,
+    "max_steps": 1000,
+    "seed": 42,
+    "quantize": false
+  },
+  "optimizer_steps": 3,
+  "initial_weights_sha256": "b75b183f692980192a45d4b032b9cf8d46376ee391cbb5ae98c7e14213845e4f",
+  "resume_start_weights_sha256": "fc6cdd8bdd5d9daa9fba2b8edce337bf69789326219aad654e42b8ebffa744fa",
+  "final_weights_sha256": "67de962752637e3b389e5e63a9d0e42e91fb71142f951bd3d35cd2be1664d0c1",
+  "adapter_sha256": "723ef4ae9a49808e37bee4368abf9b9b31c7c20838c00ecb80392d03b7b2915d",
+  "validation_loss": 1.9177180528640747,
+  "validation_records": 1,
+  "validation_total": 1,
+  "device": "cpu",
+  "peak_vram_bytes": 0,
+  "elapsed_seconds": 25.828000000008615,
+  "metrics": [
+    {
+      "step": 1,
+      "loss": 1.9494116306304932,
+      "gradient_norm": 0.842546284198761
+    },
+    {
+      "step": 2,
+      "loss": 1.901511311531067,
+      "gradient_norm": 0.7859308123588562
+    },
+    {
+      "step": 3,
+      "loss": 1.855752944946289,
+      "gradient_norm": 0.7416515350341797
+    }
+  ],
+  "status": "SMOKE_TRAINED",
+  "inference_verified": false,
+  "model_version": "lora-67de96275263"
+}

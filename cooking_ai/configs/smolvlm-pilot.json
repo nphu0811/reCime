@@ -1,0 +1,1 @@
+{"base_model":"HuggingFaceTB/SmolVLM-256M-Instruct","revision":"7e3e67edbbed1bf9888184d9df282b700a323964","rank":8,"learning_rate":0.0002,"max_length":2048,"max_steps":1000,"seed":42,"quantize":false,"gradient_checkpointing":true}

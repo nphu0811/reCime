@@ -149,6 +149,7 @@ public class MainActivity extends AppCompatActivity {
     b.putString("text", i.getStringExtra(Intent.EXTRA_TEXT));
     android.net.Uri uri = i.getParcelableExtra(Intent.EXTRA_STREAM);
     if (uri != null && "content".equals(uri.getScheme())) b.putString("uri", uri.toString());
+    b.putBoolean("video", i.getType() != null && i.getType().startsWith("video/"));
     ImportFragment f = new ImportFragment();
     f.setArguments(b);
     open(f);

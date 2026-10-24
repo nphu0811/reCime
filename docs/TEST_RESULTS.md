@@ -164,3 +164,6 @@ Animation settings đã khôi phục đúng snapshot trước thử nghiệm: an
 - The UI consumes each completed response once using a saved result id, so rotating after modifying the imported text does not overwrite the user's edits. URL and caption editing are disabled during fetch to keep URL/source consistent.
 - New Android test ImportWebRotationTest uses an in-memory delayed ExtractionAdapter to verify pending/progress/result through rotation, plus preservation of subsequent manual edits. This is synthetic, not a live website or system process-kill test.
 - GitHub CI covers compilation, unit tests and lint; this new Android instrumentation needs an Emulator run before declaring PASS.
+# Cooking AI checkpoint — 24/10/2026
+
+Backend+AI48/48, Android44JVM và9instrumentation liên quan Import/CookingAI PASS; build/lint PASS. Training LoRA25steps thật nhưng held-out JSON0/2, không production-ready. Phạm vi, các lượt FAIL đã sửa và proof: `COOKING_AI_HANDOFF.md`, `cooking_ai/evaluation/results/`. Các kết quả cũ dưới đây giữ làm lịch sử; không gọi chúng là regression mới.

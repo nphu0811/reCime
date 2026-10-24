@@ -1,0 +1,15 @@
+{
+  "records": 12,
+  "sources": 12,
+  "duplicates": [],
+  "splits": {
+    "train": 8,
+    "validation": 2,
+    "test": 2
+  },
+  "fixtures": 0,
+  "manifest_sha256": "5608291a81152061f5ea15b1695cb7b3fdfc47d23963f0d34456a73311ca8bcc",
+  "real_accuracy_evidence": false,
+  "excluded_context_ids": [],
+  "pilot_only": true
+}

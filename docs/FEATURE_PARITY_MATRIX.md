@@ -11,7 +11,7 @@ FastAPI hiện có email/password/session/profile/account delete, cloud backup C
 | Navigation/modal | Dock theo back stack có tên, xử lý callback Predictive Back của Fragment1.8; Settings trên draft vẫn giữ ẩn dock; khôi phục Home margin | Fix dựa screenshot độc lập; không suy motion/pixel parity official |
 | Regression Library/ANR | Baseline Library 5/5 một lượt; giữ WAL/catalog optimization, member query background | Không coi sửa test root là sửa server/official |
 | Import | Servings/author/license metadata, HTTPS redirects/body/time/DNS limits, duplicate review; OCR thực qua rotation; tùy chọn đọc chữ ảnh bằng OpenAI có consent/giữ ảnh/review; Share giữ caption+URL | OCR Việt thực tế đa dạng/process-kill chưa đủ QA; không tự lấy ảnh website |
-| Social | Provider statuses + fallback; TikTok caption công khai, không tự mở catalog như kết quả trích video | Không có video/audio/transcript adapter cho các nền tảng |
+| Social/Cooking AI | Provider statuses, TikTok caption; local video file share/picker và authorized AI jobs, frames/audio/timeline adapter | Không tự lấy video từ URL; ASR/OCR models và video nấu ăn thực tế còn cần QA; xem COOKING_AI_HANDOFF.md |
 | Account/backup | Auth độc lập, encrypted Android session, additive restore có checksum/FK/idempotence; contract local thật | Google/email verification/reset/collaboration chưa hoàn tất |
 | Record sync | Generic server API có user isolation/revision/conflict/tombstone/cursor | Android mutation/outbox mapping, merge từng entity và multi-device runtime chưa triển khai |
 | Nutrition/AI | JSON schema/errors/rate/timeout; USDA g/kg, kiểm tra kcal/g, không điền khi thiếu | Live smoke HTTP200 cho text/ảnh tiếng Việt/Q&A/USDA; không chứng nhận accuracy rộng; user phải xác nhận mapping |

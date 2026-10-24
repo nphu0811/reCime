@@ -168,6 +168,8 @@ def delete_account(body: DeleteAccount, user=Depends(identity)):
         raise HTTPException(401, 'Password confirmation failed')
     with database(True) as db:
         db.execute('DELETE FROM users WHERE id=?', (user['id'],))
+    from backend.cooking import delete_user_jobs
+    delete_user_jobs(user['id'])
     return {'status': 'deleted', 'localData': 'preserved'}
 
 

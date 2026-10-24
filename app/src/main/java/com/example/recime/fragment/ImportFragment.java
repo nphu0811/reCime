@@ -38,6 +38,15 @@ public class ImportFragment extends Fragment {
   private com.example.recime.viewmodel.ImportImageState imageState;
   private long appliedImage;
   private long appliedWebFetch;
+  private com.example.recime.viewmodel.CookingImportState cookingState;
+  private final ActivityResultLauncher<String[]> videoPicker = registerForActivityResult(
+      new ActivityResultContracts.OpenDocument(), uri -> {
+        if (uri != null) {
+          try { requireContext().getContentResolver().takePersistableUriPermission(uri, android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION); }
+          catch (SecurityException ignored) { /* Immediate temporary grant is sufficient to copy. */ }
+          chooseCookingProvider(uri, true);
+        }
+      });
   private final ActivityResultLauncher<androidx.activity.result.PickVisualMediaRequest> picker =
       registerForActivityResult(
           new ActivityResultContracts.PickVisualMedia(),
@@ -64,6 +73,14 @@ public class ImportFragment extends Fragment {
     busy = false;
     webState = new ViewModelProvider(this).get(ImportWebState.class);
     imageState = new ViewModelProvider(this).get(com.example.recime.viewmodel.ImportImageState.class);
+    cookingState = new ViewModelProvider(this).get(com.example.recime.viewmodel.CookingImportState.class);
+    v.findViewById(R.id.cooking_ai_image).setOnClickListener(x -> {
+      if (image.isEmpty()) { status("Chọn ảnh bằng SCAN CHỮ hoặc Camera trước, rồi chọn Cooking AI."); return; }
+      chooseCookingProvider(Uri.fromFile(new File(image)), false);
+    });
+    v.findViewById(R.id.cooking_ai_video).setOnClickListener(x -> videoPicker.launch(new String[] {"video/mp4", "video/quicktime"}));
+    v.findViewById(R.id.cooking_ai_cancel).setOnClickListener(x -> cookingState.cancel());
+    v.findViewById(R.id.cooking_ai_retry).setOnClickListener(x -> cookingState.retry());
     if (state != null) {
       if (state.containsKey("statusText")) status(state.getString("statusText"));
       appliedWebFetch = state.getLong("appliedWebFetch", 0L);
@@ -167,13 +184,28 @@ public class ImportFragment extends Fragment {
         Ui.set(v, R.id.url, shared.url); Ui.set(v, R.id.raw, shared.text);
       }
       String uri = getArguments().getString("uri");
-      if (uri != null) ocr(Uri.parse(uri));
+      if (uri != null) {
+        if (getArguments().getBoolean("video")) chooseCookingProvider(Uri.parse(uri), true);
+        else ocr(Uri.parse(uri));
+      }
     }
   }
 
   @Override
   public void onViewStateRestored(Bundle state) {
     super.onViewStateRestored(state);
+    cookingState.status.observe(getViewLifecycleOwner(), text -> { if (text != null && !text.isEmpty()) status(text); });
+    cookingState.loading.observe(getViewLifecycleOwner(), value -> loading(Boolean.TRUE.equals(value)));
+    cookingState.review.observe(getViewLifecycleOwner(), raw -> {
+      if (root == null || raw == null || raw.isEmpty()) return;
+      // Explicit replacement keeps edits made while the process was interrupted.
+      new MaterialAlertDialogBuilder(requireContext()).setTitle("Review công thức AI")
+          .setMessage("Kết quả có bằng chứng và phần chưa chắc. Thay văn bản nhập bằng kết quả để kiểm tra? Công thức chưa được lưu.")
+          .setNegativeButton("Giữ nháp", (d, w) -> cookingState.consumeReview())
+          .setPositiveButton("Xem kết quả", (d, w) -> {
+            if (root != null) { Ui.set(root, R.id.raw, raw); cookingState.consumeReview(); status("Kiểm tra kết quả, sửa phần thiếu rồi chọn Phân tích → Editor → Lưu."); }
+          }).show();
+    });
     // Observe after Android restores EditText state, so a previously applied
     // network result can never overwrite text the user subsequently edited.
     imageState.result.observe(getViewLifecycleOwner(), event -> {
@@ -229,6 +261,21 @@ public class ImportFragment extends Fragment {
       }
       return raw.toString();
     });
+  }
+
+  private void chooseCookingProvider(Uri uri, boolean video) {
+    if (root == null || busy) return;
+    new MaterialAlertDialogBuilder(requireContext()).setTitle("Chọn nơi phân tích · cần đăng nhập backend")
+        .setItems(new String[] {"Model đã train trên backend riêng", "OpenAI · gửi media ra ngoài, có thể tính phí"}, (d, option) -> {
+          boolean external = option == 1;
+          new MaterialAlertDialogBuilder(requireContext())
+              .setTitle(external ? "Đồng ý gửi media đến OpenAI?" : "Gửi media đến backend riêng?")
+              .setMessage((external ? "Media sẽ được backend chuyển đến OpenAI; có thể phát sinh phí và chịu chính sách dữ liệu của nhà cung cấp. " : "Media sẽ được tải lên backend đã cấu hình. Nếu chưa có model thật, hệ thống báo lỗi và không tự chuyển OpenAI. ")
+                  + "Chỉ gửi nội dung bạn có quyền sử dụng. Tối đa 10MB/180 giây. Định lượng ẩn không thể biết từ ảnh. Kết quả cần Review trước khi lưu.")
+              .setNegativeButton("Hủy", null)
+              .setPositiveButton("Đồng ý phân tích", (dialog, which) -> cookingState.start(uri, video,
+                  external ? "openai_existing" : "trained_local_vlm", external)).show();
+        }).setNegativeButton("Hủy", null).show();
   }
 
   private void open(String raw) {
@@ -287,14 +334,15 @@ public class ImportFragment extends Fragment {
   }
 
   private void loading(boolean on) {
-    on = on || (webState != null && webState.isLoading()) || (imageState != null && imageState.isLoading());
+    on = on || (webState != null && webState.isLoading()) || (imageState != null && imageState.isLoading())
+        || (cookingState != null && cookingState.isLoading());
     busy = on;
     if (root == null) return;
     root.findViewById(R.id.progress).setVisibility(on ? View.VISIBLE : View.GONE);
     for (int id :
         new int[] {
           R.id.fetch, R.id.pick, R.id.camera, R.id.review, R.id.manual, R.id.ai_pick, R.id.ai_text,
-          R.id.url, R.id.raw, R.id.ai_extract, R.id.ai_extract_image
+          R.id.url, R.id.raw, R.id.ai_extract, R.id.ai_extract_image, R.id.cooking_ai_image, R.id.cooking_ai_video, R.id.cooking_ai_retry
         }) root.findViewById(id).setEnabled(!on);
   }
 

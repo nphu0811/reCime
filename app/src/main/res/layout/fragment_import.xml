@@ -129,6 +129,23 @@
             android:text="Đọc ảnh đã chọn bằng OpenAI"
             style="@style/Widget.Material3.Button.OutlinedButton" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/cooking_ai_image" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:minHeight="48dp"
+            android:text="Cooking AI · Phân tích ảnh đã chọn" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/cooking_ai_video" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:minHeight="48dp"
+            android:text="Cooking AI · Chọn video MP4/MOV" />
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/cooking_ai_cancel" android:layout_width="0dp" android:layout_weight="1"
+                android:layout_height="48dp" android:text="Hủy AI" style="@style/Widget.Material3.Button.TextButton" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/cooking_ai_retry" android:layout_width="0dp" android:layout_weight="1"
+                android:layout_height="48dp" android:text="Thử lại AI" style="@style/Widget.Material3.Button.TextButton" />
+        </LinearLayout>
+
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
