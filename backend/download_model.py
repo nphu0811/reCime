@@ -3,11 +3,12 @@ from pathlib import Path
 import hashlib,json,requests
 
 MODEL='Xenova/clip-vit-base-patch32'
+REVISION='d15189d7028b43f1d3e65039190477f6af591c2a'
 ROOT=Path(__file__).resolve().parent/'models/clip'
 
 def main():
     ROOT.mkdir(parents=True,exist_ok=True)
-    metadata=requests.get(f'https://huggingface.co/api/models/{MODEL}',timeout=30);metadata.raise_for_status()
+    metadata=requests.get(f'https://huggingface.co/api/models/{MODEL}/revision/{REVISION}',timeout=30);metadata.raise_for_status()
     revision=metadata.json()['sha']
     tree=requests.get(f'https://huggingface.co/api/models/{MODEL}/tree/{revision}/onnx?expand=false',timeout=30);tree.raise_for_status()
     entry=next(x for x in tree.json() if x['path']=='onnx/vision_model_quantized.onnx')
