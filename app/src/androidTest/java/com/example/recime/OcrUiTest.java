@@ -1,4 +1,5 @@
 package com.example.recime;
+import static com.example.recime.UiGestures.click;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.*;
@@ -77,7 +78,7 @@ public class OcrUiTest {
       onView(withId(R.id.edit_title)).perform(scrollTo(), replaceText(title), closeSoftKeyboard());
       scenario.recreate();
       onView(withId(R.id.edit_title)).check(matches(withText(title)));
-      onView(withId(R.id.save)).perform(scrollTo(), click());
+      onView(withId(R.id.save)).perform(click());
       repo.io.submit(() -> {}).get(20, TimeUnit.SECONDS);
       Recipe saved =
           repo.io

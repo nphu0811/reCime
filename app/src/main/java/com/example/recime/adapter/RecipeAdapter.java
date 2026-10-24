@@ -8,7 +8,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.example.recime.R;
-import com.example.recime.helper.Motion;
 import com.example.recime.helper.Ui;
 import com.example.recime.helper.Units;
 import com.example.recime.model.Recipe;
@@ -45,8 +44,6 @@ public class RecipeAdapter extends BaseAdapter {
   public View getView(int position, View convertView, ViewGroup parent) {
     if (convertView == null) {
       convertView = LayoutInflater.from(context).inflate(layout, parent, false);
-      Motion.card(convertView);
-      Motion.stagger(convertView, position);
     }
     ImageView image = convertView.findViewById(R.id.photo);
     TextView title = convertView.findViewById(R.id.title);
@@ -55,7 +52,7 @@ public class RecipeAdapter extends BaseAdapter {
     title.setText(recipe.title);
     meta.setText(
         (recipe.favorite ? "♥ · " : "")
-            + (recipe.catalogKey == null ? recipe.cookbook : "Wikibooks · CC BY-SA 4.0")
+            + (recipe.catalogKey == null ? recipe.cookbook : (recipe.attribution.isEmpty() ? recipe.source : recipe.attribution))
             + (recipe.servingsKnown ? " · " + Units.format(recipe.servings) + " phần" : ""));
     Ui.image(image, recipe.image);
     return convertView;

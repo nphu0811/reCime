@@ -1,39 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    android:orientation="vertical" android:padding="24dp"
-    android:background="@drawable/bg_screen_glow">
-    <Button android:id="@+id/cook_back" android:layout_width="wrap_content"
-        android:layout_height="48dp" android:text="← Công thức" />
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:text="✦ COOKING MODE" android:textSize="12sp" android:textStyle="bold"
-        android:textColor="@color/acid_lime" android:layout_marginTop="16dp" />
-    <TextView android:id="@+id/cook_title" android:layout_width="match_parent"
-        android:layout_height="wrap_content" android:textSize="25sp"
-        android:textStyle="bold" android:textColor="@color/soft_white"
-        android:layout_marginTop="10dp"/>
-    <ProgressBar android:id="@+id/cook_progress" style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent" android:layout_height="8dp"
-        android:progressTint="@color/acid_lime" android:layout_marginTop="26dp"/>
-    <TextView android:id="@+id/cook_step_number" android:layout_width="match_parent"
-        android:layout_height="wrap_content" android:textColor="@color/electric_coral"
-        android:textStyle="bold" android:textSize="18sp" android:layout_marginTop="32dp"/>
-    <ScrollView android:layout_width="match_parent" android:layout_height="0dp"
-        android:layout_weight="1" android:fillViewport="true">
-        <TextView android:id="@+id/cook_step" android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:layout_marginTop="22dp"
-            android:textColor="@color/soft_white" android:textSize="26sp"
-            android:lineSpacingExtra="12dp"/>
-    </ScrollView>
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:text="Màn hình luôn sáng khi đang nấu · kiểm tra nhiệt độ và an toàn thực phẩm"
-        android:textSize="12sp" android:textColor="@color/muted_ink"/>
-    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:orientation="horizontal" android:layout_marginTop="18dp">
-        <Button android:id="@+id/cook_previous" android:layout_width="0dp"
-            android:layout_weight="1" android:layout_height="56dp" android:text="← Trước"/>
-        <Button android:id="@+id/cook_next" android:layout_width="0dp"
-            android:layout_weight="1" android:layout_height="56dp"
-            android:text="Tiếp →"/>
-    </LinearLayout>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:padding="16dp" android:background="#FAF8F2">
+ <Button android:id="@+id/cook_back" android:layout_width="wrap_content" android:layout_height="48dp" android:text="← Công thức"/>
+ <TextView android:id="@+id/cook_title" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="24sp" android:textStyle="bold" android:textColor="#24231F" android:maxLines="2" android:ellipsize="end"/>
+ <ProgressBar android:id="@+id/cook_progress" style="?android:attr/progressBarStyleHorizontal" android:layout_width="match_parent" android:layout_height="8dp" android:progressTint="#4E8CDC"/>
+ <TextView android:id="@+id/cook_step_number" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#316FAC" android:textStyle="bold" android:textSize="18sp" android:paddingVertical="8dp"/>
+ <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:fillViewport="true">
+  <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+   <TextView android:id="@+id/cook_step" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#24231F" android:textSize="24sp" android:lineSpacingExtra="6dp" android:paddingVertical="12dp"/>
+   <TextView android:id="@+id/cook_servings" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#69655E" android:textSize="16sp"/>
+   <LinearLayout android:id="@+id/cook_ingredients" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical"/>
+  </LinearLayout>
+ </ScrollView>
+ <TextView android:id="@+id/cook_timer_status" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#454039" android:accessibilityLiveRegion="polite" android:textSize="15sp"/>
+ <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+  <Button android:id="@+id/cook_timer" android:layout_width="0dp" android:layout_weight="1" android:layout_height="48dp" android:text="Hẹn giờ"/>
+  <Button android:id="@+id/cook_timer_cancel" android:layout_width="0dp" android:layout_weight="1" android:layout_height="48dp" android:text="Hủy giờ"/>
+ </LinearLayout>
+ <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Giữ sáng khi màn nấu đang mở · 1 hẹn giờ chung · dừng khi khởi động lại thiết bị" android:textSize="11sp" android:textColor="#69655E"/>
+ <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+  <Button android:id="@+id/cook_previous" android:layout_width="0dp" android:layout_weight="1" android:layout_height="52dp" android:text="← Trước"/>
+  <Button android:id="@+id/cook_next" android:layout_width="0dp" android:layout_weight="1" android:layout_height="52dp" android:text="Tiếp →"/>
+ </LinearLayout>
 </LinearLayout>

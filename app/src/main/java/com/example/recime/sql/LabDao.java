@@ -114,6 +114,16 @@ public class LabDao {
     refresh();
   }
 
+  /** A favorite toggle must not overwrite unrelated recipe/editor fields. */
+  public void setFavorite(long recipeId, boolean favorite) {
+    ContentValues values = new ContentValues();
+    values.put("favorite", favorite ? 1 : 0);
+    if (helper.getWritableDatabase().update("recipes", values, "id=?",
+        new String[] {String.valueOf(recipeId)}) != 1)
+      throw new IllegalStateException("Công thức không còn tồn tại");
+    refresh();
+  }
+
   public void delete(Recipe recipe) {
     helper
         .getWritableDatabase()
@@ -142,6 +152,7 @@ public class LabDao {
     values.put("tags", recipe.tags);
     values.put("source", recipe.source);
     values.put("image", recipe.image);
+    values.put("imagesJson", new org.json.JSONArray(recipe.images).toString());
     values.put("servings", recipe.servings);
     values.put("favorite", recipe.favorite ? 1 : 0);
     values.put("calories", recipe.calories);
@@ -169,6 +180,14 @@ public class LabDao {
         recipe.tags = text(cursor, "tags");
         recipe.source = text(cursor, "source");
         recipe.image = text(cursor, "image");
+        try {
+          org.json.JSONArray photos = new org.json.JSONArray(text(cursor, "imagesJson"));
+          for (int index = 0; index < photos.length(); index++)
+            recipe.images.add(photos.getString(index));
+        } catch (org.json.JSONException invalidPhotos) {
+          // Retain the original cover even if an older/externally edited list is invalid.
+          recipe.images.clear();
+        }
         recipe.servings = cursor.getDouble(cursor.getColumnIndexOrThrow("servings"));
         recipe.favorite = cursor.getInt(cursor.getColumnIndexOrThrow("favorite")) != 0;
         recipe.calories = number(cursor, "calories");
@@ -208,7 +227,7 @@ public class LabDao {
       while(cursor.moveToNext()){
         Meal m=new Meal();
         m.extraId=cursor.getLong(0);
-        m.day=text(cursor,"day"); m.type=text(cursor,"type");
+        m.day=text(cursor,"day"); m.type=mealType(text(cursor,"type"));
         m.slot=m.day+"|"+m.type; m.recipeId=cursor.getLong(3);
         m.servings=cursor.getDouble(4);
         list.add(m);
@@ -218,33 +237,74 @@ public class LabDao {
   }
 
   public void putMeal(Meal meal) {
-    ContentValues values = new ContentValues();
-    values.put("slot", meal.slot);
-    values.put("day", meal.day);
-    values.put("type", meal.type);
-    values.put("recipeId", meal.recipeId);
-    helper.getWritableDatabase().insertWithOnConflict("meals",null,values,SQLiteDatabase.CONFLICT_REPLACE);
-    syncPlanGroceries();
-    refresh();
+    helper.runInTransaction(() -> {
+      ContentValues values=new ContentValues();
+      values.put("slot",meal.slot);values.put("day",meal.day);values.put("type",meal.type);
+      values.put("recipeId",meal.recipeId);
+      helper.getWritableDatabase().insertWithOnConflict("meals",null,values,SQLiteDatabase.CONFLICT_REPLACE);
+      syncPlanGroceries();
+    });
   }
 
   public long addMeal(Meal meal) {
-    ContentValues values=new ContentValues();
-    values.put("day",meal.day); values.put("type",meal.type);
-    values.put("recipeId",meal.recipeId);
-    values.put("servings",meal.servings > 0 ? meal.servings : 0.0);
-    long id=helper.getWritableDatabase().insertOrThrow("meal_extras",null,values);
-    syncPlanGroceries();
-    refresh();
-    return id;
+    com.example.recime.helper.PlannerWeek.validate(meal.day,meal.type,meal.servings);
+    final long[] id={0};
+    helper.runInTransaction(() -> {
+      ContentValues values=mealValues(meal.day,meal.type,meal.recipeId,meal.servings);
+      id[0]=helper.getWritableDatabase().insertOrThrow("meal_extras",null,values);
+      syncPlanGroceries();
+    });
+    return id[0];
+  }
+
+  private String mealType(String value){
+    try{return com.example.recime.helper.PlannerWeek.TYPES[com.example.recime.helper.PlannerWeek.typeIndex(value)];}
+    catch(IllegalArgumentException unsupported){return value;}
+  }
+
+  private ContentValues mealValues(String day,String type,long recipeId,double servings) {
+    ContentValues values=new ContentValues();values.put("day",day);values.put("type",mealType(type));
+    values.put("recipeId",recipeId);values.put("servings",servings);return values;
+  }
+
+  /** Update a single occurrence. Legacy rows become extras, never replace a destination dish. */
+  public void editMeal(Meal original,String day,String type,long recipeId,double servings) {
+    changeMeal(original,day,type,recipeId,servings,false);
+  }
+
+  private void changeMeal(Meal original,String day,String type,long recipeId,double servings,boolean moveOnly) {
+    com.example.recime.helper.PlannerWeek.validate(day,type,servings);
+    helper.runInTransaction(() -> {
+      SQLiteDatabase db=helper.getWritableDatabase();
+      ContentValues values=mealValues(day,type,recipeId,servings);
+      if(original.extraId>0) {
+        if(moveOnly){values.remove("recipeId");values.remove("servings");}
+        if(db.update("meal_extras",values,"id=? AND recipeId=?",
+            new String[]{String.valueOf(original.extraId),String.valueOf(original.recipeId)})!=1)
+          throw new IllegalStateException("Món trong lịch đã thay đổi hoặc bị xóa");
+      } else {
+        if(db.delete("meals","slot=? AND recipeId=?",
+            new String[]{original.slot,String.valueOf(original.recipeId)})!=1)
+          throw new IllegalStateException("Món trong lịch đã thay đổi hoặc bị xóa");
+        db.insertOrThrow("meal_extras",null,values);
+      }
+      syncPlanGroceries();
+    });
+  }
+
+  public void moveMeal(Meal original,String day,String type) {
+    changeMeal(original,day,type,original.recipeId,0,true);
   }
 
   public void deleteMeal(Meal meal) {
-    if(meal.extraId > 0)
-      helper.getWritableDatabase().delete("meal_extras","id=?",new String[]{String.valueOf(meal.extraId)});
-    else helper.getWritableDatabase().delete("meals","slot=?",new String[]{meal.slot});
-    syncPlanGroceries();
-    refresh();
+    helper.runInTransaction(() -> {
+      if(meal.extraId>0)
+        helper.getWritableDatabase().delete("meal_extras","id=? AND recipeId=?",
+            new String[]{String.valueOf(meal.extraId),String.valueOf(meal.recipeId)});
+      else helper.getWritableDatabase().delete("meals","slot=? AND recipeId=?",
+          new String[]{meal.slot,String.valueOf(meal.recipeId)});
+      syncPlanGroceries();
+    });
   }
 
   private List<Meal> getMeals(String sql,String... args) {
@@ -253,7 +313,7 @@ public class LabDao {
       while(cursor.moveToNext()){
         Meal m=new Meal();
         m.slot=text(cursor,"slot");m.day=text(cursor,"day");
-        m.type=text(cursor,"type");m.recipeId=cursor.getLong(cursor.getColumnIndexOrThrow("recipeId"));
+        m.type=mealType(text(cursor,"type"));m.recipeId=cursor.getLong(cursor.getColumnIndexOrThrow("recipeId"));
         list.add(m);
       }
     }
@@ -261,10 +321,11 @@ public class LabDao {
   }
 
   public void clearMealWeek(String start,String end) {
-    helper.getWritableDatabase().delete("meals","day>=? AND day<=?",new String[]{start,end});
-    helper.getWritableDatabase().delete("meal_extras","day>=? AND day<=?",new String[]{start,end});
-    syncPlanGroceries();
-    refresh();
+    helper.runInTransaction(() -> {
+      helper.getWritableDatabase().delete("meals","day>=? AND day<=?",new String[]{start,end});
+      helper.getWritableDatabase().delete("meal_extras","day>=? AND day<=?",new String[]{start,end});
+      syncPlanGroceries();
+    });
   }
 
   /** Fully recompute derived rows. Manual groceries are NEVER altered. */
@@ -274,9 +335,13 @@ public class LabDao {
     try(Cursor c=db.rawQuery("SELECT itemKey,checked FROM plan_groceries",null)){
       while(c.moveToNext()) checked.put(c.getString(0),c.getInt(1)!=0);
     }
+    List<Recipe> allRecipes = recipeSnapshot();
+    java.util.Map<Long, Recipe> recipeMap = new java.util.HashMap<>();
+    for (Recipe r : allRecipes) recipeMap.put(r.id, r);
+
     List<Ingredient> items=new ArrayList<>();
     for(Meal m:allMeals(null,null)){
-      Recipe r=find(m.recipeId);
+      Recipe r=recipeMap.get(m.recipeId);
       if(r!=null) {
         double ratio= m.extraId > 0 && m.servings > 0 && r.servings > 0
             ? m.servings/r.servings : 1.0;
@@ -324,6 +389,55 @@ public class LabDao {
     return getGroceries("SELECT * FROM groceries ORDER BY id");
   }
 
+  /** Add independent copies; planned rows and already-bought manual rows are never merged into. */
+  public void addGroceryBatch(List<Ingredient> input,double tsp,double tbsp,double cup,String category) {
+    List<Ingredient> merged=GroceryAggregator.merge(input,tsp,tbsp,cup);
+    if(merged.isEmpty())throw new IllegalArgumentException("Chọn ít nhất một nguyên liệu");
+    helper.runInTransaction(()->{
+      for(Ingredient item:merged){
+        Grocery match=null;
+        for(Grocery existing:grocerySnapshot()){
+          if(existing.checked||!Units.key(existing.name).equals(Units.key(item.name)))continue;
+          if(item.amount==null&&existing.amount==null&&Units.canonical(existing.unit).equals(Units.canonical(item.unit))){match=existing;break;}
+          if(item.amount!=null&&existing.amount!=null&&Units.dimension(existing.unit).equals(Units.dimension(item.unit))){match=existing;break;}
+        }
+        if(match!=null){
+          if(item.amount==null)continue;
+          double total=match.amount+Units.convert(item.amount,item.unit,match.unit,tsp,tbsp,cup);
+          if(!Double.isFinite(total))throw new IllegalArgumentException("Số lượng nguyên liệu quá lớn");
+          ContentValues values=new ContentValues();values.put("amount",total);
+          helper.getWritableDatabase().update("groceries",values,"id=?",new String[]{String.valueOf(match.id)});
+        }else{
+          Grocery next=new Grocery();next.name=item.name;next.unit=item.unit;next.amount=item.amount;
+          next.category=category==null||category.trim().isEmpty()?GroceryAggregator.category(item.name):category.trim();
+          insertGrocery(next);
+        }
+      }
+    });
+  }
+
+  public void saveManualGrocery(Grocery draft,double tsp,double tbsp,double cup){
+    GroceryAggregator.merge(java.util.Collections.singletonList(new Ingredient(draft.name,draft.amount,draft.unit)),tsp,tbsp,cup);
+    if(draft.planned)throw new IllegalArgumentException("Hãy sửa nguồn trong Meal Plan");
+    if(draft.id==0){addGroceryBatch(java.util.Collections.singletonList(new Ingredient(draft.name,draft.amount,draft.unit)),tsp,tbsp,cup,draft.category);return;}
+    ContentValues values=groceryValues(draft);values.remove("id");values.remove("checked");
+    if(helper.getWritableDatabase().update("groceries",values,"id=?",new String[]{String.valueOf(draft.id)})!=1)
+      throw new IllegalStateException("Nguyên liệu không còn tồn tại");
+    refresh();
+  }
+
+  /** Stable plan itemKey survives recomputation; manual checks only update the checked column. */
+  public void setGroceryChecked(Grocery reference,boolean checked){
+    ContentValues values=new ContentValues();values.put("checked",checked?1:0);
+    if(reference.planned){
+      String key=Units.key(reference.name)+"|"+Units.canonical(reference.unit);
+      if(helper.getWritableDatabase().update("plan_groceries",values,"itemKey=?",new String[]{key})!=1)
+        throw new IllegalStateException("Nguyên liệu trong lịch đã thay đổi");
+    }else if(helper.getWritableDatabase().update("groceries",values,"id=?",new String[]{String.valueOf(reference.id)})!=1)
+      throw new IllegalStateException("Nguyên liệu không còn tồn tại");
+    refresh();
+  }
+
   public long insertGrocery(Grocery grocery) {
     long id = helper.getWritableDatabase().insertOrThrow("groceries", null, groceryValues(grocery));
     refresh();
@@ -331,12 +445,7 @@ public class LabDao {
   }
 
   public void updateGrocery(Grocery grocery) {
-    if (grocery.planned) {
-      ContentValues v=new ContentValues(); v.put("checked",grocery.checked?1:0);
-      helper.getWritableDatabase().update("plan_groceries",v,"id=?",
-          new String[]{String.valueOf(-grocery.id)});
-      refresh();return;
-    }
+    if(grocery.planned){setGroceryChecked(grocery,grocery.checked);return;}
     helper
         .getWritableDatabase()
         .update(
@@ -383,7 +492,7 @@ public class LabDao {
   /** True cookbook entities; old recipe.cookbook remains the primary category for legacy code. */
   private void attachCookbook(Recipe recipe,long id) {
     String name=recipe.cookbook==null?"":recipe.cookbook.trim();
-    if(name.isEmpty()) name="Món nhà";
+    if(name.isEmpty()) return;
     ContentValues book=new ContentValues();
     book.put("name",name);book.put("createdAt",System.currentTimeMillis());
     SQLiteDatabase db=helper.getWritableDatabase();
@@ -419,6 +528,91 @@ public class LabDao {
       while(c.moveToNext())ids.add(c.getLong(0));
     }
     return ids;
+  }
+
+  public List<String> cookbookNamesForRecipe(long recipeId) {
+    List<String> names = new ArrayList<>();
+    try (Cursor cursor = helper.getReadableDatabase().rawQuery(
+        "SELECT c.name FROM cookbooks c JOIN cookbook_members m ON m.cookbookId=c.id"
+            + " WHERE m.recipeId=? ORDER BY c.name COLLATE NOCASE",
+        new String[] {String.valueOf(recipeId)})) {
+      while (cursor.moveToNext()) names.add(cursor.getString(0));
+    }
+    return names;
+  }
+
+  /** Replace only this cookbook's personal memberships; preserve all other collections. */
+  public void selectCookbookRecipes(String name, java.util.Set<Long> selected) {
+    if (selected == null) throw new IllegalArgumentException("Danh sách không hợp lệ");
+    helper.runInTransaction(() -> {
+      if (!bookNamesSnapshot().contains(name)) throw new IllegalArgumentException("Cookbook không tồn tại");
+      for (Long id : selected) {
+        Recipe r = find(id);
+        if (r == null || r.catalogKey != null) throw new IllegalArgumentException("Chỉ chọn công thức cá nhân");
+      }
+      for (Recipe r : recipeSnapshot()) {
+        if (r.catalogKey != null) continue;
+        List<String> names = cookbookNamesForRecipe(r.id);
+        boolean before = names.contains(name), after = selected.contains(r.id);
+        if (before == after) continue;
+        if (after) names.add(name); else names.remove(name);
+        replaceRecipeCookbooks(r.id, names);
+      }
+    });
+  }
+
+  /** Save the complete selection atomically; removing membership never deletes a recipe. */
+  public void replaceRecipeCookbooks(long recipeId, List<String> selectedNames) {
+    if (selectedNames == null) throw new IllegalArgumentException("Danh sách cookbook không hợp lệ");
+    SQLiteDatabase db = helper.getWritableDatabase();
+    db.beginTransaction();
+    try {
+      if (find(recipeId) == null) throw new IllegalArgumentException("Công thức không tồn tại");
+      java.util.LinkedHashMap<Long, String> selected = new java.util.LinkedHashMap<>();
+      // Resolve every name before changing either memberships or the legacy primary label.
+      for (String name : selectedNames) {
+        if (name == null || name.trim().isEmpty())
+          throw new IllegalArgumentException("Cookbook không tồn tại");
+        try (Cursor cursor = db.rawQuery(
+            "SELECT id,name FROM cookbooks WHERE name=? COLLATE NOCASE",
+            new String[] {name.trim()})) {
+          if (!cursor.moveToFirst()) throw new IllegalArgumentException("Cookbook không tồn tại: " + name);
+          selected.put(cursor.getLong(0), cursor.getString(1));
+        }
+      }
+      db.delete("cookbook_members", "recipeId=?", new String[] {String.valueOf(recipeId)});
+      for (Long cookbookId : selected.keySet()) {
+        ContentValues member = new ContentValues();
+        member.put("cookbookId", cookbookId);
+        member.put("recipeId", recipeId);
+        db.insertOrThrow("cookbook_members", null, member);
+      }
+      ContentValues primary = new ContentValues();
+      primary.put("cookbook", selected.isEmpty() ? "" : selected.values().iterator().next());
+      db.update("recipes", primary, "id=?", new String[] {String.valueOf(recipeId)});
+      db.setTransactionSuccessful();
+    } finally {
+      db.endTransaction();
+    }
+    refresh();
+  }
+
+  public java.util.Map<String, java.util.Set<Long>> allCookbookMemberships() {
+    java.util.Map<String, java.util.Set<Long>> map = new java.util.HashMap<>();
+    try (Cursor c = helper.getReadableDatabase().rawQuery(
+        "SELECT c.name, m.recipeId FROM cookbooks c JOIN cookbook_members m ON m.cookbookId=c.id ORDER BY c.name COLLATE NOCASE", null)) {
+      while (c.moveToNext()) {
+        String name = c.getString(0);
+        long recipeId = c.getLong(1);
+        java.util.Set<Long> set = map.get(name);
+        if (set == null) {
+          set = new java.util.HashSet<>();
+          map.put(name, set);
+        }
+        set.add(recipeId);
+      }
+    }
+    return map;
   }
 
   public List<String> bookNamesSnapshot(){

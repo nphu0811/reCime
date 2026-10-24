@@ -15,8 +15,11 @@ import com.example.recime.*;
 import com.example.recime.AIservice.LocalAiClient;
 import com.example.recime.activity.MainActivity;
 import com.example.recime.helper.PublicWebExtractor;
+import com.example.recime.helper.ImportDuplicateChecker;
+import com.example.recime.helper.RecipeParser;
 import com.example.recime.helper.Ui;
 import com.example.recime.viewmodel.LabViewModel;
+import com.example.recime.viewmodel.ImportWebState;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.text.TextRecognition;
@@ -31,6 +34,10 @@ public class ImportFragment extends Fragment {
   private Uri cameraUri;
   private boolean busy;
   private boolean dishPhoto;
+  private ImportWebState webState;
+  private com.example.recime.viewmodel.ImportImageState imageState;
+  private long appliedImage;
+  private long appliedWebFetch;
   private final ActivityResultLauncher<androidx.activity.result.PickVisualMediaRequest> picker =
       registerForActivityResult(
           new ActivityResultContracts.PickVisualMedia(),
@@ -53,18 +60,24 @@ public class ImportFragment extends Fragment {
   public void onViewCreated(View v, Bundle state) {
     Motion.enter(v);
     root = v;
+    v.findViewById(R.id.import_back).setOnClickListener(x -> getParentFragmentManager().popBackStack());
     busy = false;
+    webState = new ViewModelProvider(this).get(ImportWebState.class);
+    imageState = new ViewModelProvider(this).get(com.example.recime.viewmodel.ImportImageState.class);
     if (state != null) {
+      if (state.containsKey("statusText")) status(state.getString("statusText"));
+      appliedWebFetch = state.getLong("appliedWebFetch", 0L);
+      appliedImage = state.getLong("appliedImage", 0L);
       image = state.getString("image", "");
       dishPhoto = state.getBoolean("dishPhoto", false);
       String uri = state.getString("camera");
       if (uri != null) cameraUri = Uri.parse(uri);
     }
-    if (state != null && state.getBoolean("interrupted"))
-      status("Màn hình đã được tạo lại. Hãy thử lại thao tác nhập ảnh/URL.");
+    if (state != null && state.getBoolean("interrupted") && !webState.isLoading() && !imageState.isLoading())
+      status("Thao tác OCR/AI trước đó bị gián đoạn; văn bản nháp vẫn được giữ.");
     v.findViewById(R.id.manual).setOnClickListener(x -> open(null));
     v.findViewById(R.id.ai_settings)
-        .setOnClickListener(x -> ((MainActivity) requireActivity()).open(new AiSettingsFragment()));
+        .setOnClickListener(x -> ((MainActivity) requireActivity()).open(new SettingsFragment()));
     v.findViewById(R.id.ai_pick)
         .setOnClickListener(
             x -> {
@@ -123,6 +136,23 @@ public class ImportFragment extends Fragment {
                   .show();
             });
     v.findViewById(R.id.fetch).setOnClickListener(x -> fetch());
+    v.findViewById(R.id.ai_extract).setOnClickListener(x -> {
+      String text = Ui.text(v, R.id.raw);
+      if (text.length() < 10) { status("Dán văn bản công thức trước; AI chỉ trích nội dung được cung cấp."); return; }
+      extractWithAi(false, text);
+    });
+    v.findViewById(R.id.ai_extract_image).setOnClickListener(x -> {
+      if (image.isEmpty()) {
+        status("Chọn ảnh bằng SCAN CHỮ hoặc Camera trước. OCR chạy trên máy; chỉ gửi ảnh khi bạn xác nhận OpenAI.");
+        return;
+      }
+      new MaterialAlertDialogBuilder(requireContext())
+          .setTitle("Gửi ảnh công thức tới OpenAI?")
+          .setMessage("Ảnh đã chọn sẽ được gửi qua backend của bạn đến OpenAI để đọc chữ, có thể phát sinh phí. Kiểm tra ảnh không chứa dữ liệu riêng tư. Không suy công thức từ hình món ăn. Kết quả cần bạn sửa và xác nhận trước khi lưu.")
+          .setNegativeButton("Hủy", null)
+          .setPositiveButton("Gửi ảnh", (dialog, which) -> extractWithAi(true, image))
+          .show();
+    });
     v.findViewById(R.id.review)
         .setOnClickListener(
             x -> {
@@ -133,18 +163,123 @@ public class ImportFragment extends Fragment {
     if (state == null && getArguments() != null) {
       String text = getArguments().getString("text", "");
       if (text != null) {
-        if (text.trim().startsWith("https://") && !text.trim().contains("\n"))
-          Ui.set(v, R.id.url, text);
-        else Ui.set(v, R.id.raw, text);
+        com.example.recime.helper.SharedRecipeInput shared = com.example.recime.helper.SharedRecipeInput.parse(text);
+        Ui.set(v, R.id.url, shared.url); Ui.set(v, R.id.raw, shared.text);
       }
       String uri = getArguments().getString("uri");
       if (uri != null) ocr(Uri.parse(uri));
     }
   }
 
+  @Override
+  public void onViewStateRestored(Bundle state) {
+    super.onViewStateRestored(state);
+    // Observe after Android restores EditText state, so a previously applied
+    // network result can never overwrite text the user subsequently edited.
+    imageState.result.observe(getViewLifecycleOwner(), event -> {
+      if (root == null || event == null) return;
+      if (event.loading) { loading(true); status("Đang đọc ảnh trên thiết bị…"); return; }
+      loading(false);
+      if (event.id <= appliedImage) return;
+      appliedImage = event.id;
+      if (event.error != null) { status(event.error); return; }
+      image = event.image;
+      if (event.dish) { aiRequest("image", image); return; }
+      Ui.set(root, R.id.raw, event.text);
+      status(event.text.trim().isEmpty()
+          ? "Không tìm thấy chữ. Chọn ảnh rõ hơn hoặc nhập văn bản; chưa có công thức để lưu."
+          : "OCR hoàn tất. Kiểm tra dấu tiếng Việt, số lượng và phần thiếu trước khi phân tích.");
+    });
+    webState.result.observe(getViewLifecycleOwner(), event -> {
+      if (root == null || event == null) return;
+      if (event.loading) {
+        loading(true);
+        status(event.url.equals("AI:image") ? "Đang đọc chữ trong ảnh qua backend/OpenAI…"
+            : event.url.startsWith("AI:") ? "Đang trích văn bản qua backend/OpenAI…" : "Đang đọc trang công khai…");
+        return;
+      }
+      loading(false);
+      if (event.id <= appliedWebFetch) return;
+      appliedWebFetch = event.id;
+      if (event.error != null) {
+        status("Không nhập được: " + event.error + (event.url.startsWith("AI:")
+            ? " Nháp vẫn được giữ; có thể tiếp tục bằng OCR/nhập tay."
+            : " Có thể sửa URL và thử lại."));
+      } else {
+        if (!event.url.startsWith("AI:")) image = "";
+        Ui.set(root, R.id.raw, event.text);
+        status(event.url.startsWith("AI:") ? "AI đã trích văn bản; kiểm tra mọi nguyên liệu, định lượng và bước trước khi lưu." : "Đã đọc Recipe JSON-LD. Kiểm tra văn bản rồi chọn Phân tích.");
+      }
+    });
+  }
+
+  private void extractWithAi(boolean fromImage, String input) {
+    if (busy || root == null) return;
+    final android.content.Context context = requireContext().getApplicationContext();
+    com.example.recime.sql.RecipeRepository repository = new ViewModelProvider(requireActivity()).get(LabViewModel.class).repository;
+    webState.fetch(fromImage ? "AI:image" : "AI:text", repository.extraction, ignored -> {
+      LocalAiClient client = new LocalAiClient(context);
+      JSONObject recipe = (fromImage ? client.extractImage(new File(input)) : client.extractText(input)).getJSONObject("recipe");
+      StringBuilder raw = new StringBuilder(recipe.getString("title")).append('\n');
+      if (!recipe.isNull("servings")) raw.append("Servings: ").append(recipe.getDouble("servings")).append('\n');
+      for (String section : new String[] {"ingredients", "steps"}) {
+        raw.append(section.equals("ingredients") ? "Ingredients\n" : "Instructions\n");
+        JSONArray lines = recipe.getJSONArray(section);
+        for (int n = 0; n < lines.length(); n++) raw.append(lines.getString(n)).append('\n');
+      }
+      return raw.toString();
+    });
+  }
+
   private void open(String raw) {
-    ((MainActivity) requireActivity())
-        .open(EditorFragment.create(0, raw, Ui.text(root, R.id.url), image));
+    if (root == null || busy) return;
+    final View target = root;
+    final String source = Ui.text(target, R.id.url);
+    final String photo = image;
+    if (raw == null || raw.trim().isEmpty()) {
+      ((MainActivity) requireActivity()).open(EditorFragment.create(0, raw, source, photo));
+      return;
+    }
+    // Read SQLite off the UI thread; do not alter an existing recipe automatically.
+    final com.example.recime.sql.RecipeRepository repository =
+        new ViewModelProvider(requireActivity()).get(LabViewModel.class).repository;
+    loading(true);
+    repository.io.execute(() -> {
+      com.example.recime.model.Recipe existing = null;
+      String error = null;
+      try {
+        existing = ImportDuplicateChecker.find(
+            repository.dao.recipeSnapshot(), RecipeParser.parse(raw), source);
+      } catch (Exception e) {
+        error = e.getMessage() == null ? "Không đọc được thư viện" : e.getMessage();
+      }
+      final com.example.recime.model.Recipe duplicate = existing;
+      final String failure = error;
+      target.post(() -> {
+        if (root != target || !isAdded()) return;
+        loading(false);
+        if (failure != null) {
+          status("Không kiểm tra được công thức trùng: " + failure);
+          return;
+        }
+        if (duplicate == null) {
+          ((MainActivity) requireActivity())
+              .open(EditorFragment.create(0, raw, source, photo));
+          return;
+        }
+        new MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Có thể bạn đã lưu công thức này")
+            .setMessage("Đã tìm thấy \"" + duplicate.title
+                + "\" trong Recipes. Bạn muốn mở bản cũ hay nhập bản sao?")
+            .setNeutralButton("Hủy", null)
+            .setNegativeButton("Mở bản đã lưu", (dialog, which) ->
+                ((MainActivity) requireActivity()).open(DetailFragment.create(duplicate.id)))
+            .setPositiveButton("Nhập bản sao", (dialog, which) ->
+                ((MainActivity) requireActivity())
+                    .open(EditorFragment.create(0, raw, source, photo)))
+            .show();
+      });
+    });
   }
 
   private void status(String s) {
@@ -152,167 +287,36 @@ public class ImportFragment extends Fragment {
   }
 
   private void loading(boolean on) {
+    on = on || (webState != null && webState.isLoading()) || (imageState != null && imageState.isLoading());
     busy = on;
     if (root == null) return;
     root.findViewById(R.id.progress).setVisibility(on ? View.VISIBLE : View.GONE);
     for (int id :
         new int[] {
-          R.id.fetch, R.id.pick, R.id.camera, R.id.review, R.id.manual, R.id.ai_pick, R.id.ai_text
+          R.id.fetch, R.id.pick, R.id.camera, R.id.review, R.id.manual, R.id.ai_pick, R.id.ai_text,
+          R.id.url, R.id.raw, R.id.ai_extract, R.id.ai_extract_image
         }) root.findViewById(id).setEnabled(!on);
   }
 
   private void fetch() {
-    if (busy) return;
-    String url = Ui.text(root, R.id.url);
-    try {
-      java.net.URI parsed = new java.net.URI(url);
-      String host = parsed.getHost();
-      if (host != null && (host.equals("tiktok.com") || host.endsWith(".tiktok.com"))) {
-        aiRequest("tiktok", url);
-        return;
-      }
-    } catch (java.net.URISyntaxException ignored) {
+    if (busy || root == null) return;
+    String url = Ui.text(root, R.id.url).trim();
+    com.example.recime.helper.ImportProviders.Provider provider =
+        com.example.recime.helper.ImportProviders.forUrl(url);
+    if (provider.status != com.example.recime.helper.ImportProviders.Status.SUPPORTED) {
+      status("Không nhập được: " + provider.name + ": chưa có adapter trích xuất được phép. Dán caption, transcript bạn có quyền sử dụng hoặc chọn ảnh; không đọc nội dung video từ URL.");
+      return;
     }
-    loading(true);
-    status("Đang đọc trang công khai…");
-    final View target = root;
-    new ViewModelProvider(requireActivity())
-        .get(LabViewModel.class)
-        .repository
-        .extraction
-        .execute(
-            () -> {
-              try {
-                String text = new PublicWebExtractor().extract(url);
-                target.post(
-                    () -> {
-                      if (root != target) return;
-                      image = "";
-                      Ui.set(root, R.id.raw, text);
-                      loading(false);
-                      status("Đã đọc Recipe JSON-LD. Kiểm tra văn bản rồi chọn Phân tích.");
-                    });
-              } catch (Exception e) {
-                target.post(
-                    () -> {
-                      if (root != target) return;
-                      loading(false);
-                      status("Không nhập được: " + e.getMessage() + " Có thể sửa URL và thử lại.");
-                    });
-              }
-            });
+    if (provider.metadataOnly) { aiRequest("tiktok", url); return; }
+    com.example.recime.sql.RecipeRepository repository =
+        new ViewModelProvider(requireActivity()).get(LabViewModel.class).repository;
+    webState.fetch(url, repository.extraction, new PublicWebExtractor());
   }
 
   private void ocr(Uri uri) {
     if (root == null) return;
-    loading(true);
-    status("Đang đọc ảnh trên thiết bị…");
-    final View target = root;
-    final android.content.Context context = requireContext().getApplicationContext();
-    new ViewModelProvider(requireActivity())
-        .get(LabViewModel.class)
-        .repository
-        .extraction
-        .execute(
-            () -> {
-              try {
-                // Keep a private, bounded copy so a picked URI can expire without breaking recipe
-                // photos.
-                File dir = new File(context.getFilesDir(), "photos");
-                dir.mkdirs();
-                File file = File.createTempFile("recipe_", ".img", dir);
-                try (InputStream in = context.getContentResolver().openInputStream(uri);
-                    OutputStream out = new FileOutputStream(file)) {
-                  if (in == null) throw new IOException("Không mở được ảnh");
-                  byte[] buffer = new byte[8192];
-                  int n, total = 0;
-                  while ((n = in.read(buffer)) != -1) {
-                    total += n;
-                    if (total > 20 * 1024 * 1024) throw new IOException("Ảnh vượt giới hạn 20MB");
-                    out.write(buffer, 0, n);
-                  }
-                } catch (Exception e) {
-                  file.delete();
-                  throw e;
-                }
-                if (dishPhoto) {
-                  target.post(
-                      () -> {
-                        if (root == target) {
-                          image = file.getAbsolutePath();
-                          loading(false);
-                          aiRequest("image", image);
-                        }
-                      });
-                  return;
-                }
-                android.graphics.BitmapFactory.Options options =
-                    new android.graphics.BitmapFactory.Options();
-                options.inJustDecodeBounds = true;
-                android.graphics.BitmapFactory.decodeFile(file.getAbsolutePath(), options);
-                if (options.outWidth <= 0 || options.outHeight <= 0)
-                  throw new IOException("Định dạng ảnh không hợp lệ");
-                options.inSampleSize = 1;
-                while (Math.max(options.outWidth, options.outHeight) / options.inSampleSize > 2200)
-                  options.inSampleSize *= 2;
-                options.inJustDecodeBounds = false;
-                android.graphics.Bitmap bitmap =
-                    android.graphics.BitmapFactory.decodeFile(file.getAbsolutePath(), options);
-                if (bitmap == null) throw new IOException("Không giải mã được ảnh");
-                int rotation = 0;
-                try {
-                  int orientation =
-                      new android.media.ExifInterface(file.getAbsolutePath())
-                          .getAttributeInt(android.media.ExifInterface.TAG_ORIENTATION, 1);
-                  if (orientation == 6) rotation = 90;
-                  else if (orientation == 3) rotation = 180;
-                  else if (orientation == 8) rotation = 270;
-                } catch (IOException ignored) {
-                }
-                InputImage input = InputImage.fromBitmap(bitmap, rotation);
-                TextRecognizer recognizer =
-                    TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS);
-                recognizer
-                    .process(input)
-                    .addOnSuccessListener(
-                        result -> {
-                          if (root == target) {
-                            image = file.getAbsolutePath();
-                            Ui.set(root, R.id.raw, result.getText());
-                            loading(false);
-                            if (result.getText().trim().length() < 12) {
-                              aiRequest("image", image);
-                              return;
-                            }
-                            status(
-                                result.getText().trim().isEmpty()
-                                    ? "Không tìm thấy chữ. Thử ảnh rõ hơn hoặc nhập thủ công."
-                                    : "OCR hoàn tất. Hãy sửa dấu tiếng Việt, số lượng và phần thiếu"
-                                        + " trước khi phân tích.");
-                          }
-                        })
-                    .addOnFailureListener(
-                        e -> {
-                          if (root == target) {
-                            loading(false);
-                            status("OCR lỗi: " + e.getMessage() + ". Chọn ảnh khác để thử lại.");
-                          }
-                        })
-                    .addOnCompleteListener(
-                        task -> {
-                          recognizer.close();
-                          bitmap.recycle();
-                        });
-              } catch (Exception e) {
-                target.post(
-                    () -> {
-                      if (root == target) {
-                        loading(false);
-                        status("Không đọc được ảnh: " + e.getMessage());
-                      }
-                    });
-              }
-            });
+    imageState.read(uri, dishPhoto, new ViewModelProvider(requireActivity())
+        .get(LabViewModel.class).repository.extraction);
   }
 
   private void aiRequest(String kind, String input) {
@@ -347,7 +351,9 @@ public class ImportFragment extends Fragment {
                               "warning",
                               "Chọn món để xem công thức nguồn; luôn kiểm tra biến thể và định"
                                   + " lượng."));
-                      showCandidates(result);
+                      if (kind.equals("tiktok")) {
+                        status("Đã đọc caption công khai; chưa đọc video/âm thanh. Bổ sung nguyên liệu và các bước còn thiếu, rồi chọn Phân tích. Kết quả tra cứu catalog là công thức khác.");
+                      } else showCandidates(result);
                     });
               } catch (Exception e) {
                 target.post(
@@ -422,7 +428,10 @@ public class ImportFragment extends Fragment {
   public void onSaveInstanceState(Bundle b) {
     super.onSaveInstanceState(b);
     b.putString("image", image);
-    b.putBoolean("interrupted", busy);
+    if (root != null) b.putString("statusText", Ui.text(root, R.id.status));
+    b.putBoolean("interrupted", busy && !webState.isLoading() && !imageState.isLoading());
+    b.putLong("appliedWebFetch", appliedWebFetch);
+    b.putLong("appliedImage", appliedImage);
     b.putBoolean("dishPhoto", dishPhoto);
     if (cameraUri != null) b.putString("camera", cameraUri.toString());
   }

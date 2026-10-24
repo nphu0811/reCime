@@ -7,18 +7,19 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.*;
 import org.json.*;
 
-/** Real adapter to the user's own laptop. No external key or upload to a vendor. */
+/** Independent backend adapter. Optional OpenAI calls require explicit user action. */
 public final class LocalAiClient {
   private final String base;
+  private final Context context;
   private final OkHttpClient http =
-      new OkHttpClient.Builder().callTimeout(180, TimeUnit.SECONDS).build();
+      new OkHttpClient.Builder().followRedirects(false).followSslRedirects(false)
+          .connectTimeout(8, TimeUnit.SECONDS).callTimeout(65, TimeUnit.SECONDS).build();
+  private final com.example.recime.helper.SessionStore session;
 
   public LocalAiClient(Context context) {
-    base =
-        context
-            .getSharedPreferences("ai", 0)
-            .getString("endpoint", "http://127.0.0.1:8765")
-            .replaceAll("/+$", "");
+    this.context = context.getApplicationContext();
+    base = AccountClient.endpoint(context);
+    session = new com.example.recime.helper.SessionStore(context);
     HttpUrl parsed = HttpUrl.parse(base);
     if (parsed == null || parsed.username().length() > 0 || parsed.password().length() > 0)
       throw new IllegalArgumentException("Địa chỉ AI server không hợp lệ");
@@ -26,6 +27,8 @@ public final class LocalAiClient {
 
   private JSONObject request(String path, RequestBody body) throws Exception {
     Request.Builder request = new Request.Builder().url(base + path);
+    String token = session.token(base);
+    if (!token.isEmpty()) request.header("Authorization", "Bearer " + token);
     if (body != null) request.post(body);
     try (Response response = http.newCall(request.build()).execute()) {
       if (response.body() == null) throw new IOException("AI server không trả dữ liệu");
@@ -56,6 +59,9 @@ public final class LocalAiClient {
             new JSONObject().put("text", text).toString(),
             MediaType.get("application/json; charset=utf-8")));
   }
+  public JSONObject extractText(String text) throws Exception {
+    return request("/v1/import/ai-text", RequestBody.create(new JSONObject().put("text", text).toString(), MediaType.get("application/json; charset=utf-8")));
+  }
 
   public JSONObject tiktok(String url) throws Exception {
     return request(
@@ -83,39 +89,35 @@ public final class LocalAiClient {
   }
 
   public JSONObject image(File file) throws Exception {
-    BitmapFactory.Options options = new BitmapFactory.Options();
-    options.inJustDecodeBounds = true;
-    BitmapFactory.decodeFile(file.getPath(), options);
-    if (options.outWidth <= 0 || options.outHeight <= 0) throw new IOException("Ảnh không hợp lệ");
-    options.inSampleSize = 1;
-    while (Math.max(options.outWidth, options.outHeight) / options.inSampleSize > 1400)
-      options.inSampleSize *= 2;
-    options.inJustDecodeBounds = false;
-    Bitmap bitmap = BitmapFactory.decodeFile(file.getPath(), options);
+    return uploadImage(file, "/analyze/image", 1400);
+  }
+
+  public JSONObject extractImage(File file) throws Exception {
+    return uploadImage(file, "/v1/import/ai-image", 2400);
+  }
+
+  private JSONObject uploadImage(File file, String path, int maxSide) throws Exception {
+    Bitmap bitmap = com.example.recime.helper.ImageHelper.readBitmap(context, file.getPath(), maxSide);
     if (bitmap == null) throw new IOException("Không đọc được ảnh");
-    int orientation =
-        new android.media.ExifInterface(file.getPath())
-            .getAttributeInt(android.media.ExifInterface.TAG_ORIENTATION, 1);
-    int degrees = orientation == 6 ? 90 : orientation == 3 ? 180 : orientation == 8 ? 270 : 0;
-    if (degrees != 0) {
-      Matrix matrix = new Matrix();
-      matrix.postRotate(degrees);
-      Bitmap rotated =
-          Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-      if (rotated != bitmap) bitmap.recycle();
-      bitmap = rotated;
-    }
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-    bitmap.compress(Bitmap.CompressFormat.JPEG, 85, bytes);
-    bitmap.recycle();
+    try {
+      // Flatten transparent text pages on white; JPEG strips EXIF and location.
+      Bitmap flattened = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.RGB_565);
+      try {
+        Canvas canvas = new Canvas(flattened);
+        canvas.drawColor(Color.WHITE);
+        canvas.drawBitmap(bitmap, 0, 0, null);
+        if (!flattened.compress(Bitmap.CompressFormat.JPEG, 90, bytes)) throw new IOException("Không mã hóa được ảnh");
+      } finally { flattened.recycle(); }
+    } finally { bitmap.recycle(); }
     RequestBody body =
         new MultipartBody.Builder()
             .setType(MultipartBody.FORM)
             .addFormDataPart(
                 "photo",
-                "dish.jpg",
+                "recipe.jpg",
                 RequestBody.create(bytes.toByteArray(), MediaType.get("image/jpeg")))
             .build();
-    return request("/analyze/image", body);
+    return request(path, body);
   }
 }

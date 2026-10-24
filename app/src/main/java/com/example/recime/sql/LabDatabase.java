@@ -9,7 +9,7 @@ import com.example.recime.model.Recipe;
 /** SQLiteOpenHelper như project QuanLySinhVien. Giữ tên file và version cũ để bảo toàn dữ liệu. */
 public class LabDatabase extends SQLiteOpenHelper {
   public static final String DATABASE_NAME = "myrecipelab.db";
-  public static final int DATABASE_VERSION = 4;
+  public static final int DATABASE_VERSION = 6;
   private final LabDao dao;
 
   public LabDatabase(Context context) {
@@ -26,6 +26,7 @@ public class LabDatabase extends SQLiteOpenHelper {
   public void onConfigure(SQLiteDatabase db) {
     super.onConfigure(db);
     db.setForeignKeyConstraintsEnabled(true);
+    db.enableWriteAheadLogging();
   }
 
   @Override
@@ -33,7 +34,7 @@ public class LabDatabase extends SQLiteOpenHelper {
     db.execSQL(
         "CREATE TABLE IF NOT EXISTS `recipes` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
             + " `title` TEXT, `ingredients` TEXT, `steps` TEXT, `cookbook` TEXT, `tags` TEXT,"
-            + " `source` TEXT, `image` TEXT, `servings` REAL NOT NULL, `favorite` INTEGER NOT NULL,"
+            + " `source` TEXT, `image` TEXT, `imagesJson` TEXT NOT NULL DEFAULT '[]', `servings` REAL NOT NULL, `favorite` INTEGER NOT NULL,"
             + " `calories` REAL, `protein` REAL, `carbs` REAL, `fat` REAL, `nutritionSource` TEXT,"
             + " `catalogKey` TEXT, `attribution` TEXT DEFAULT '', `imageAttribution` TEXT DEFAULT"
             + " '', `servingsKnown` INTEGER NOT NULL DEFAULT 1)");
@@ -52,6 +53,11 @@ public class LabDatabase extends SQLiteOpenHelper {
         "CREATE TABLE IF NOT EXISTS `catalog_tombstones` (`catalogKey` TEXT NOT NULL, `deletedAt`"
             + " INTEGER NOT NULL, PRIMARY KEY(`catalogKey`))");
     createV4(db);
+    createV6(db);
+  }
+
+  private void createV6(SQLiteDatabase db) {
+    db.execSQL("CREATE TABLE IF NOT EXISTS backup_restores (backupId TEXT PRIMARY KEY NOT NULL, importedAt INTEGER NOT NULL)");
   }
 
   private void createV4(SQLiteDatabase db) {
@@ -93,6 +99,9 @@ public class LabDatabase extends SQLiteOpenHelper {
               + " deletedAt INTEGER NOT NULL)");
     }
     if (oldVersion < 4) createV4(db);
+    if (oldVersion < 5)
+      db.execSQL("ALTER TABLE recipes ADD COLUMN imagesJson TEXT NOT NULL DEFAULT '[]'");
+    if (oldVersion < 6) createV6(db);
   }
 
   public LabDao dao() {

@@ -1,12 +1,14 @@
-# reCime — Kinetic Kitchen / Java + XML / AI local
+# reCime — Android độc lập / Java + XML / SQLite / FastAPI
 
-**reCime** là ứng dụng Android độc lập với visual style Kinetic Kitchen (midnight / neon lime / coral), motion thuần Android và dữ liệu offline bằng **SQLiteOpenHelper (SQLite)**, không cần trả tiền database hoặc API. Dataset đi kèm có **547 công thức** (cộng4 món mẫu tự soạn khi cài mới), **211 công thức có ảnh thật (178 ảnh riêng biệt)** cùng nguồn, lịch sử tác giả và giấy phép. Phần lớn là công thức tiếng Việt từ Wikibooks, có cả món quốc tế; đây **không phải toàn bộ món Việt Nam**. 336 công thức còn thiếu ảnh thật. Không sử dụng mã nguồn/nhận diện/API riêng của ReciMe.
+**reCime** là ứng dụng Android độc lập, giao diện trắng/kem, Java/XML/Fragment và dữ liệu offline bằng **SQLiteOpenHelper**. Có 547 công thức catalog kèm nguồn/giấy phép; không tự thêm công thức demo. CRUD, import web/text/OCR, Planner/Groceries/Cooking và backup tệp hoạt động không cần key. Backend FastAPI tùy chọn có email/password, cloud backup có outbox/conflict và API record sync; đồng bộ tự động từng bản ghi trên Android chưa hoàn tất. OpenAI/USDA tùy chọn cần key server và có thể tính phí. Không sử dụng source, asset hoặc API riêng của ReciMe.
+
+Tình trạng hiện tại và giới hạn: [Bàn giao](docs/FINAL_HANDOFF.md), [Cấu hình API/backend](docs/SETUP_API_KEYS.md), [Triển khai](docs/DEPLOYMENT.md), [Kiểm thử](docs/TEST_RESULTS.md), [Tùy chỉnh tiếp](docs/NEXT_CUSTOMIZATIONS.md). Các phần lịch sử bên dưới có thể mô tả tính năng/visual cũ; dùng các tài liệu trên làm mốc hiện tại.
 
 ## Chạy Android Studio
 
 1. Open thư mục `reCIme`, chọn Gradle JDK **21**, SDK **37**, Sync. Wrapper Gradle9.5.0 và AGP9.3.3 đã cấu hình; minSDK24.
 2. Mở emulator hoặc kết nối điện thoại USB debugging → Run module `app`.
-3. Lần mở đầu nạp dataset vào SQLite. Công thức, sửa đổi, yêu thích, lịch tuần và checklist còn sau khi khởi động lại. Database version 3 có migration giữ dữ liệu; công thức catalog đã xóa được lưu tombstone để cập nhật catalog không phục hồi chúng.
+3. Lần mở đầu nạp dataset vào SQLite. Database v6 migration additive giữ recipe/photos/cookbooks/meals/groceries/tombstones; v5→6 chỉ thêm ledger restore backup. Không reset dữ liệu khi cập nhật.
 4. Thư viện, CRUD, OCR và planner không cần AI server. Lần Sync đầu cần Internet tải dependencies. APK: `app/build/outputs/apk/debug/app-debug.apk`.
 
 ```powershell

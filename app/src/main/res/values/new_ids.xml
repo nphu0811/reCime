@@ -1,0 +1,4 @@
+<resources>
+ <item name="remote_search" type="id"/>
+ <item name="remote_status" type="id"/>
+</resources>

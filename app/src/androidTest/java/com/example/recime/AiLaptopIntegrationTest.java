@@ -1,7 +1,9 @@
 package com.example.recime;
 
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
+import static com.example.recime.UiGestures.click;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
+import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.*;
 import static org.junit.Assert.*;
@@ -69,7 +71,20 @@ public class AiLaptopIntegrationTest {
             .setType("image/jpeg")
             .putExtra(Intent.EXTRA_STREAM, uri)
             .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+    androidx.test.espresso.intent.Intents.init();
     try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(intent)) {
+      // A shared image uses local OCR. Dish similarity is an explicit user choice,
+      // never an automatic upload when OCR sees too little text.
+      long ocrDeadline=SystemClock.elapsedRealtime()+45000;
+      boolean[] ready={false};
+      while(!ready[0] && SystemClock.elapsedRealtime()<ocrDeadline){
+        scenario.onActivity(a->ready[0]=a.findViewById(R.id.pick)!=null&&a.findViewById(R.id.pick).isEnabled());
+        SystemClock.sleep(50);
+      }
+      assertTrue("OCR must finish before explicit dish lookup",ready[0]);
+      androidx.test.espresso.intent.Intents.intending(androidx.test.espresso.intent.matcher.IntentMatchers.hasAction(android.provider.MediaStore.ACTION_PICK_IMAGES))
+          .respondWith(new android.app.Instrumentation.ActivityResult(android.app.Activity.RESULT_OK,new Intent().setData(uri)));
+      onView(withId(R.id.ai_pick)).perform(scrollTo(),click());
       AtomicReference<String> status = new AtomicReference<>("");
       long deadline = SystemClock.elapsedRealtime() + 120000;
       do {
@@ -82,8 +97,8 @@ public class AiLaptopIntegrationTest {
         SystemClock.sleep(200);
       } while (SystemClock.elapsedRealtime() < deadline);
       assertTrue(status.get(), status.get().contains("Ảnh không thể xác minh"));
-      onView(withText("Món nào giống ảnh/caption của bạn?")).check(matches(isDisplayed()));
-      onView(withText("Bún bò Huế")).perform(click());
+      onView(withText("Món nào giống ảnh/caption của bạn?")).inRoot(isDialog()).check(matches(isDisplayed()));
+      onView(withText("Bún bò Huế")).inRoot(isDialog()).perform(click());
       com.example.recime.sql.RecipeRepository.get(context)
           .io
           .submit(() -> {})
@@ -91,6 +106,7 @@ public class AiLaptopIntegrationTest {
       androidx.test.espresso.Espresso.onIdle();
       onView(withId(R.id.detail_title)).check(matches(withText("Bún bò Huế")));
     } finally {
+      androidx.test.espresso.intent.Intents.release();
       file.delete();
     }
   }

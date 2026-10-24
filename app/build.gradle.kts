@@ -19,6 +19,12 @@ android {
 
     }
 
+    testOptions {
+        // Functional UI assertions run without transitions competing with injected gestures.
+        // The runner restores device animation settings after instrumentation.
+        animationsDisabled = true
+    }
+
     buildTypes {
         release {
             optimization {
@@ -47,5 +53,6 @@ dependencies {
     implementation(libs.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.espresso.core)
+    androidTestImplementation("androidx.test.espresso:espresso-intents:3.7.0")
     androidTestImplementation(libs.ext.junit)
 }

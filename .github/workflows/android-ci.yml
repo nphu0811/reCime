@@ -6,6 +6,19 @@ on:
     branches: [master]
 
 jobs:
+  backend-contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+          cache-dependency-path: backend/requirements.txt
+      - run: python -m pip install -r backend/requirements.txt
+      - name: Auth, sync, provider mocks and health contracts
+        run: python -m unittest backend.test_cloud backend.test_health backend.test_provider_contracts backend.test_image_import -v
   android-build:
     runs-on: ubuntu-latest
     timeout-minutes: 30

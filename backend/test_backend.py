@@ -52,7 +52,7 @@ class RecipeBackendTests(unittest.TestCase):
         class Reply:
             status_code=200
             def json(self):
-                nutrients=[{'nutrientName':n,'value':v} for n,v in (
+                nutrients=[{'nutrientName':n,'value':v,'unitName':'kcal' if n=='Energy' else 'g'} for n,v in (
                     ('Energy',130),('Protein',3),('Carbohydrate, by difference',29),
                     ('Total lipid (fat)',0.2))]
                 return {'foods':[{'fdcId':123,'description':'Rice test','foodNutrients':nutrients}]}

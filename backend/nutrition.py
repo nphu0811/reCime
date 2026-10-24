@@ -1,5 +1,5 @@
 """Source-linked USDA FoodData Central lookup; returns no fake nutrition for unknown items."""
-import os,re
+import os,re,math,time
 import requests
 
 AMOUNT=re.compile(r'^\s*(\d+(?:[.,]\d+)?)\s*(kg|g)\s+(.+?)\s*$',re.I)
@@ -21,6 +21,8 @@ def estimate(ingredients,servings,key=None):
     if not rows:raise ValueError('Danh sách nguyên liệu trống.')
     if not 0<servings<=10000:raise ValueError('Khẩu phần phải là số dương.')
     matched=[];missing=[];totals={key:0.0 for key in NUTRIENTS.values()}
+    deadline=time.monotonic()+50
+    cache={}
     for line in rows:
         amount=AMOUNT.match(line)
         if not amount:
@@ -35,29 +37,37 @@ def estimate(ingredients,servings,key=None):
         ascii_key=''.join(c for c in unicodedata.normalize('NFD',query.lower())
                           if unicodedata.category(c)!='Mn').replace('đ','d')
         query=VI_TO_EN.get(ascii_key,query)
-        resp=requests.get('https://api.nal.usda.gov/fdc/v1/foods/search',
-          params={'api_key':key,'query':query,'pageSize':5,'dataType':'Foundation,SR Legacy'},
-          timeout=18)
-        if resp.status_code!=200:raise RuntimeError('USDA FoodData Central HTTP '+str(resp.status_code))
-        foods=resp.json().get('foods',[])
+        if query not in cache:
+            remaining=deadline-time.monotonic()
+            if remaining<=0:raise RuntimeError('USDA quá thời gian tổng; thử ít nguyên liệu hơn.')
+            resp=requests.get('https://api.nal.usda.gov/fdc/v1/foods/search',
+              params={'api_key':key,'query':query,'pageSize':5,'dataType':'Foundation,SR Legacy'},
+              timeout=min(18,remaining))
+            if resp.status_code!=200:raise RuntimeError('USDA FoodData Central HTTP '+str(resp.status_code))
+            cache[query]=resp.json().get('foods',[])
+        foods=cache[query]
         if not foods:
             missing.append({'input':line,'reason':'USDA không tìm được nguyên liệu tương ứng.'})
             continue
         food=foods[0]
-        byname={n.get('nutrientName'):n for n in food.get('foodNutrients',[])}
+        byname={n.get('nutrientName'):n for n in food.get('foodNutrients',[])
+                if str(n.get('unitName','')).lower()==('kcal' if n.get('nutrientName')=='Energy' else 'g')}
         values={}
         for name,label in NUTRIENTS.items():
             nutrient=byname.get(name)
             if nutrient is None or nutrient.get('value') is None:
                 values={};break
-            values[label]=float(nutrient['value'])*grams/100
+            value=float(nutrient['value'])*grams/100
+            if not math.isfinite(value) or value<0:
+                values={};break
+            values[label]=value
         if len(values)!=4:
             missing.append({'input':line,'reason':'USDA thiếu một hoặc nhiều chỉ số bắt buộc.'})
             continue
         matched.append({'input':line,'fdcId':food.get('fdcId'),
            'description':food.get('description'),
            'source':'https://fdc.nal.usda.gov/food-details/'+str(food.get('fdcId'))+'/nutrients',
-           'grams':grams,'totals':values})
+           'grams':grams,'totals':values,'matchStatus':'candidate-requires-user-confirmation'})
         for label,value in values.items():totals[label]+=value
     complete=bool(matched) and not missing
     return {'complete':complete,'matched':matched,'missing':missing,

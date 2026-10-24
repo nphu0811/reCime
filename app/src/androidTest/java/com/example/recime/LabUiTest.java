@@ -1,4 +1,5 @@
 package com.example.recime;
+import static com.example.recime.UiGestures.click;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.*;
@@ -30,13 +31,14 @@ public class LabUiTest {
             .setType("text/plain")
             .putExtra(
                 Intent.EXTRA_TEXT,
-                title + "\nNguyên liệu\n200 g đậu phụ\n1 muỗng canh dầu\nCách làm\nÁp chảo đậu.");
+                title + "\nNguyên liệu\n200 g " + title + " đậu phụ\n1 muỗng canh " + title + " dầu\nCách làm\nÁp chảo đậu.");
     try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(intent)) {
       onView(withId(R.id.review)).perform(scrollTo(), click());
       onView(withId(R.id.edit_title)).check(matches(withText(title)));
-      onView(withId(R.id.save)).perform(scrollTo(), click());
+      onView(withId(R.id.save)).perform(click());
       repo.io.submit(() -> {}).get(20, TimeUnit.SECONDS);
       Espresso.onIdle();
+      Espresso.pressBack(); // Leave Import with its draft intact before using root tabs.
       onView(withId(R.id.nav_recipes)).perform(click());
       onView(withId(R.id.search)).perform(replaceText(title), closeSoftKeyboard());
       onView(org.hamcrest.Matchers.allOf(withId(R.id.title), withText(title))).perform(click());
@@ -66,6 +68,8 @@ public class LabUiTest {
               () -> {
                 for (Recipe r : repo.dao.recipeSnapshot())
                   if (r.title.equals(title)) repo.dao.delete(r);
+                for (com.example.recime.model.Grocery g : repo.dao.grocerySnapshot())
+                  if (g.name.contains(title)) repo.dao.deleteGrocery(g);
               })
           .get(20, TimeUnit.SECONDS);
     }
@@ -75,12 +79,13 @@ public class LabUiTest {
   public void tabsHaveRealContentAndInvalidUrlHasRecoverableError() throws Exception {
     try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
       onView(withId(R.id.nav_plan)).perform(click());
-      onView(withId(R.id.board_title)).check(matches(withText("Một tuần ngon lành")));
+      onView(withId(R.id.board_title)).check(matches(withText("Meal Plan")));
       onView(withId(R.id.next_week)).perform(click());
       onView(withId(R.id.prev_week)).perform(click());
       onView(withId(R.id.nav_discover)).perform(click());
-      onView(withId(R.id.heading)).check(matches(withText("Fresh ideas.\nFresh bites.")));
-      onView(withId(R.id.nav_import)).perform(click());
+      onView(withId(R.id.heading)).check(matches(withText("Discover")));
+      onView(withId(R.id.add)).perform(click());
+      onView(withText("Nhập link, ảnh, văn bản / AI")).perform(click());
       onView(withId(R.id.url)).perform(scrollTo(), replaceText("invalid-url"), closeSoftKeyboard());
       onView(withId(R.id.fetch)).perform(scrollTo(), click());
       RecipeRepository.get(ApplicationProvider.getApplicationContext())

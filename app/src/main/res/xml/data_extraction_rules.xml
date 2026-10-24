@@ -5,11 +5,17 @@
 -->
 <data-extraction-rules>
     <cloud-backup>
+        <exclude domain="sharedpref" path="account_session.xml"/>
+        <exclude domain="sharedpref" path="cloud_revision.xml"/>
         <!-- TODO: Use <include> and <exclude> to control what is backed up.
         <include .../>
         <exclude .../>
         -->
     </cloud-backup>
+    <device-transfer>
+        <exclude domain="sharedpref" path="account_session.xml"/>
+        <exclude domain="sharedpref" path="cloud_revision.xml"/>
+    </device-transfer>
     <!--
     <device-transfer>
         <include .../>

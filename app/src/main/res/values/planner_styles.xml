@@ -1,0 +1,4 @@
+<resources>
+    <style name="Theme.MealPlanner" parent="Theme.RecipeEditor" />
+    <style name="Theme.PlannerDialog" parent="Theme.Material3.Light.Dialog.Alert" />
+</resources>

@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="20dp">
+        <com.google.android.material.button.MaterialButton android:id="@+id/import_back" android:layout_width="wrap_content" android:layout_height="48dp" android:text="← Quay lại" style="@style/Widget.Material3.Button.TextButton"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -21,7 +22,7 @@
             android:textSize="10sp"
             android:letterSpacing="0.12"
             android:textStyle="bold"
-            android:textColor="@color/acid_lime" />
+            android:textColor="#316FAC" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -52,7 +53,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             app:cardCornerRadius="28dp"
-            app:cardBackgroundColor="@color/acid_lime"
+            app:cardBackgroundColor="#EAF1FA"
             app:strokeWidth="0dp">
 
             <LinearLayout
@@ -79,12 +80,13 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/ai_pick"
-                    android:textColor="@color/soft_white"
+                    android:textColor="#FFFFFF"
                     app:backgroundTint="@color/night_ink"
                     android:layout_width="match_parent"
-                    android:layout_height="52dp"
+                    android:layout_height="wrap_content"
+                    android:minHeight="52dp"
                     android:layout_marginTop="10dp"
-                    android:text="✦ SCAN MÓN ĂN"
+                    android:text="Tìm món tương tự trong catalog"
                     app:cornerRadius="14dp" />
 
             </LinearLayout>
@@ -119,13 +121,21 @@
 
         </LinearLayout>
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/ai_extract_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:text="Đọc ảnh đã chọn bằng OpenAI"
+            style="@style/Widget.Material3.Button.OutlinedButton" />
+
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-            app:boxStrokeColor="@color/acid_lime"
-            app:boxBackgroundColor="@color/card_ink">
+            app:boxStrokeColor="#8C8880"
+            app:boxBackgroundColor="#FFFFFF">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/url"
@@ -159,7 +169,7 @@
             android:layout_marginVertical="12dp"
             android:text="Ảnh có chữ dùng OCR trên điện thoại. TikTok đọc caption công khai khi nền tảng cho phép. Luôn kiểm tra kết quả trước khi lưu."
             android:textSize="12sp"
-            android:textColor="@color/muted_ink" />
+            android:textColor="#69655E" />
 
         <EditText
             android:id="@+id/raw"
@@ -178,6 +188,13 @@
             android:text="✦ AI MATCH TỪ CAPTION"
             style="@style/Widget.Material3.Button.OutlinedButton"
             app:cornerRadius="14dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/ai_extract"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:text="Trích xuất văn bản bằng OpenAI (cần cấu hình)" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/review"

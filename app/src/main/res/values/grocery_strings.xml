@@ -1,0 +1,15 @@
+<resources>
+    <string name="grocery_manual">+ Tự thêm</string>
+    <string name="grocery_batch">Chọn công thức / bữa ăn</string>
+    <string name="grocery_sort">Sắp xếp nguyên liệu</string>
+    <string name="grocery_empty">Chưa có nguyên liệu. Thêm thủ công hoặc chọn nguyên liệu từ công thức, bữa ăn.</string>
+    <string name="grocery_menu">⋮</string>
+    <string name="grocery_checked">Đã mua</string>
+    <string name="grocery_name">Tên nguyên liệu</string>
+    <string name="grocery_amount">Số lượng (có thể trống)</string>
+    <string name="grocery_unit">Đơn vị</string>
+    <string name="grocery_category">Nhóm hàng (có thể trống)</string>
+    <string name="grocery_search">Tìm công thức / bữa ăn</string>
+    <string name="grocery_servings">Khẩu phần / số mẻ</string>
+    <string name="grocery_copy_hint">Batch tạo bản sao độc lập trong mục tự thêm. Nguyên liệu tự tính từ Meal Planner vẫn giữ riêng.</string>
+</resources>

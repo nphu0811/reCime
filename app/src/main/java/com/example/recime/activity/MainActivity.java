@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.*;
 import androidx.fragment.app.Fragment;
 import com.example.recime.R;
-import com.example.recime.helper.Motion;
 import com.example.recime.fragment.BoardFragment;
 import com.example.recime.fragment.ImportFragment;
 import com.example.recime.fragment.RecipesFragment;
@@ -14,39 +13,80 @@ import com.example.recime.viewmodel.LabViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
+  private static final int[] TABS = {R.id.nav_recipes, R.id.nav_plan, R.id.nav_grocery, R.id.nav_discover};
+  private int selectedTab = R.id.nav_recipes;
+  private int rootHostMargin;
+  private static final String MODAL_ENTRY = "recipe-modal";
+  private final java.util.Map<Integer, Fragment.SavedState> tabStates = new java.util.HashMap<>();
+  @Override protected void onSaveInstanceState(Bundle out) {
+    out.putInt("selectedTab", selectedTab);
+    for (Integer id : tabStates.keySet()) out.putParcelable("tab:" + id, tabStates.get(id));
+    super.onSaveInstanceState(out);
+  }
+  public void openImport() { open(new ImportFragment()); }
+
   @Override
   public void onCreate(Bundle state) {
     super.onCreate(state);
+    boolean newInstall = !getDatabasePath(com.example.recime.sql.LabDatabase.DATABASE_NAME).exists();
     setContentView(R.layout.activity_main);
+    rootHostMargin = ((android.view.ViewGroup.MarginLayoutParams) findViewById(R.id.host).getLayoutParams()).bottomMargin;
+    getSupportFragmentManager().addOnBackStackChangedListener(
+        new androidx.fragment.app.FragmentManager.OnBackStackChangedListener() {
+          @Override public void onBackStackChanged() { scheduleChrome(); }
+          @Override public void onBackStackChangeCommitted(Fragment fragment, boolean pop) {
+            // Fragment 1.8 predictive Back uses this callback and counts the
+            // transitioning entry until it returns; read the stack next loop.
+            scheduleChrome();
+          }
+          private void scheduleChrome() { findViewById(R.id.host).post(MainActivity.this::updateModalChrome); }
+        });
+    androidx.core.view.WindowInsetsControllerCompat bars = androidx.core.view.WindowCompat
+        .getInsetsController(getWindow(), getWindow().getDecorView());
+    bars.setAppearanceLightStatusBars(true);
+    bars.setAppearanceLightNavigationBars(true);
+    if (android.os.Build.VERSION.SDK_INT < 26) getWindow().setNavigationBarColor(0xFF101323);
     ViewCompat.setOnApplyWindowInsetsListener(
         findViewById(R.id.main),
         (v, insets) -> {
           androidx.core.graphics.Insets b = insets.getInsets(WindowInsetsCompat.Type.systemBars());
           v.setPadding(b.left, b.top, b.right, b.bottom);
-          return insets;
+          // Root already applies the system bars; do not add them again inside the dock.
+          return WindowInsetsCompat.CONSUMED;
         });
     BottomNavigationView bottom = findViewById(R.id.bottom);
-    bottom.setOnItemSelectedListener(
-        item -> {
-          getSupportFragmentManager()
-              .popBackStackImmediate(
-                  null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE);
-          Fragment f;
-          if (item.getItemId() == R.id.nav_import) f = new ImportFragment();
-          else if (item.getItemId() == R.id.nav_plan) f = BoardFragment.create(true);
-          else if (item.getItemId() == R.id.nav_grocery) f = BoardFragment.create(false);
-          else f = RecipesFragment.create(item.getItemId() == R.id.nav_discover);
-          getSupportFragmentManager()
-              .beginTransaction()
-              .setCustomAnimations(R.anim.recime_slide_down, R.anim.recime_fade_out)
-              .replace(R.id.host, f)
-              .commit();
-          if (Motion.enabled(bottom)) Motion.pop(bottom);
-          return true;
-        });
+    bottom.setItemActiveIndicatorColor(android.content.res.ColorStateList.valueOf(0xFFEAF1FA));
+    if (state != null) {
+      selectedTab = state.getInt("selectedTab", R.id.nav_recipes);
+      for (int id : TABS) {
+        androidx.fragment.app.Fragment.SavedState saved = state.getParcelable("tab:" + id);
+        if (saved != null) tabStates.put(id, saved);
+      }
+    }
+    bottom.setOnItemSelectedListener(item -> {
+      int target = item.getItemId();
+      getSupportFragmentManager().popBackStackImmediate(null,
+          androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE);
+      Fragment old = getSupportFragmentManager().findFragmentById(R.id.host);
+      if (old != null && old.isAdded()) tabStates.put(selectedTab,
+          getSupportFragmentManager().saveFragmentInstanceState(old));
+      Fragment next = target == R.id.nav_plan ? BoardFragment.create(true)
+          : target == R.id.nav_grocery ? BoardFragment.create(false)
+          : RecipesFragment.create(target == R.id.nav_discover);
+      if (tabStates.containsKey(target)) next.setInitialSavedState(tabStates.get(target));
+      selectedTab = target;
+      getSupportFragmentManager().beginTransaction().replace(R.id.host, next).commitNow();
+      return true;
+    });
+    bottom.setOnItemReselectedListener(item -> getSupportFragmentManager()
+        .popBackStackImmediate(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE));
     if (state == null) {
+      getSupportFragmentManager().beginTransaction()
+          .replace(R.id.host, RecipesFragment.create(false)).commitNow();
       if (Intent.ACTION_SEND.equals(getIntent().getAction())) handleShare(getIntent());
-      else bottom.setSelectedItemId(R.id.nav_recipes);
+      else if (getIntent().hasExtra("cookingRecipe")) open(com.example.recime.fragment.CookingFragment.create(getIntent().getLongExtra("cookingRecipe", 0)));
+      else if (newInstall && !getSharedPreferences("onboarding", 0).getBoolean("completed", false))
+        open(new com.example.recime.fragment.WelcomeFragment());
     }
     new androidx.lifecycle.ViewModelProvider(this)
         .get(LabViewModel.class)
@@ -64,6 +104,33 @@ public class MainActivity extends AppCompatActivity {
                     .setValue(null);
               }
             });
+    com.example.recime.sql.RecipeRepository repository = com.example.recime.sql.RecipeRepository.get(this);
+    final android.content.Context appContext = getApplicationContext();
+    repository.io.execute(() -> {
+      if (com.example.recime.helper.CloudBackupQueue.pending(appContext)) com.example.recime.helper.CloudBackupQueue.schedule(appContext);
+    });
+    updateModalChrome();
+  }
+
+  private boolean isRecipeModal(Fragment fragment) {
+    return fragment instanceof ImportFragment
+        || fragment instanceof com.example.recime.fragment.EditorFragment
+        || fragment instanceof com.example.recime.fragment.CookingFragment;
+  }
+
+  /** A child such as Settings must not expose root tabs over an unfinished draft. */
+  private void updateModalChrome() {
+    androidx.fragment.app.FragmentManager manager = getSupportFragmentManager();
+    // During a pop the outgoing view can still be attached for its exit animation.
+    // The committed back stack, rather than that view, owns the dock policy.
+    boolean modal = false;
+    for (int i = 0; i < manager.getBackStackEntryCount(); i++)
+      modal |= MODAL_ENTRY.equals(manager.getBackStackEntryAt(i).getName());
+    findViewById(R.id.bottom).setVisibility(modal ? android.view.View.GONE : android.view.View.VISIBLE);
+    android.view.View host = findViewById(R.id.host);
+    android.view.ViewGroup.MarginLayoutParams params = (android.view.ViewGroup.MarginLayoutParams) host.getLayoutParams();
+    params.bottomMargin = modal ? 0 : rootHostMargin;
+    host.setLayoutParams(params);
   }
 
   @Override
@@ -71,18 +138,20 @@ public class MainActivity extends AppCompatActivity {
     super.onNewIntent(intent);
     setIntent(intent);
     handleShare(intent);
+    if (intent.hasExtra("cookingRecipe")) open(com.example.recime.fragment.CookingFragment.create(intent.getLongExtra("cookingRecipe", 0)));
   }
 
   private void handleShare(Intent i) {
     if (!Intent.ACTION_SEND.equals(i.getAction())) return;
-    ((BottomNavigationView) findViewById(R.id.bottom)).setSelectedItemId(R.id.nav_import);
+    if (getSupportFragmentManager().findFragmentById(R.id.host) == null)
+      ((BottomNavigationView) findViewById(R.id.bottom)).setSelectedItemId(R.id.nav_recipes);
     Bundle b = new Bundle();
     b.putString("text", i.getStringExtra(Intent.EXTRA_TEXT));
     android.net.Uri uri = i.getParcelableExtra(Intent.EXTRA_STREAM);
-    if (uri != null) b.putString("uri", uri.toString());
+    if (uri != null && "content".equals(uri.getScheme())) b.putString("uri", uri.toString());
     ImportFragment f = new ImportFragment();
     f.setArguments(b);
-    getSupportFragmentManager().beginTransaction().replace(R.id.host, f).commit();
+    open(f);
     // Saved instance state restores the fragment; keep the original intent identity.
   }
 
@@ -96,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
             R.anim.recime_slide_down,
             R.anim.recime_fade_out)
         .replace(R.id.host, f)
-        .addToBackStack(null)
+        .addToBackStack(isRecipeModal(f) ? MODAL_ENTRY : null)
         .commit();
   }
 }

@@ -15,12 +15,61 @@ import org.junit.runner.RunWith;
 /** Regression: real cookbook CRUD, two dishes per slot, derived + manual groceries. */
 @RunWith(AndroidJUnit4.class)
 public class LabV4FeaturesTest {
+  @Test public void firstExtraMealRetainsPortionsAcrossReopenAlongsideLegacyAndManualData(){
+    Context context=ApplicationProvider.getApplicationContext();
+    String name="test-v4-portions-"+System.nanoTime()+".db";
+    LabDatabase db=new LabDatabase(context,name);
+    try{
+      Recipe recipe=new Recipe();recipe.title="Portion persistence";
+      recipe.ingredients="200 g test portion ingredient";recipe.steps="Cook";
+      recipe.servings=2;recipe.id=db.dao().insert(recipe);
+      Meal selected=new Meal();selected.day="2031-01-02";selected.type="Trưa";
+      selected.slot=selected.day+"|"+selected.type;selected.recipeId=recipe.id;
+      selected.servings=4;
+      selected.extraId=db.dao().addMeal(selected);
+      assertTrue(selected.extraId>0);
+      assertEquals(400.0,db.dao().plannedGrocerySnapshot().get(0).amount,0.001);
+      Grocery checked=db.dao().plannedGrocerySnapshot().get(0);
+      checked.checked=true;db.dao().updateGrocery(checked);
+      Grocery manual=new Grocery();manual.name="Manual retained";
+      manual.amount=50.0;manual.unit="g";manual.id=db.dao().insertGrocery(manual);
+
+      // Legacy rows keep the original recipe yield; the scaled v4 row must coexist.
+      Meal legacy=new Meal();legacy.day=selected.day;legacy.type=selected.type;
+      legacy.slot=selected.slot;legacy.recipeId=recipe.id;db.dao().putMeal(legacy);
+      assertEquals(600.0,db.dao().plannedGrocerySnapshot().get(0).amount,0.001);
+      db.close();db=new LabDatabase(context,name);
+      List<Meal> meals=db.dao().mealSnapshot(selected.day,selected.day);
+      assertEquals(2,meals.size());
+      Meal storedExtra=null;
+      int legacyCount=0;
+      for(Meal meal:meals){
+        if(meal.extraId>0)storedExtra=meal;
+        else legacyCount++;
+      }
+      assertEquals(1,legacyCount);assertNotNull(storedExtra);
+      assertEquals(4.0,storedExtra.servings,0.001);
+      assertEquals(selected.extraId,storedExtra.extraId);
+      db.dao().syncPlanGroceries();
+      assertEquals(600.0,db.dao().plannedGrocerySnapshot().get(0).amount,0.001);
+      assertTrue(db.dao().plannedGrocerySnapshot().get(0).checked);
+      assertEquals(1,db.dao().grocerySnapshot().size());
+      assertEquals(manual.id,db.dao().grocerySnapshot().get(0).id);
+      db.dao().deleteMeal(legacy);
+      assertEquals(400.0,db.dao().plannedGrocerySnapshot().get(0).amount,0.001);
+      assertTrue(db.dao().plannedGrocerySnapshot().get(0).checked);
+      db.dao().deleteMeal(storedExtra);
+      assertTrue(db.dao().plannedGrocerySnapshot().isEmpty());
+      assertEquals(1,db.dao().grocerySnapshot().size());
+    }finally{db.close();context.deleteDatabase(name);}
+  }
+
   @Test public void v4CollectionsAndPlannerKeepUserData(){
     Context context=ApplicationProvider.getApplicationContext();
     String name="test-v4-"+System.nanoTime()+".db";
     LabDatabase db=new LabDatabase(context,name);
     try{
-      assertEquals(4,db.getWritableDatabase().getVersion());
+      assertEquals(com.example.recime.sql.LabDatabase.DATABASE_VERSION,db.getWritableDatabase().getVersion());
       Recipe r=new Recipe();r.title="Cơm";r.ingredients="200 g gạo";
       r.steps="Nấu";r.cookbook="Món nhà";
       r.id=db.dao().insert(r);

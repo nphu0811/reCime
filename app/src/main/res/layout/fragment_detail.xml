@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_screen_glow"
+    android:background="#FAF8F2"
     tools:context=".fragment.DetailFragment">
 
     <LinearLayout
@@ -20,6 +20,16 @@
             android:layout_height="wrap_content"
             android:text="← BACK TO KITCHEN" />
 
+        <TextView android:id="@+id/detail_status"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:accessibilityLiveRegion="polite" android:text="@string/detail_loading" />
+        <LinearLayout android:id="@+id/detail_content"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:visibility="gone">
+        <Button android:id="@+id/save_catalog" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:text="Lưu bản sao vào Recipes" android:visibility="gone"/>
+        <TextView android:id="@+id/detail_photo_empty"
+            android:layout_width="match_parent" android:layout_height="100dp"
+            android:gravity="center" android:text="@string/detail_no_photo" android:visibility="gone" />
         <ImageView
             android:id="@+id/photo"
             android:layout_width="match_parent"
@@ -31,13 +41,27 @@
             android:contentDescription="Ảnh món ăn"
             tools:src="@drawable/preview_bun_bo_hue" />
 
+        <LinearLayout android:id="@+id/detail_gallery_controls"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+            <Button android:id="@+id/detail_photo_previous" android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:text="@string/detail_previous_symbol"
+                android:contentDescription="@string/detail_previous_photo" />
+            <TextView android:id="@+id/detail_photo_count" android:layout_width="0dp"
+                android:layout_height="wrap_content" android:layout_weight="1"
+                android:gravity="center" android:accessibilityLiveRegion="polite" />
+            <Button android:id="@+id/detail_photo_next" android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:text="@string/detail_next_symbol"
+                android:contentDescription="@string/detail_next_photo" />
+        </LinearLayout>
+
         <TextView
             android:id="@+id/detail_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="34sp"
             android:fontFamily="sans-serif-black"
-            android:textColor="@color/soft_white"
+            android:textColor="#24231F"
             tools:text="Bún bò Huế" />
 
         <TextView
@@ -144,7 +168,7 @@
             android:id="@+id/add_to_book"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:text="▦ Lưu vào cookbook" />
+            android:text="▦ Quản lý cookbooks" />
         <com.google.android.material.button.MaterialButton
             android:id="@+id/to_plan"
             android:layout_width="match_parent"
@@ -198,13 +222,14 @@
 
         <TextView
             android:id="@+id/source"
-            android:textColor="@color/muted_ink"
+            android:textColor="#69655E"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textIsSelectable="true"
         android:autoLink="web"
             tools:text="Wikibooks · CC BY-SA 4.0&#10;Tác giả và giấy phép ảnh có trong chi tiết nguồn." />
 
+        </LinearLayout>
     </LinearLayout>
 
 </ScrollView>

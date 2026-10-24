@@ -91,7 +91,17 @@ public final class RecipeParser {
       line = line.trim();
       if (line.isEmpty()) continue;
       String k = Units.key(line).replaceAll(":$", "");
-      if (k.matches("nguyen lieu|ingredients")) {
+      Matcher portions = Pattern.compile("^(?:servings|serves|khau phan|so phan)\\s*:?\\s*(\\d+(?:[.,]\\d+)?)\\s*(?:nguoi|phan|servings|people)?$").matcher(k);
+      if (portions.matches()) {
+        double count = Double.parseDouble(portions.group(1).replace(',', '.'));
+        if (count > 0 && count <= 10000) p.servings = count;
+        continue;
+      }
+      if (line.startsWith("Attribution: ")) {
+        p.attribution = line.substring("Attribution: ".length()).trim();
+        continue;
+      }
+      if (k.matches("nguyen lieu|ingredients|ingredient list")) {
         section = 1;
         continue;
       }
