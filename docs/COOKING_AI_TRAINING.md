@@ -49,6 +49,8 @@ Metrics: JSON validity, exact dish, ingredient P/R/F1, quantity/unit exact, step
 
 ## Bổ sung dữ liệu đúng quyền
 
+**Rà 109 ảnh Wiki có sẵn:** dùng [Dataset Reviewer](COOKING_AI_DATASET_REVIEWER.md), không cần tự viết annotation JSON hoặc chạy exporter lại. Công cụ lưu nháp riêng, giữ split gốc và chỉ export ảnh được bạn xác nhận cả nhãn lẫn quyền. Chưa có ảnh nào được người dùng xác minh khi bàn giao công cụ. Các bước JSON dưới đây dành cho dữ liệu bổ sung khác.
+
 Mẫu: `cooking_ai/data/sample_annotation.json`; ghi mỗi record một dòng vào `cooking_ai/data/private/real/annotations.jsonl`, media tại `.../real/media/`. Import tự tính hash và source split:
 
 ```powershell
