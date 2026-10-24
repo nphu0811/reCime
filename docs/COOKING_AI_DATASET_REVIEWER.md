@@ -1,5 +1,7 @@
 # Rà soát ảnh Cooking AI — không cần viết JSON
 
+**Tự động:** dùng [Automated Wiki Reviewer](COOKING_AI_AUTO_REVIEW.md) để chạy đối chiếu nguồn và model local cho toàn bộ ảnh. Giao diện dưới đây vẫn giữ riêng cho xác nhận thủ công tùy chọn; kết quả máy không thay trạng thái của người dùng.
+
 Dataset hiện có **109 ảnh Wiki**. Khi bàn giao công cụ: **0 ảnh được người dùng xác minh**, 0/109 đã rà. Công cụ chỉ chạy trên máy, không gọi AI, OpenAI hoặc dịch vụ ngoài; không tự chạy training.
 
 ## Mở giao diện

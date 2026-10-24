@@ -16,7 +16,10 @@ def main():
     p.add_argument('--validation', type=int, default=4)
     p.add_argument('--test', type=int, default=6)
     p.add_argument('--image-only', action='store_true')
+    p.add_argument('--max-length', type=int, default=4096, help='Match training config max_length; never truncate examples')
     a = p.parse_args()
+    if a.max_length < 1:
+        p.error('--max-length must be positive')
     rows, _ = validate(a.manifest)
     processor = AutoProcessor.from_pretrained('HuggingFaceTB/SmolVLM-256M-Instruct',
         revision='7e3e67edbbed1bf9888184d9df282b700a323964', local_files_only=True)
@@ -32,7 +35,7 @@ def main():
             if taken >= count:
                 break
             try:
-                batch(processor, row, root, 'cpu', 4096)
+                batch(processor, row, root, 'cpu', a.max_length)
             except ValueError:
                 excluded.append(row.id)
                 continue
@@ -45,6 +48,9 @@ def main():
     _, report = validate(output)
     report['excluded_context_ids'] = excluded
     report['pilot_only'] = True
+    report['max_length'] = a.max_length
+    report['modalities'] = {split: {kind: sum(r.split == split and r.kind == kind for r in selected)
+                          for kind in ('image', 'text')} for split in ('train', 'validation', 'test')}
     output.with_suffix('.quality.json').write_text(json.dumps(report, indent=2), encoding='utf-8')
     print(json.dumps(report))
 

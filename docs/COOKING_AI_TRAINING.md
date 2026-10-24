@@ -49,7 +49,7 @@ Metrics: JSON validity, exact dish, ingredient P/R/F1, quantity/unit exact, step
 
 ## Bổ sung dữ liệu đúng quyền
 
-**Rà 109 ảnh Wiki có sẵn:** dùng [Dataset Reviewer](COOKING_AI_DATASET_REVIEWER.md), không cần tự viết annotation JSON hoặc chạy exporter lại. Công cụ lưu nháp riêng, giữ split gốc và chỉ export ảnh được bạn xác nhận cả nhãn lẫn quyền. Chưa có ảnh nào được người dùng xác minh khi bàn giao công cụ. Các bước JSON dưới đây dành cho dữ liệu bổ sung khác.
+**Tự động rà 109 ảnh Wiki:** dùng [Automated Wiki Reviewer](COOKING_AI_AUTO_REVIEW.md), không cần bấm từng ảnh hoặc chạy exporter lại. Nhãn máy dùng cho weak supervision, giữ split gốc và `annotation_verified=false`; không phải ground truth chuyên gia. [Dataset Reviewer thủ công](COOKING_AI_DATASET_REVIEWER.md) vẫn giữ nguyên trạng thái riêng, chỉ dùng khi muốn xác nhận bằng người. Các bước JSON dưới đây dành cho dữ liệu bổ sung khác.
 
 Mẫu: `cooking_ai/data/sample_annotation.json`; ghi mỗi record một dòng vào `cooking_ai/data/private/real/annotations.jsonl`, media tại `.../real/media/`. Import tự tính hash và source split:
 
@@ -74,3 +74,7 @@ Exporter video chỉ tạo frames/timeline để review; không tự cấp quy�
 Máy kiểm tra: RTX4050 6141MiB VRAM (~5346MiB free lúc đầu), RAM 12GB (~1.6GB free), đĩa trống ban đầu 13.6GB. Ước lượng Qwen BF16 riêng weights ~8GB, thêm activations/vision/optimizer; QLoRA giảm base xuống khoảng 2–3GB nhưng tổng phụ thuộc ảnh/context và có thể 10–18GB. Đây là ước lượng, không phải VRAM benchmark. Config từ chối dưới 16GiB free CUDA; đề xuất GPU24GB+, RAM32GB+, storage50GB+ cho Qwen.
 
 So sánh: CPU local không thuê GPU, đã chạy được SmolVLM pilot nhưng chậm; Runpod A5000 24GB niêm yết $0.27/h hoặc A40 48GB $0.59/h khi kiểm tra 24/10/2026, chưa gồm storage/thuế/availability ([giá chính thức](https://www.runpod.io/pricing)). Không có tài nguyên trả phí nào được tạo. Chỉ sau khi bạn phê duyệt host/chi phí: chạy `bash cooking_ai/scripts/train_cloud.sh /data/manifest.jsonl /data /data/run`. Script chỉ chạy bên trong máy đã có, không thuê máy. Full Qwen compatibility và GPU training còn cần chạy thực tế.
+
+## Checkpoint sau rà soát tự động
+
+Lượt mới: [Automated Reviewer](COOKING_AI_AUTO_REVIEW.md) đã xử lý 109 ảnh; 11 accepted đều thuộc train. Pilot hỗn hợp 7 ảnh + 1 text train, 2 text validation, 2 text test dùng config2048 và subset `--max-length 2048` để khớp giới hạn, không truncate. LoRA mới tại `cooking_ai/runs/wiki-auto-reviewed-pilot-2048`: 8 steps rồi resume9, checkpoint-load inference đã chạy; JSON ảnh không hợp lệ, cả base/LoRA cũ/mới đều JSON0/2 trên proxy text held-out. Không deploy, không gọi đây là expert accuracy; xem `cooking_ai/data/private/auto_review/training-summary.json`. Lần thử đầu context-mismatch có 1 optimizer step nhưng không save adapter, được giữ riêng. Checkpoint cũ không bị ghi đè.
